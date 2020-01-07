@@ -1,0 +1,42 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+{{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register'), 'attr': {'class': 'fos_user_registration_register'}}) }}
+
+    {{ form_errors(form) }}
+    <p class="login-box-msg">{{ 'user_registration_title'|trans({}, 'SonataUserBundle') }}</p>
+    <div class="form-group regg-form">
+        {{ form_row(form.firstName) }}
+    </div>
+    <div class="form-group regg-form">
+        {{ form_row(form.lastName) }}
+    </div>
+    <div class="form-group regg-form">
+        {{ form_row(form.email) }}
+    </div>
+    <div class="form-group regg-form">
+        {{ form_row(form.plainPassword.first) }}
+    </div>
+    <div class="form-group regg-form">
+        {{ form_row(form.plainPassword.second) }}
+    </div>
+
+    <p class="login-box-msg">{{ 'headquarter_title'|trans({}, 'SonataUserBundle') }}</p>
+
+    <div class="form-group regg-form">
+        {{ form_row(form.headquarter.name) }}
+    </div>
+    <div class="form-group regg-form">
+        {{ form_row(form.headquarter.city) }}
+    </div>
+    <div class="form-group regg-form">
+        {{ form_row(form.headquarter.country) }}
+    </div> 
+    <div class="row">
+        <div class="col-xs-8">
+        </div>
+        <div class="col-xs-4">
+            <input class="btn btn-primary" type="submit" value="{{ 'registration.submit'|trans }}" />
+                
+        </div>
+    </div>
+{{ form_end(form) }}
