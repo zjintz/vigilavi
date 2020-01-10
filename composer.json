@@ -37,7 +37,7 @@
         "liip/functional-test-bundle": "^3.0.0",
         "liip/test-fixtures-bundle": "^1.0.0",
         "symfony/debug-pack": "*",
-        "symfony/maker-bundle": "^1.0",
+        "symfony/maker-bundle": "^1.14",
         "symfony/profiler-pack": "*",
         "symfony/test-pack": "^1.0"
     },
