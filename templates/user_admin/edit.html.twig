@@ -1,0 +1,12 @@
+{% extends '@SonataAdmin/CRUD/base_edit.html.twig' %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/addDemoButton.js') }}"></script>
+    <script>
+     const route = "{{ path('demo_mail', {period: 'daily', source: 'CNBB', text_format: 'PDF'})|escape('js') }}";
+    </script>
+    {# javascript used for extend.html.twig #}
+{% endblock javascripts %}
+

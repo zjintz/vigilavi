@@ -3,8 +3,39 @@ sonata_admin:
     show_mosaic_button: false
     search: false
     dashboard:
+        groups:
+          app.admin.group.dashboard:
+                keep_open:       true
+                label: ~
+                label_catalogue: App
+                icon: '<i class="fa fa-home"></i>'
+                items:
+                    - route: sonata_admin_dashboard
+                      label: app.admin.group.dashboard 
+          app.admin.group.users:
+                keep_open:       true
+                label: app.admin.group.users
+                label_catalogue: App
+                icon: '<i class="fa fa-user"></i>'
+                items:
+                    - app.admin.user
+          app.admin.group.words:
+                keep_open:       true
+                label: app.admin.group.words
+                label_catalogue: App
+                icon: '<i class="fa fa-cloud"></i>'
+                items:
+                    - app.admin.word
+                    - app.admin.word_set
         blocks:
-            - { type: sonata.admin.block.admin_list, position: left }
+#            - { type: sonata.admin.block.admin_list, position: left }
+    security:
+        handler: sonata.admin.security.handler.role
+        role_admin: ROLE_SONATA_ADMIN
+        role_super_admin: ROLE_SUPER_ADMIN
+    assets:
+        extra_stylesheets:
+            - bundles/sonatatranslation/css/sonata-translation.css
 
 sonata_block:
     blocks:

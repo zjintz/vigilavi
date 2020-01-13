@@ -23,5 +23,41 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+    app.admin.emailsubscription:
+        class: App\Admin\EmailSubscriptionAdmin
+        arguments: [~, App\Entity\EmailSubscription, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: EmailSubscription }
+        calls:
+            - [ setTranslationDomain, [messages]]
+            
+    app.admin.user:
+        class: App\Admin\UserAdmin
+        arguments: [~, App\Application\Sonata\UserBundle\Entity\User, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: User }
+        calls:
+            - [ setTranslationDomain, [messages]]
+
+    app.admin.headquarter:
+        class: App\Admin\HeadquarterAdmin
+        arguments: [~, App\Entity\Headquarter, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: Headquarter }
+
+    app.admin.word:
+        class: App\Admin\WordAdmin
+        arguments: [~, App\Entity\Word, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: Word }
+        calls:
+            - [ setTranslationDomain, [messages]]
+    app.admin.word_set:
+        class: App\Admin\WordSetAdmin
+        arguments: [~, App\Entity\WordSet, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: WordSet }
+        calls:
+            - [ setTranslationDomain, [messages]]
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

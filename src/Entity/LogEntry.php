@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -245,6 +247,16 @@ class LogEntry
      * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $category_type;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Outcome", mappedBy="logEntry", orphanRemoval=true)
+     */
+    private $outcomes;
+
+    public function __construct()
+    {
+        $this->outcomes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -799,6 +811,37 @@ class LogEntry
     public function setCategoryType(?string $category_type): self
     {
         $this->category_type = $category_type;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Outcome[]
+     */
+    public function getOutcomes(): Collection
+    {
+        return $this->outcomes;
+    }
+
+    public function addOutcome(Outcome $outcome): self
+    {
+        if (!$this->outcomes->contains($outcome)) {
+            $this->outcomes[] = $outcome;
+            $outcome->setLogEntry($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOutcome(Outcome $outcome): self
+    {
+        if ($this->outcomes->contains($outcome)) {
+            $this->outcomes->removeElement($outcome);
+            // set the owning side to null (unless already changed)
+            if ($outcome->getLogEntry() === $this) {
+                $outcome->setLogEntry(null);
+            }
+        }
 
         return $this;
     }
