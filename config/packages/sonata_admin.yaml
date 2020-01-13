@@ -11,7 +11,9 @@ sonata_admin:
                 icon: '<i class="fa fa-home"></i>'
                 items:
                     - route: sonata_admin_dashboard
-                      label: app.admin.group.dashboard 
+                      label: app.admin.group.dashboard
+
+
           app.admin.group.users:
                 keep_open:       true
                 label: app.admin.group.users
@@ -27,6 +29,15 @@ sonata_admin:
                 items:
                     - app.admin.word
                     - app.admin.word_set
+
+          app.admin.group.reports:
+                keep_open:       true
+                label: app.admin.group.reports
+                label_catalogue: App
+                icon: '<i class="fa fa-folder-open"></i>'
+                items:
+                    - app.admin.report
+                      
         blocks:
 #            - { type: sonata.admin.block.admin_list, position: left }
     security:
