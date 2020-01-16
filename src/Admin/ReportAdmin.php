@@ -30,23 +30,22 @@ final class ReportAdmin extends AbstractAdmin
 
         $formMapper
             ->with('General')
-            ->add('name', TextType::class, ['label' => 'report.label.name',])
-            ->add(
-                'description',
-                TextType::class, ['label' => 'report.label.description',] )
+            ->add('wordSet', null, ['label' => 'report.label.wordSet',])
+            ->add('date', null, ['label' => 'report.label.date',])
             ->end();
     }
 
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
-        $datagridMapper->add('name', null, [
-            'operator_type' => 'sonata_type_equal',
+        $datagridMapper->add('wordSet', null, [
+            'operator_type' => EqualType::class,
             'advanced_filter' => false
         ]);
-        $datagridMapper->add('description', null, [
-            'operator_type' => 'sonata_type_equal',
+        $datagridMapper->add('date', null, [
+            'operator_type' => EqualType::class,
             'advanced_filter' => false
         ]);
+
     }
 
 
@@ -54,14 +53,17 @@ final class ReportAdmin extends AbstractAdmin
     {
 
         $listMapper->addIdentifier(
-            'name',
+            'wordSet',
             null,
-            ['label' => 'report.label.name']
+            ['label' => 'report.label.wordSet',
+             'class' => WordSet::class
+             ]
         );
-        $listMapper->add(
-            'description',
+        $listMapper->addIdentifier(
+            'date',
             null,
-            ['label' => 'report.label.description']
+            ['label' => 'report.label.date'
+             ]
         );
     }
 
@@ -72,8 +74,15 @@ final class ReportAdmin extends AbstractAdmin
 
         $showMapper
             ->with('General', ['label' => 'report.title.general'])
-            ->add('name', null, ['label' => 'report.label.name'])
-            ->add('description', null, ['label' => 'report.label.description'])
+            ->add('wordSet', null, ['label' => 'report.label.wordSet'])
+            ->add('date', null, ['label' => 'report.label.date'])
+            ->add(
+                'outcomes',
+                null,
+                ['label' => 'report.label.outcomes',
+                 'class' => Outcome::class
+                ]
+            )
             ->end()
             ;
     }

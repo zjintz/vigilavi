@@ -2,11 +2,13 @@
 
 namespace App\Admin;
 
+use App\Entity\Word;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Sonata\Form\Type\EqualType;
@@ -32,6 +34,14 @@ final class WordSetAdmin extends AbstractAdmin
             ->with('General')
             ->add('name', TextType::class, ['label' => 'wordSet.label.name',])
             ->add('description', TextType::class, ['label' => 'wordSet.label.description',])
+            ->add(
+                'words',
+                null,
+                ['label' => 'wordSet.label.words',
+                 'expanded' => false,
+                 'class' => Word::class
+                ]
+            )
             ->end();
     }
 
@@ -52,7 +62,7 @@ final class WordSetAdmin extends AbstractAdmin
     {
 
         $listMapper->addIdentifier(
-            'text',
+            'name',
             null,
             ['label' => 'wordSet.label.name']
         );
@@ -72,6 +82,7 @@ final class WordSetAdmin extends AbstractAdmin
             ->with('General', ['label' => 'wordSet.title.general'])
             ->add('name', null, ['label' => 'wordSet.label.name'])
             ->add('description', null, ['label' => 'wordSet.label.description'])
+            ->add('words', null, ['label' => 'wordSet.label.words', 'expanded' => true, 'by_reference' => false, 'multiple' => true, 'associated_property' => 'text'])
             ->end()
             ;
     }

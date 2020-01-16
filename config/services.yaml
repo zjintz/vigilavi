@@ -47,7 +47,7 @@ services:
 
     app.admin.report:
         class: App\Admin\ReportAdmin
-        arguments: [~, App\Entity\Report, ~]
+        arguments: [~, App\Entity\Report, App\Controller\ReportCRUDController]
         tags:
             - { name: sonata.admin, manager_type: orm, label: Report }
         calls:

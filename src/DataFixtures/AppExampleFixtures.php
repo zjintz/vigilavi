@@ -6,6 +6,8 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use App\Entity\LogEntry;
+use App\Entity\Word;
+use App\Entity\WordSet;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class AppExampleFixtures extends Fixture implements FixtureGroupInterface
@@ -26,13 +28,8 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
         
         $num = 0;
         $line = fgetcsv($csv);
-
-                                               
         while (!feof($csv)) {
-            echo $num;
-            var_dump($line);
             $timeLog = \DateTime::createFromFormat($format24H,$line[2]);
-            var_dump($timeLog);
             $logEntry[$num] = new LogEntry();
             $logEntry[$num]->setDevice($line[0]);
             $logEntry[$num]->setDate(\DateTime::createFromFormat($format,$line[1]));
@@ -85,8 +82,62 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
             $line = fgetcsv($csv);
         }
         fclose($csv);
+        $this->addMisc($manager);
 
         $manager->flush();
+    }
+
+    private function addMisc(ObjectManager $manager)
+    {
+        $words = ["bed", "shirt", "sheet"];
+        $palabras = ["cama", "camisa", "lata", "machete"];
+        $palavras = ["cigarro", "pai", "carro", "cima"];
+
+        $globalWordSet = new WordSet();
+        $globalWordSet->setName("Global");
+        $globalWordSet->setDescription("Todas Las Palabras.");
+        $englishWordSet = new WordSet();
+        $englishWordSet->setName("English words");
+        $englishWordSet->setDescription("just english.");
+        $latWordSet = new WordSet();
+        $latWordSet->setName("Portunol");
+        $latWordSet->setDescription("Solo esp y pr.");
+        $manager->persist($globalWordSet);
+        $manager->persist($englishWordSet);
+        $manager->persist($latWordSet);
+        foreach($words as $lastWord)
+        {
+            $newWord = $this->makeWord($lastWord, "English");
+            $newWord->addWordSet($globalWordSet);
+            $newWord->addWordSet($englishWordSet);
+            $manager->persist($newWord);            
+        }
+
+        foreach($palabras as $lastWord)
+        {
+            $newWord = $this->makeWord($lastWord, "Español");
+            $newWord->addWordSet($latWordSet);
+            $newWord->addWordSet($globalWordSet);
+            $manager->persist($newWord);
+        }
+
+        foreach($palavras as $lastWord)
+        {
+            $newWord = $this->makeWord($lastWord, 'Português');
+            $newWord->addWordSet($globalWordSet);
+            $newWord->addWordSet($latWordSet);
+            $manager->persist($newWord);
+        }
+        $manager->flush();
+        
+    }
+
+    private function makeWord(string $text, string $language)
+    {
+        $newWord = new Word();
+        $newWord->setText($text);
+        $newWord->setLanguage($language);
+        return $newWord;
     }
 
     public static function getGroups(): array

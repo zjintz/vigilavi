@@ -2,6 +2,7 @@
 
 namespace App\Admin;
 
+use App\Entity\WordSet;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
@@ -45,6 +46,16 @@ final class WordAdmin extends AbstractAdmin
                  'label' => 'word.label.language',
                 ]
             )
+            ->add(
+                'wordSets',
+                null,
+                ['label' => 'word.label.wordSets',
+                 'expanded' => true,
+                 'multiple' => true,
+                 'class' => WordSet::class,
+                 'choice_label' => 'name'
+                ]
+            )
             ->end();
     }
 
@@ -85,6 +96,7 @@ final class WordAdmin extends AbstractAdmin
             ->with('General', ['label' => 'word.title.general'])
             ->add('text', null, ['label' => 'word.label.text'])
             ->add('language', null, ['label' => 'word.label.language'])
+            ->add('wordSets', null, ['label' => 'word.label.wordSets', 'expanded' => true, 'by_reference' => false, 'multiple' => true, 'associated_property' => 'name'])
             ->end()
             ;
     }

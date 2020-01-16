@@ -34,9 +34,10 @@ class WordSet
     private $words;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Report", mappedBy="wordSets")
+     * @ORM\OneToMany(targetEntity="App\Entity\Report", mappedBy="wordSet")
      */
     private $reports;
+
 
     public function __construct()
     {
@@ -111,7 +112,7 @@ class WordSet
     {
         if (!$this->reports->contains($report)) {
             $this->reports[] = $report;
-            $report->addWordSet($this);
+            $report->setWordSet($this);
         }
 
         return $this;
@@ -121,9 +122,18 @@ class WordSet
     {
         if ($this->reports->contains($report)) {
             $this->reports->removeElement($report);
-            $report->removeWordSet($this);
+            // set the owning side to null (unless already changed)
+            if ($report->getWordSet() === $this) {
+                $report->setWordSet(null);
+            }
         }
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return $this->name;
+    }
+
 }

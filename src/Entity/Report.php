@@ -19,84 +19,28 @@ class Report
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $name;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $description;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\WordSet", inversedBy="reports")
-     */
-    private $wordSets;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Outcome", mappedBy="report", orphanRemoval=true)
      */
     private $outcomes;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\WordSet", inversedBy="reports")
+     */
+    private $wordSet;
+
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $date;
+
     public function __construct()
     {
-        $this->wordSets = new ArrayCollection();
         $this->outcomes = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(?string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|WordSet[]
-     */
-    public function getWordSets(): Collection
-    {
-        return $this->wordSets;
-    }
-
-    public function addWordSet(WordSet $wordSet): self
-    {
-        if (!$this->wordSets->contains($wordSet)) {
-            $this->wordSets[] = $wordSet;
-        }
-
-        return $this;
-    }
-
-    public function removeWordSet(WordSet $wordSet): self
-    {
-        if ($this->wordSets->contains($wordSet)) {
-            $this->wordSets->removeElement($wordSet);
-        }
-
-        return $this;
     }
 
     /**
@@ -126,6 +70,30 @@ class Report
                 $outcome->setReport(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getWordSet(): ?WordSet
+    {
+        return $this->wordSet;
+    }
+
+    public function setWordSet(?WordSet $wordSet): self
+    {
+        $this->wordSet = $wordSet;
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(\DateTimeInterface $date): self
+    {
+        $this->date = $date;
 
         return $this;
     }

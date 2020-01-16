@@ -73,4 +73,10 @@ class Outcome
 
         return $this;
     }
+    public function __toString()
+    {
+        $outString = $this->classification.' -- URL: ';
+        $outString = $outString.$this->logEntry->getUrl(); 
+        return  $outString;
+    }
 }
