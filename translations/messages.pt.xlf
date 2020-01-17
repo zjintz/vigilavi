@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+      <body>
+        <trans-unit id="app.user.stats.total">
+          <source>app.user.stats.total</source>
+          <target>Total de usuários registrados</target>
+        </trans-unit>
+        <trans-unit id="app.user.stats.active">
+          <source>app.user.stats.active</source>
+          <target>Usuários Ativos</target>
+        </trans-unit>
+        <trans-unit id="app.user.stats.inactive">
+          <source>app.user.stats.inactive</source>
+          <target>Usuários Inativos</target>
+        </trans-unit>
+        <trans-unit id="City">
+          <source>City</source>
+          <target>Cidade</target>
+        </trans-unit>
+        <trans-unit id="Country">
+          <source>Country</source>
+          <target>Pais</target>
+        </trans-unit>
+        <trans-unit id="Date">
+          <source>Date</source>
+          <target>Data</target>
+        </trans-unit>
+        <trans-unit id="EmailSubscription">
+          <source>EmailSubscription</source>
+          <target>Assinatura do Email</target>
+        </trans-unit>
+        <trans-unit id="form.password">
+          <source>form.password</source>
+          <target>Senha</target>
+        </trans-unit>
+        <trans-unit id="form.password.repeat">
+          <source>form.password.repeat</source>
+          <target>Repetir senha</target>
+        </trans-unit>
+        <trans-unit id="your_email_subscription">
+          <source>your_email_subscription</source>
+          <target>Sua Assinatura do Email : </target>
+        </trans-unit>
+        <trans-unit id="edit.subscription.here">
+          <source>edit.subscription.here</source>
+          <target>Editar </target>
+        </trans-unit>
+        <trans-unit id="email_subscription.help.is_active">
+          <source>email_subscription.help.is_active</source>
+          <target>Ativar ou desativar sua Assinatura.</target>
+        </trans-unit>
+        
+        <trans-unit id="email_subscription.label.is_active">
+          <source>email_subscription.label.is_active</source>
+          <target>Receber emails: </target>
+        </trans-unit>
+        <trans-unit id="email_subscription.label.periodicity">
+          <source>email_subscription.label.periodicity</source>
+          <target>Tipo de envío: </target>
+        </trans-unit>
+        <trans-unit id="email_subscription.label.days_ahead">
+          <source>email_subscription.label.days_ahead</source>
+          <target>Dias de Antecedência</target>
+        </trans-unit>
+
+        <trans-unit id="Headquarter">
+          <source>Headquarter</source>
+          <target>Sede</target>
+        </trans-unit>
+        <trans-unit id="Name">
+          <source>Name</source>
+          <target>Nome</target>
+        </trans-unit>
+
+        <trans-unit id="User">
+          <source>User</source>
+          <target>Usuario</target>
+        </trans-unit>
+        <trans-unit id="user_label_first_name">
+          <source>user.label.first_name</source>
+          <target>Nome</target>
+        </trans-unit>
+        <trans-unit id="user_label_last_name">
+          <source>user.label.last_name</source>
+          <target>Sobrenome</target>
+        </trans-unit>
+        <trans-unit id="hq_label_name">
+          <source>hq.label.name</source>
+          <target>Nome da sede</target>
+        </trans-unit>
+        <trans-unit id="hq_label_city">
+          <source>hq.label.city</source>
+          <target>Cidade da sede</target>
+        </trans-unit>
+        <trans-unit id="hq_label_country">
+          <source>hq.label.country</source>
+          <target>País da sede</target>
+        </trans-unit>
+        <trans-unit id="link_return">
+          <source>link.return</source>
+          <target>voltar</target>
+        </trans-unit>
+        <trans-unit id="mails.logs.title">
+          <source>mail.logs.title</source>
+        <target>Mailer Logs</target>
+        </trans-unit>
+        <trans-unit id="report.label.wordSet">
+          <source>report.label.wordSet</source>
+          <target>Word Set</target>
+        </trans-unit>
+        <trans-unit id="report.label.date">
+          <source>report.label.date</source>
+          <target>Data</target>
+        </trans-unit>
+        
+        <trans-unit id="Word">
+          <source>Word</source>
+          <target>Palavra</target>
+       
+        </trans-unit>
+        <trans-unit id="word.label.text">
+          <source>word.label.text</source>
+          <target>Texto</target>
+        </trans-unit>
+        <trans-unit id="word.label.language">
+          <source>word.label.language</source>
+          <target>Idioma</target>
+        </trans-unit>
+        <trans-unit id="wordSet.label.name">
+          <source>wordSet.label.name</source>
+          <target>Nome</target>
+        </trans-unit>
+        <trans-unit id="wordSet.label.description">
+          <source>wordSet.label.description</source>
+          <target>Descrição</target>
+        </trans-unit>
+    </body>
+  </file>
+</xliff>

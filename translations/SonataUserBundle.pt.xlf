@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+      <body>
+        <trans-unit id="Access">
+          <source>Access</source>
+          <target>Acesso</target>
+        </trans-unit>
+        <trans-unit id="user_registration_title">
+          <source>user_registration_title</source>
+          <target>Registro de usuário</target>
+        </trans-unit>
+        <trans-unit id="Headquarter">
+          <source>Headquarter</source>
+          <target>Sede</target>
+        </trans-unit>
+        <trans-unit id="headquarter_title">
+          <source>headquarter_title</source>
+          <target>Sede</target>
+        </trans-unit>
+        <trans-unit id="sign_up">
+          <source>sign_up</source>
+          <target>Cadastrar-se</target>
+        </trans-unit>
+        <trans-unit id="e-mail">
+          <source>e-mail</source>
+          <target>e-mail</target>
+        </trans-unit>
+        <trans-unit id="forgotten_password">
+          <source>forgotten_password</source>
+          <target>Esqueci minha senha!</target>
+        </trans-unit>
+        <trans-unit id="security.login.password">
+          <source>security.login.password</source>
+          <target>Senha</target>
+        </trans-unit>
+        <trans-unit id="form.password">
+          <source>form.password</source>
+          <target>Senha</target>
+        </trans-unit>
+        <trans-unit id="form.password.repeat">
+          <source>form.password.repeat</source>
+          <target>Repetir senha</target>
+        </trans-unit>
+        <trans-unit id="form.label_plain_password">
+          <source>form.label_plain_password</source>
+          <target>Senha</target>
+        </trans-unit>
+        <trans-unit id="form.label_email_subscription">
+          <source>form.label_email_subscription</source>
+          <target>Assinatura de email :</target>
+        </trans-unit>
+        <trans-unit id="form.label_headquarter">
+          <source>form.label_headquarter</source>
+          <target>Sede</target>
+        </trans-unit>
+
+        <trans-unit id="Profile">
+          <source>Profile</source>
+          <target>Perfil</target>
+        </trans-unit>
+        <trans-unit id="Roles">
+          <source>Roles</source>
+          <target>Roles</target>
+        </trans-unit>
+        <trans-unit id="Security">
+          <source>Security</source>
+          <target>Seguridade</target>
+        </trans-unit>
+        <trans-unit id="Subscription">
+          <source>Subscription</source>
+          <target>Assinatura</target>
+        </trans-unit>
+        <trans-unit id="User">
+          <source>User</source>
+          <target>Usuário</target>
+        </trans-unit>
+        <trans-unit id="user_registration.success_message">
+          <source>user_registration.success_message</source>
+          <target>Usuário criado com êxito.</target>
+        </trans-unit>
+        <trans-unit id="user_registration.activation_notice">
+          <source>user_registration.activation_notice</source>
+          <target>Logo que sua conta for ativada, você receberá um e-mail de notificação.</target>
+        </trans-unit>
+      </body>
+    </file>
+</xliff>

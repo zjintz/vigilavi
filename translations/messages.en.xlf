@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+      <body>
+            <trans-unit id="assembler_title">
+                <source>assembler.title</source>
+                <target>Liturgy Text</target>
+            </trans-unit>
+            <trans-unit id="assembler_warning_no_text_found">
+                <source>assembler.warning.no_text_found</source>
+                <target>No text found.</target>
+            </trans-unit>
+            <trans-unit id="form_label_text_format">
+                <source>form.label.text_format</source>
+                <target>Format :</target>
+            </trans-unit>
+            <trans-unit id="form_label_liturgy_date">
+                <source>form.label.liturgy_date</source>
+                <target>Liturgy Date :</target>
+            </trans-unit>
+            <trans-unit id="form_label_source">
+                <source>form.label.source</source>
+                <target>Source :</target>
+            </trans-unit>
+            <trans-unit id="form_button_get_text">
+                <source>form.button.get_text</source>
+                <target>Get Text</target>
+            </trans-unit>
+            <trans-unit id="Headquarter">
+              <source>Headquarter</source>
+              <target>Headquarter</target>
+            </trans-unit>
+            <trans-unit id="link_return">
+                <source>link.return</source>
+                <target>return</target>
+            </trans-unit>
+            <trans-unit id="Liturgy">
+              <source>Liturgy</source>
+              <target>Liturgy</target>
+            </trans-unit>
+            <trans-unit id="Liturgy.Text">
+                <source>Liturgy.Text</source>
+                <target>Liturgy Text</target>
+            </trans-unit>
+            <trans-unit id="User">
+              <source>User</source>
+              <target>User</target>
+            </trans-unit>
+            <trans-unit id="user_label_first_name">
+                <source>user.label.first_name</source>
+                <target>First Name</target>
+            </trans-unit>
+            <trans-unit id="user_label_last_name">
+                <source>user.label.last_name</source>
+                <target>Last Name</target>
+            </trans-unit>
+            <trans-unit id="hq_label_name">
+                <source>hq.label.name</source>
+                <target>Name</target>
+            </trans-unit>
+            <trans-unit id="hq_label_city">
+                <source>hq.label.city</source>
+                <target>City</target>
+            </trans-unit>
+            <trans-unit id="hq_label_country">
+                <source>hq.label.country</source>
+                <target>Country</target>
+            </trans-unit>
+
+        </body>
+    </file>
+</xliff>

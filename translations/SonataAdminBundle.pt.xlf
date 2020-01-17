@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+      <body>
+        <trans-unit id="toggle_navigation">
+          <source>toggle_navigation</source>
+          <target>Mudar de navegação</target>
+        </trans-unit>
+        <trans-unit id="link_filters">
+              <source>link_filters</source>
+              <target>Filtros</target>
+            </trans-unit>
+        <trans-unit id="link_actions">
+          <source>link_actions</source>
+          <target>Ações</target>
+        </trans-unit>
+        <trans-unit id="stats_view_more">
+          <source>stats_view_more</source>
+          <target>lista</target>
+        </trans-unit>
+      </body>
+    </file>
+</xliff>

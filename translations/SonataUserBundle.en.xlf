@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+      <body>
+        <trans-unit id="user_registration_title">
+          <source>user_registration_title</source>
+          <target>User Registration</target>
+        </trans-unit>
+        <trans-unit id="headquarter_title">
+          <source>headquarter_title</source>
+          <target>Headquarter</target>
+        </trans-unit>
+        <trans-unit id="sign_up">
+          <source>sign_up</source>
+          <target>Sign up</target>
+        </trans-unit>
+      </body>
+    </file>
+</xliff>

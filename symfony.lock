@@ -26,6 +26,9 @@
     "knplabs/knp-menu-bundle": {
         "version": "v2.3.0"
     },
+    "laminas/laminas-zendframework-bridge": {
+        "version": "1.0.1"
+    },
     "liip/functional-test-bundle": {
         "version": "3.3.0"
     },
@@ -212,5 +215,8 @@
         "files": [
             "config/packages/twig_extensions.yaml"
         ]
+    },
+    "webimpress/safe-writer": {
+        "version": "2.0.0"
     }
 }
