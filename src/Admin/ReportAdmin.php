@@ -9,6 +9,7 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Sonata\AdminBundle\Form\Type\AdminType;
 use Sonata\Form\Type\EqualType;
 
 /**
@@ -19,21 +20,6 @@ use Sonata\Form\Type\EqualType;
 final class ReportAdmin extends AbstractAdmin
 {
     
-    protected function configureFormFields(FormMapper $formMapper)
-    {
-        $formMapper
-            ->with(
-                'General',
-                ['class' => 'col-md-7', 'label' => 'report.title.general']
-            )
-            ->end();
-
-        $formMapper
-            ->with('General')
-            ->add('wordSet', null, ['label' => 'report.label.wordSet',])
-            ->add('date', null, ['label' => 'report.label.date',])
-            ->end();
-    }
 
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
@@ -48,23 +34,44 @@ final class ReportAdmin extends AbstractAdmin
 
     }
 
+    protected function configureFormFields(FormMapper $formMapper)
+    {
+        $formMapper
+            ->with(
+                'General',
+                ['class' => 'col-md-7', 'label' => 'word.title.general']
+            )
+            ->end();
 
+        $formMapper
+            ->with('General', ['label' => 'report.title.general'])
+            ->add('wordSet', null, ['label' => 'report.label.wordSet'])
+            ->add('date', null, ['label' => 'report.label.date'])
+            
+            ->end();
+    }
+    
     protected function configureListFields(ListMapper $listMapper)
     {
 
-        $listMapper->addIdentifier(
+        $listMapper->add(
             'wordSet',
             null,
             ['label' => 'report.label.wordSet',
              'class' => WordSet::class
              ]
         );
-        $listMapper->addIdentifier(
+        $listMapper->add(
             'date',
             null,
-            ['label' => 'report.label.date'
-             ]
+            ['label' => 'report.label.date']
+        
         );
+        $listMapper->add('_action', 'actions', array(
+            'actions' => array(
+                'show' => array()
+            )
+        ));
     }
 
     protected function configureShowFields(ShowMapper $showMapper)
@@ -76,11 +83,13 @@ final class ReportAdmin extends AbstractAdmin
             ->with('General', ['label' => 'report.title.general'])
             ->add('wordSet', null, ['label' => 'report.label.wordSet'])
             ->add('date', null, ['label' => 'report.label.date'])
+            
             ->add(
                 'outcomes',
-                null,
-                ['label' => 'report.label.outcomes',
-                 'class' => Outcome::class
+                AdminType::class,
+                [
+                    'label' => 'report.label.outcomes',
+                    'route' => ['name' => 'show']
                 ]
             )
             ->end()

@@ -45,6 +45,30 @@ services:
         tags:
             - { name: sonata.admin, manager_type: orm, label: Headquarter }
 
+    app.admin.log_entry:
+        class: App\Admin\LogEntryAdmin
+        arguments: [~, App\Entity\LogEntry, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: LogEntry }
+        calls:
+            - [ setTranslationDomain, [messages]]
+
+    app.admin.origin:
+        class: App\Admin\OriginAdmin
+        arguments: [~, App\Entity\Origin, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: Origin}
+        calls:
+            - [ setTranslationDomain, [messages]]
+            
+    app.admin.outcome:
+        class: App\Admin\OutcomeAdmin
+        arguments: [~, App\Entity\Outcome, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: Outcome }
+        calls:
+            - [ setTranslationDomain, [messages]]
+            
     app.admin.report:
         class: App\Admin\ReportAdmin
         arguments: [~, App\Entity\Report, App\Controller\ReportCRUDController]
@@ -52,7 +76,6 @@ services:
             - { name: sonata.admin, manager_type: orm, label: Report }
         calls:
             - [ setTranslationDomain, [messages]]
-            
             
     app.admin.word:
         class: App\Admin\WordAdmin

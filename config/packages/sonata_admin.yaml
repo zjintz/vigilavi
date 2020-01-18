@@ -29,6 +29,15 @@ sonata_admin:
                 items:
                     - app.admin.word
                     - app.admin.word_set
+                    
+          app.admin.group.logs:
+                keep_open:       true
+                label: app.admin.group.logs
+                label_catalogue: App
+                icon: '<i class="fa fa-file-text"></i>'
+                items:
+                    - app.admin.log_entry
+                    - app.admin.origin
 
           app.admin.group.reports:
                 keep_open:       true

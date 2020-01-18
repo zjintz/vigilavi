@@ -160,11 +160,20 @@ class ReportCRUDController extends CRUDController
     private function evaluateEntries($newObject)
     {
         $entriesRepo = $this->entityManager->getRepository(LogEntry::class);
+        $wordSet = $newObject->getWordSet();
+        $words = $wordSet->getWords();
         $entries = $entriesRepo->findBy(['date'=>$newObject->getDate()]);
         foreach ($entries as $entry) {
             
             $newOutcome = new Outcome();
-            $newOutcome->setClassification("ok");
+            $class = 'ok';
+            foreach ($words as $word) {
+                if (strPos($entry->getUrl(), $word->getText()) !== false) {
+                    $class = "(!!!)";
+                }
+            }
+
+            $newOutcome->setClassification($class);
             $newOutcome->setReport($newObject);
             $newOutcome->setLogEntry($entry);
             $this->entityManager->persist($newOutcome);
