@@ -9,7 +9,6 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Sonata\Form\Type\EqualType;
 
 /**
@@ -33,23 +32,9 @@ final class WordAdmin extends AbstractAdmin
             ->with('General')
             ->add('text', TextType::class, ['label' => 'word.label.text',])
             ->add(
-                'language',
-                ChoiceType::class,
-                ['choices'  => [
-                          'English' => 'English',
-                          'Español' => 'Español',
-                          'Português' => 'Português',
-                      ],
-                 'expanded' => false,
-                 'multiple' => false,
-                 'required' => true,
-                 'label' => 'word.label.language',
-                ]
-            )
-            ->add(
-                'wordSets',
+                'wordSet',
                 null,
-                ['label' => 'word.label.wordSets',
+                ['label' => 'word.label.wordSet',
                  'expanded' => true,
                  'multiple' => true,
                  'class' => WordSet::class,
@@ -80,11 +65,7 @@ final class WordAdmin extends AbstractAdmin
             null,
             ['label' => 'word.label.text']
         );
-        $listMapper->add(
-            'language',
-            null,
-            ['label' => 'word.label.language']
-        );
+
     }
 
     protected function configureShowFields(ShowMapper $showMapper)
@@ -95,8 +76,7 @@ final class WordAdmin extends AbstractAdmin
         $showMapper
             ->with('General', ['label' => 'word.title.general'])
             ->add('text', null, ['label' => 'word.label.text'])
-            ->add('language', null, ['label' => 'word.label.language'])
-            ->add('wordSets', null, ['label' => 'word.label.wordSets', 'expanded' => true, 'by_reference' => false, 'multiple' => true, 'associated_property' => 'name'])
+            ->add('wordSet', null, ['label' => 'word.label.wordSet'])
             ->end()
             ;
     }

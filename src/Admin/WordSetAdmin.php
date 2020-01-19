@@ -11,6 +11,9 @@ use Sonata\AdminBundle\Show\ShowMapper;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Sonata\AdminBundle\Form\Type\AdminType;
+use Sonata\AdminBundle\Form\Type\CollectionType;
+use Sonata\AdminBundle\Form\Type\ModelType;
 use Sonata\Form\Type\EqualType;
 
 /**
@@ -36,10 +39,11 @@ final class WordSetAdmin extends AbstractAdmin
             ->add('description', TextType::class, ['label' => 'wordSet.label.description',])
             ->add(
                 'words',
-                null,
+                CollectionType::class,
                 ['label' => 'wordSet.label.words',
-                 'expanded' => false,
-                 'class' => Word::class
+                 'allow_add'=>true,
+                 'allow_delete'=> true
+                 
                 ]
             )
             ->end();

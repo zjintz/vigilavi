@@ -29,14 +29,14 @@ class WordSet
     private $description;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Word", inversedBy="wordSets")
-     */
-    private $words;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Report", mappedBy="wordSet")
      */
     private $reports;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Word", mappedBy="wordSet", orphanRemoval=true)
+     */
+    private $words;
 
 
     public function __construct()
@@ -75,32 +75,6 @@ class WordSet
     }
 
     /**
-     * @return Collection|Word[]
-     */
-    public function getWords(): Collection
-    {
-        return $this->words;
-    }
-
-    public function addWord(Word $word): self
-    {
-        if (!$this->words->contains($word)) {
-            $this->words[] = $word;
-        }
-
-        return $this;
-    }
-
-    public function removeWord(Word $word): self
-    {
-        if ($this->words->contains($word)) {
-            $this->words->removeElement($word);
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection|Report[]
      */
     public function getReports(): Collection
@@ -134,6 +108,37 @@ class WordSet
     public function __toString()
     {
         return $this->name;
+    }
+
+    /**
+     * @return Collection|Word[]
+     */
+    public function getWords(): Collection
+    {
+        return $this->words;
+    }
+
+    public function addWord(Word $word): self
+    {
+        if (!$this->words->contains($word)) {
+            $this->words[] = $word;
+            $word->setWordSet($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWord(Word $word): self
+    {
+        if ($this->words->contains($word)) {
+            $this->words->removeElement($word);
+            // set the owning side to null (unless already changed)
+            if ($word->getWordSet() === $this) {
+                $word->setWordSet(null);
+            }
+        }
+
+        return $this;
     }
 
 }

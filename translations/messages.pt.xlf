@@ -97,27 +97,41 @@
           <source>hq.label.country</source>
           <target>País da sede</target>
         </trans-unit>
+        <trans-unit id="label.date">
+          <source>label.date</source>
+          <target>Data</target>
+        </trans-unit>
+        <trans-unit id="label.time">
+          <source>label.time</source>
+          <target>Hora</target>
+        </trans-unit>        
         <trans-unit id="link_return">
           <source>link.return</source>
           <target>voltar</target>
+        </trans-unit>
+        <trans-unit id="LogEntry">
+          <source>LogEntry</source>
+        <target>Registro</target>
         </trans-unit>
         <trans-unit id="mails.logs.title">
           <source>mail.logs.title</source>
         <target>Mailer Logs</target>
         </trans-unit>
+        <trans-unit id="Origin">
+          <source>Origin</source>
+        <target>Origem</target>
+        </trans-unit>
         <trans-unit id="report.label.wordSet">
           <source>report.label.wordSet</source>
           <target>Word Set</target>
         </trans-unit>
-        <trans-unit id="report.label.date">
-          <source>report.label.date</source>
-          <target>Data</target>
-        </trans-unit>
-        
         <trans-unit id="Word">
           <source>Word</source>
           <target>Palavra</target>
-       
+        </trans-unit>
+        <trans-unit id="WordSet">
+          <source>WordSet</source>
+          <target>Conjuntos de Palavras</target>
         </trans-unit>
         <trans-unit id="word.label.text">
           <source>word.label.text</source>

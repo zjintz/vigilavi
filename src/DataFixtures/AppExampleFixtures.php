@@ -89,54 +89,45 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
 
     private function addMisc(ObjectManager $manager)
     {
-        $words = ["bed", "shirt", "sheet"];
+        $words = ["bed", "shirt", "sheet", "skype"];
         $palabras = ["cama", "camisa", "lata", "machete"];
         $palavras = ["cigarro", "pai", "carro", "cima"];
-
-        $globalWordSet = new WordSet();
-        $globalWordSet->setName("Global");
-        $globalWordSet->setDescription("Todas Las Palabras.");
         $englishWordSet = new WordSet();
         $englishWordSet->setName("English words");
         $englishWordSet->setDescription("just english.");
         $latWordSet = new WordSet();
         $latWordSet->setName("Portunol");
         $latWordSet->setDescription("Solo esp y pr.");
-        $manager->persist($globalWordSet);
         $manager->persist($englishWordSet);
         $manager->persist($latWordSet);
         foreach($words as $lastWord)
         {
-            $newWord = $this->makeWord($lastWord, "English");
-            $newWord->addWordSet($globalWordSet);
-            $newWord->addWordSet($englishWordSet);
+            $newWord = $this->makeWord($lastWord);
+            $newWord->setWordSet($englishWordSet);
             $manager->persist($newWord);            
         }
 
         foreach($palabras as $lastWord)
         {
-            $newWord = $this->makeWord($lastWord, "Español");
-            $newWord->addWordSet($latWordSet);
-            $newWord->addWordSet($globalWordSet);
+            $newWord = $this->makeWord($lastWord);
+            $newWord->setWordSet($latWordSet);
             $manager->persist($newWord);
         }
 
         foreach($palavras as $lastWord)
         {
-            $newWord = $this->makeWord($lastWord, 'Português');
-            $newWord->addWordSet($globalWordSet);
-            $newWord->addWordSet($latWordSet);
+            $newWord = $this->makeWord($lastWord);
+            $newWord->setWordSet($latWordSet);
             $manager->persist($newWord);
         }
         $manager->flush();
         
     }
 
-    private function makeWord(string $text, string $language)
+    private function makeWord(string $text)
     {
         $newWord = new Word();
         $newWord->setText($text);
-        $newWord->setLanguage($language);
         return $newWord;
     }
 

@@ -46,7 +46,7 @@ final class ReportAdmin extends AbstractAdmin
         $formMapper
             ->with('General', ['label' => 'report.title.general'])
             ->add('wordSet', null, ['label' => 'report.label.wordSet'])
-            ->add('date', null, ['label' => 'report.label.date'])
+            ->add('date', null, ['label' => 'label.date'])
             
             ->end();
     }

@@ -24,14 +24,10 @@ class Word
     private $text;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="App\Entity\WordSet", inversedBy="words")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $language;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\WordSet", mappedBy="words")
-     */
-    private $wordSets;
+    private $wordSet;
 
     public function __construct()
     {
@@ -55,48 +51,21 @@ class Word
         return $this;
     }
 
-    public function getLanguage(): ?string
-    {
-        return $this->language;
-    }
-
-    public function setLanguage(string $language): self
-    {
-        $this->language = $language;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|WordSet[]
-     */
-    public function getWordSets(): Collection
-    {
-        return $this->wordSets;
-    }
-
-    public function addWordSet(WordSet $wordSet): self
-    {
-        if (!$this->wordSets->contains($wordSet)) {
-            $this->wordSets[] = $wordSet;
-            $wordSet->addWord($this);
-        }
-
-        return $this;
-    }
-
-    public function removeWordSet(WordSet $wordSet): self
-    {
-        if ($this->wordSets->contains($wordSet)) {
-            $this->wordSets->removeElement($wordSet);
-            $wordSet->removeWord($this);
-        }
-
-        return $this;
-    }
-
+    
     public function __toString()
     {
-        return $this->text."  -  (".$this->language.")"; 
+        return $this->text; 
+    }
+
+    public function getWordSet(): ?WordSet
+    {
+        return $this->wordSet;
+    }
+
+    public function setWordSet(?WordSet $wordSet): self
+    {
+        $this->wordSet = $wordSet;
+
+        return $this;
     }
 }

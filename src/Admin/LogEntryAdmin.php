@@ -32,12 +32,12 @@ final class LogEntryAdmin extends AbstractAdmin
         $listMapper->add(
             'date',
             null,
-            ['label' => 'logEntry.label.date']
+            ['label' => 'label.date']
         );
         $listMapper->add(
             'time',
             null,
-            ['label' => 'logEntry.label.time']
+            ['label' => 'label.time']
         );
         $listMapper->add(
             'device_id',

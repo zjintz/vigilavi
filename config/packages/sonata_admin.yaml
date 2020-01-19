@@ -27,7 +27,6 @@ sonata_admin:
                 label_catalogue: App
                 icon: '<i class="fa fa-cloud"></i>'
                 items:
-                    - app.admin.word
                     - app.admin.word_set
                     
           app.admin.group.logs:
