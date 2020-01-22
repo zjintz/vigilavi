@@ -39,6 +39,11 @@ final class OriginAdmin extends AbstractAdmin
             null,
             ['label' => 'origin.label.type']
         );
+        $listMapper->add(
+            'deviceId',
+            null,
+            ['label' => 'origin.label.deviceId']
+        );
 
         $listMapper->add('_action', 'actions', array(
             'actions' => array(
@@ -64,6 +69,11 @@ final class OriginAdmin extends AbstractAdmin
                 'type',
                 null,
                 ['label' => 'origin.label.type']
+            )
+            ->add(
+                'deviceId',
+                null,
+                ['label' => 'origin.label.deviceId']
             )
             ->end();
     }

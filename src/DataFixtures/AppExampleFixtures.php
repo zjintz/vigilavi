@@ -2,12 +2,15 @@
 
 namespace App\DataFixtures;
 
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use App\Application\Sonata\UserBundle\Entity\User;
 use App\Entity\LogEntry;
 use App\Entity\Word;
 use App\Entity\WordSet;
+use App\Entity\Origin;
+use App\Entity\Headquarter;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class AppExampleFixtures extends Fixture implements FixtureGroupInterface
@@ -28,6 +31,11 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
         
         $num = 0;
         $line = fgetcsv($csv);
+        $origin = new Origin();
+        $origin->setDeviceId("C31007H8JH8PME4");
+        $origin->setName("Comala");
+        $origin->setType("Sede");
+        $manager->persist($origin);
         while (!feof($csv)) {
             $timeLog = \DateTime::createFromFormat($format24H,$line[2]);
             $logEntry[$num] = new LogEntry();
@@ -77,17 +85,36 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
             $logEntry[$num]->setAppIsCloud($line[43]);
             $logEntry[$num]->setOverrideName($line[44]);
             $logEntry[$num]->setOverrideAuthorizer($line[45]);
+            $logEntry[$num]->setOrigin($origin);
             $manager->persist($logEntry[$num]);
             $num += 1;
             $line = fgetcsv($csv);
         }
         fclose($csv);
-        $this->addMisc($manager);
+        $this->addTestUser($manager, $origin);
+        $this->addWords($manager);
 
         $manager->flush();
     }
 
-    private function addMisc(ObjectManager $manager)
+    private function addTestUser($manager, $origin)
+    {
+        $testHQ = new Headquarter();
+        $testHQ->setCity("testCity");
+        $testHQ->setCountry("testCountry");
+        $testHQ->setName("testHQ");
+        $testAdmin = new User();
+        $testAdmin->setUsername('test@mail.com');
+        $testAdmin->setPlainPassword('test');
+        $testAdmin->setEnabled(true);
+        $testAdmin->setEmail('test@mail.com');
+        $testAdmin->setRoles(["ROLE_ADMIN"]);
+        $testAdmin->addOrigin($origin);
+        $testAdmin->setHeadquarter($testHQ);
+        $manager->persist($testAdmin);
+        $manager->flush();
+    }
+    private function addWords(ObjectManager $manager)
     {
         $words = ["bed", "shirt", "sheet", "skype"];
         $palabras = ["cama", "camisa", "lata", "machete"];

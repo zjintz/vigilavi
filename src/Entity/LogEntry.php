@@ -253,6 +253,11 @@ class LogEntry
      */
     private $outcomes;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Origin", inversedBy="logEntries")
+     */
+    private $origin;
+
     public function __construct()
     {
         $this->outcomes = new ArrayCollection();
@@ -842,6 +847,18 @@ class LogEntry
                 $outcome->setLogEntry(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getOrigin(): ?Origin
+    {
+        return $this->origin;
+    }
+
+    public function setOrigin(?Origin $origin): self
+    {
+        $this->origin = $origin;
 
         return $this;
     }

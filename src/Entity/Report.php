@@ -33,6 +33,12 @@ class Report
      */
     private $date;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Origin", inversedBy="reports")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $origin;
+
     public function __construct()
     {
         $this->outcomes = new ArrayCollection();
@@ -94,6 +100,18 @@ class Report
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getOrigin(): ?Origin
+    {
+        return $this->origin;
+    }
+
+    public function setOrigin(?Origin $origin): self
+    {
+        $this->origin = $origin;
 
         return $this;
     }

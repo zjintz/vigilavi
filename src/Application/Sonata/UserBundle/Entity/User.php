@@ -3,8 +3,11 @@
 namespace App\Application\Sonata\UserBundle\Entity;
 
 use App\Entity\EmailSubscription;
+use App\Entity\Origin;
 use App\Entity\Headquarter;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Sonata\UserBundle\Entity\BaseUser as BaseUser;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -37,6 +40,15 @@ class User extends BaseUser
      */
     private $emailSubscription;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Origin", mappedBy="user", orphanRemoval=true)
+     */
+    private $origins;
+
+    public function __construct()
+    {
+        $this->origins = new ArrayCollection();
+    }
     /**
      * Get id.
      *
@@ -79,6 +91,37 @@ class User extends BaseUser
     public function setEmailSubscription(EmailSubscription $emailSubscription): self
     {
         $this->emailSubscription = $emailSubscription;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Origin[]
+     */
+    public function getOrigins(): Collection
+    {
+        return $this->origins;
+    }
+
+    public function addOrigin(Origin $origin): self
+    {
+        if (!$this->origins->contains($origin)) {
+            $this->origins[] = $origin;
+            $origin->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrigin(Origin $origin): self
+    {
+        if ($this->origins->contains($origin)) {
+            $this->origins->removeElement($origin);
+            // set the owning side to null (unless already changed)
+            if ($origin->getUser() === $this) {
+                $origin->seUser(null);
+            }
+        }
 
         return $this;
     }
