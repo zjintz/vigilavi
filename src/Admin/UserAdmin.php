@@ -10,12 +10,13 @@ use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Sonata\AdminBundle\Form\Type\ModelType;
-use Sonata\UserBundle\Form\Type\SecurityRolesType;
 use Sonata\AdminBundle\Form\Type\AdminType;
 use Sonata\AdminBundle\Form\Type\ModelListType;
 use Sonata\AdminBundle\Form\Type\CollectionType;
+use Sonata\UserBundle\Form\Type\SecurityRolesType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -33,6 +34,11 @@ final class UserAdmin extends AbstractAdmin
     
     protected $baseRouteName = 'admin_sonata_user_user';
     protected $baseRoutePattern = 'admin_sonata_user_user';
+
+    public function configureRoutes(RouteCollection $collection)
+    {
+        $collection->remove('export');
+    }
 
         /**
      * {@inheritdoc}
@@ -164,6 +170,19 @@ final class UserAdmin extends AbstractAdmin
                         'expanded' => true,
                         'multiple' => true,
                         'required' => false,
+                    ])
+                ->end()
+                ->with('Origins')
+                    ->add('origins',
+                          ModelType::class,
+                          
+                          [
+                              'label' => 'user.label.origins',
+                              'property' => 'name', 
+                              'expanded' => true,
+                              'multiple' => true,
+                              'required' => false,
+                              'btn_add'  => false,
                     ])
                 ->end()
             ->end();

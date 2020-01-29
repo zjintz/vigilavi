@@ -6,7 +6,9 @@ use App\Entity\Origin;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Sonata\AdminBundle\Form\Type\AdminType;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -21,10 +23,32 @@ use Sonata\Form\Type\EqualType;
 final class OriginAdmin extends AbstractAdmin
 {
 
+    public function configureRoutes(RouteCollection $collection)
+    {
+        $collection->remove('export');
+    }
+
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
     }
 
+    protected function configureFormFields(FormMapper $formMapper)
+    {
+        $formMapper
+            ->with(
+                'General',
+                ['class' => 'col-md-7', 'label' => 'title.general']
+            )
+            ->end();
+
+        $formMapper
+            ->with('General')
+            ->add('name', TextType::class, ['label' => 'origin.label.name',])
+            ->add('type', TextType::class, ['label' => 'origin.label.type',])
+            ->add('deviceId', TextType::class, ['label' => 'origin.label.deviceId',])
+
+            ->end();
+    }
 
     protected function configureListFields(ListMapper $listMapper)
     {
@@ -47,7 +71,8 @@ final class OriginAdmin extends AbstractAdmin
 
         $listMapper->add('_action', 'actions', array(
             'actions' => array(
-                'show' => array()
+                'show' => array(),
+                'edit' => array()
             )
         ));
 
@@ -75,6 +100,12 @@ final class OriginAdmin extends AbstractAdmin
                 null,
                 ['label' => 'origin.label.deviceId']
             )
+            ->add(
+                'reports',
+                AdminType::class,
+                ['label' => 'origin.label.reports']
+            )
+            
             ->end();
     }
 }

@@ -6,6 +6,7 @@ use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -21,6 +22,11 @@ final class ReportAdmin extends AbstractAdmin
 {
     
 
+    public function configureRoutes(RouteCollection $collection)
+    {
+        $collection->remove('export');
+    }
+    
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper->add('wordSet', null, [
@@ -46,7 +52,11 @@ final class ReportAdmin extends AbstractAdmin
         $formMapper
             ->with('General', ['label' => 'report.title.general'])
             ->add('wordSet', null, ['label' => 'report.label.wordSet'])
-            ->add('date', null, ['label' => 'label.date'])
+            ->add('date', null, ['label' => 'report.label.date'])
+            ->add('origin',
+                  null,
+                  ['label' => 'label.origin', 'choice_label' => 'name']
+            )
             
             ->end();
     }
@@ -67,6 +77,12 @@ final class ReportAdmin extends AbstractAdmin
             ['label' => 'report.label.date']
         
         );
+        $listMapper->add(
+            'origin',
+            null,
+            ['label' => 'report.label.origin']
+        
+        );
         $listMapper->add('_action', 'actions', array(
             'actions' => array(
                 'show' => array()
@@ -83,6 +99,7 @@ final class ReportAdmin extends AbstractAdmin
             ->with('General', ['label' => 'report.title.general'])
             ->add('wordSet', null, ['label' => 'report.label.wordSet'])
             ->add('date', null, ['label' => 'report.label.date'])
+            ->add('origin', null, ['label' => 'report.label.origin'])
             
             ->add(
                 'outcomes',
