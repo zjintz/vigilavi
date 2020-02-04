@@ -179,7 +179,7 @@ class LogEntry
     private $reason;
 
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $user_agent;
 

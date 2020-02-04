@@ -80,7 +80,9 @@ final class ReportAdmin extends AbstractAdmin
         $listMapper->add(
             'origin',
             null,
-            ['label' => 'report.label.origin']
+            ['label' => 'label.origin',
+             'associated_property' => 'name'
+            ]
         
         );
         $listMapper->add('_action', 'actions', array(
@@ -93,13 +95,27 @@ final class ReportAdmin extends AbstractAdmin
     protected function configureShowFields(ShowMapper $showMapper)
     {
         $showMapper
-                ->with('General', ['class' => 'col-md-7'])->end();
-
-        $showMapper
-            ->with('General', ['label' => 'report.title.general'])
+            ->tab('General')
+                ->with('General', ['class' => 'col-md-5'])
             ->add('wordSet', null, ['label' => 'report.label.wordSet'])
             ->add('date', null, ['label' => 'report.label.date'])
-            ->add('origin', null, ['label' => 'report.label.origin'])
+            ->add(
+                'origin',
+                null,
+                [
+                    'label' => 'label.origin',
+                    'associated_property' => 'name'
+                ]
+            )
+            ->end()
+            ->with('Stats', ['class' => 'col-md-7'])
+            ->end()
+            ->end()
+            ;
+
+        $showMapper
+            ->tab('Outcomes')
+            ->with('Outcomes', ['label' => 'report.title.general'])
             
             ->add(
                 'outcomes',
@@ -110,6 +126,20 @@ final class ReportAdmin extends AbstractAdmin
                 ]
             )
             ->end()
+            ->end()
             ;
+    }
+
+    public function toString($object)
+    {
+        $title = "";
+        if(!is_null($object->getDate()))
+        {
+            $title = $object->getDate()->format("Y-m-d");
+            $title = 'do '.$title;
+        }
+        return $object instanceof Liturgy
+            ? $object->getTitle()
+            : 'Informe '.$title; // shown in the breadcrumb on the create view
     }
 }

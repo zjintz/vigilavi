@@ -16,7 +16,7 @@
         </trans-unit>
         <trans-unit id="app.admin.group.reports">
           <source>app.admin.group.reports</source>
-          <target>Reports</target>
+          <target>Informes</target>
         </trans-unit>
         <trans-unit id="app.admin.group.words">
           <source>app.admin.group.words</source>

@@ -109,6 +109,10 @@
           <source>link.return</source>
           <target>voltar</target>
         </trans-unit>
+        <trans-unit id="label.origin">
+          <source>label.origin</source>
+          <target>Origem</target>
+        </trans-unit>
         <trans-unit id="LogEntry">
           <source>LogEntry</source>
         <target>Registro</target>
@@ -121,9 +125,29 @@
           <source>Origin</source>
         <target>Origem</target>
         </trans-unit>
+        <trans-unit id="Report">
+          <source>Report</source>
+          <target>Informe</target>
+        </trans-unit>
+        <trans-unit id="Report List">
+          <source>Report List</source>
+          <target>Lista de informes</target>
+        </trans-unit>
+        <trans-unit id="report.label.date">
+          <source>report.label.date</source>
+          <target>Data do informe</target>
+        </trans-unit>
         <trans-unit id="report.label.wordSet">
           <source>report.label.wordSet</source>
-          <target>Word Set</target>
+          <target>Conjunto de palavras</target>
+        </trans-unit>
+        <trans-unit id="report.title.general">
+          <source>report.title.general</source>
+          <target>General</target>
+        </trans-unit>
+        <trans-unit id="report.label.outcomes">
+          <source>report.label.outcomes</source>
+          <target>Resultados</target>
         </trans-unit>
         <trans-unit id="Word">
           <source>Word</source>

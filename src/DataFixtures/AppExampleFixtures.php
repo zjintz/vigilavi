@@ -25,7 +25,7 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
     public function load(ObjectManager $manager)
     {
         $rootDir = $this->parameterBag->get('kernel.project_dir');
-        $csv = fopen($rootDir.'/data/small-example.csv', 'r');
+        $csv = fopen($rootDir.'/data/example-1000.csv', 'r');
         $format = 'Y-m-d';
         $format24H = "H:i:s";
         
