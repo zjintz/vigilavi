@@ -7,6 +7,7 @@ use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -20,6 +21,15 @@ use Sonata\Form\Type\EqualType;
  */
 final class OutcomeAdmin extends AbstractAdmin
 {
+
+    public function configureRoutes(RouteCollection $collection)
+    {
+        
+        $collection->remove('export');
+        $collection->remove('edit');
+        $collection->remove('delete');
+        
+    }
 
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
@@ -38,26 +48,35 @@ final class OutcomeAdmin extends AbstractAdmin
             null,
             ['label' => 'outcome.label.classification']
         );
-        $listMapper->addIdentifier(
-            'report',
+        $listMapper->add(
+            'wordsFound',
+            null,
+            ['label' => 'outcome.label.wordsFound']
+        );
+
+        $listMapper->add(
+            'logEntry.url',
             null,
             [
-                'label' => 'outcome.label.report',
-                'route' => [
-                     'name' => 'outcome.link.report'
-                 ]
+                'label' => '.label.url',
+
             ]
         );
-        $listMapper->addIdentifier(
-            'logEntry',
+
+        $listMapper->add(
+            'logEntry.log_subtype',
             null,
             [
-                'label' => 'outcome.label.log_entry',
-                'route' => [
-                     'name' => 'outcome.link.log_entry'
-                 ]
+                'label' => '.label.log_subtype',
+
             ]
         );
+        
+        $listMapper->add('_action', 'actions', array(
+            'actions' => array(
+                'show' => array(),
+            )
+        ));
     }
 
     protected function configureShowFields(ShowMapper $showMapper)
@@ -68,7 +87,29 @@ final class OutcomeAdmin extends AbstractAdmin
         $showMapper
             ->with('General', ['label' => 'outcome.title.general'])
             ->add('classification', null, ['label' => 'outcome.label.classification'])
-            ->add('report', null, ['label' => 'outcome.label.report', 'associated_property'=> 'id'])
+            ->add(
+                'wordsFound',
+                null,
+                ['label' => 'outcome.label.wordsFound']
+            )
+            ->add('report',
+                  null,
+                  [
+                      'label' => 'outcome.label.report',
+                    'associated_property'=> 'id',
+                      'route' => [
+                        'name' => 'show'
+                      ]
+                      
+                  ]
+            )
+            ->add('report.date',
+                  null,
+                  [
+                      'label' => 'label.date'                      
+                  ]
+            )
+            
             ->add(
                 'logEntry',
                 null,
@@ -78,6 +119,13 @@ final class OutcomeAdmin extends AbstractAdmin
                     'route' => [
                         'name' => 'show'
                     ]
+                ]
+            )
+            ->add(
+                'logEntry.log_subtype',
+                null,
+                [
+                    'label' => 'label.log.subtype'
                 ]
             )
             ->end()

@@ -163,21 +163,53 @@ class ReportCRUDController extends CRUDController
         $wordSet = $newObject->getWordSet();
         $words = $wordSet->getWords();
         $entries = $entriesRepo->findBy(['date'=>$newObject->getDate()]);
+        $newObject->setTotalWords(count($words));
+        $newObject->setTotalLogEntries(count($entries));
+        $totalAllowedEntries =0;
+        $totalDeniedEntries = 0;
+        $totalClassifiedEntries = 0;
+        $totalAllowedClassifiedEntries = 0;
+        $totalDeniedClassifiedEntries = 0;
         foreach ($entries as $entry) {
-            
+            if ($entry->getLogSubType() === "Allowed" ) {
+                $totalAllowedEntries +=1;
+            }
+            if ($entry->getLogSubType() === "Denied" ) {
+                $totalDeniedEntries +=1;
+            }
             $newOutcome = new Outcome();
             $class = 'ok';
+            $wordsFound = '';
+            $classified = false;
             foreach ($words as $word) {
                 if (strPos($entry->getUrl(), $word->getText()) !== false) {
+                    $classified = true;
+                    $wordsFound = $wordsFound." ".$word;
                     $class = "(!!!)";
+                }
+            }
+            if($classified)
+            {
+                $totalClassifiedEntries +=1;
+                if ($entry->getLogSubType() === "Allowed" ) {
+                    $totalAllowedClassifiedEntries +=1;
+                }
+                if ($entry->getLogSubType() === "Denied" ) {
+                    $totalDeniedClassifiedEntries +=1;
                 }
             }
 
             $newOutcome->setClassification($class);
             $newOutcome->setReport($newObject);
             $newOutcome->setLogEntry($entry);
+            $newOutcome->setWordsFound($wordsFound);
             $this->entityManager->persist($newOutcome);
         }
+        $newObject->setTotalAllowedLogEntries($totalAllowedEntries);
+        $newObject->setTotalDeniedLogEntries($totalDeniedEntries);
+        $newObject->setTotalClassifiedLogEntries($totalClassifiedEntries);
+        $newObject->setTotalAllowedClassifiedLogEntries($totalAllowedClassifiedEntries);
+        $newObject->setTotalDeniedClassifiedLogEntries($totalDeniedClassifiedEntries);
         $this->entityManager->flush();
         
     }

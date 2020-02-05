@@ -39,6 +39,41 @@ class Report
      */
     private $origin;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $totalWords;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $totalLogEntries;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $totalAllowedLogEntries;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $totalDeniedLogEntries;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $totalClassifiedLogEntries;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $totalAllowedClassifiedLogEntries;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $totalDeniedClassifiedLogEntries;
+
     public function __construct()
     {
         $this->outcomes = new ArrayCollection();
@@ -112,6 +147,90 @@ class Report
     public function setOrigin(?Origin $origin): self
     {
         $this->origin = $origin;
+
+        return $this;
+    }
+
+    public function getTotalWords(): ?int
+    {
+        return $this->totalWords;
+    }
+
+    public function setTotalWords(?int $totalWords): self
+    {
+        $this->totalWords = $totalWords;
+
+        return $this;
+    }
+
+    public function getTotalLogEntries(): ?int
+    {
+        return $this->totalLogEntries;
+    }
+
+    public function setTotalLogEntries(?int $totalLogEntries): self
+    {
+        $this->totalLogEntries = $totalLogEntries;
+
+        return $this;
+    }
+
+    public function getTotalAllowedLogEntries(): ?int
+    {
+        return $this->totalAllowedLogEntries;
+    }
+
+    public function setTotalAllowedLogEntries(?int $totalAllowedLogEntries): self
+    {
+        $this->totalAllowedLogEntries = $totalAllowedLogEntries;
+
+        return $this;
+    }
+
+    public function getTotalDeniedLogEntries(): ?int
+    {
+        return $this->totalDeniedLogEntries;
+    }
+
+    public function setTotalDeniedLogEntries(?int $totalDeniedLogEntries): self
+    {
+        $this->totalDeniedLogEntries = $totalDeniedLogEntries;
+
+        return $this;
+    }
+
+    public function getTotalClassifiedLogEntries(): ?int
+    {
+        return $this->totalClassifiedLogEntries;
+    }
+
+    public function setTotalClassifiedLogEntries(?int $totalClassifiedLogEntries): self
+    {
+        $this->totalClassifiedLogEntries = $totalClassifiedLogEntries;
+
+        return $this;
+    }
+
+    public function getTotalAllowedClassifiedLogEntries(): ?int
+    {
+        return $this->totalAllowedClassifiedLogEntries;
+    }
+
+    public function setTotalAllowedClassifiedLogEntries(?int $totalAllowedClassifiedLogEntries): self
+    {
+        $this->totalAllowedClassifiedLogEntries = $totalAllowedClassifiedLogEntries;
+
+        return $this;
+    }
+
+    public function getTotalDeniedClassifiedLogEntries(): ?int
+    {
+        return $this->totalDeniedClassifiedLogEntries;
+    }
+
+    public function setTotalDeniedClassifiedLogEntries(?int $totalDeniedClassifiedLogEntries): self
+    {
+        $this->totalDeniedClassifiedLogEntries = $totalDeniedClassifiedLogEntries;
 
         return $this;
     }

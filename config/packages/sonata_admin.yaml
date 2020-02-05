@@ -5,7 +5,7 @@ sonata_admin:
     dashboard:
         groups:
           app.admin.group.dashboard:
-                keep_open:       true
+                on_top:       true
                 label: ~
                 label_catalogue: App
                 icon: '<i class="fa fa-home"></i>'
@@ -15,37 +15,44 @@ sonata_admin:
 
 
           app.admin.group.users:
-                keep_open:       true
-                label: app.admin.group.users
+                on_top:          true
+                label:           app.admin.group.users
                 label_catalogue: App
-                icon: '<i class="fa fa-user"></i>'
+                icon:            '<i class="fa fa-user"></i>'
                 items:
                     - app.admin.user
+
+          app.admin.group.origins:
+                on_top:       true
+                label: app.admin.group.origins
+                label_catalogue: App
+                icon: '<i class="fa fa-map-marker"></i>'
+                items:
+                    - app.admin.origin
+
           app.admin.group.words:
-                keep_open:       true
+                on_top:       true
                 label: app.admin.group.words
                 label_catalogue: App
-                icon: '<i class="fa fa-cloud"></i>'
+                icon: '<i class="fa fa-tags"></i>'
                 items:
                     - app.admin.word_set
                     
-          app.admin.group.logs:
-                keep_open:       true
-                label: app.admin.group.logs
-                label_catalogue: App
-                icon: '<i class="fa fa-file-text"></i>'
-                items:
-                    - app.admin.log_entry
-                    - app.admin.origin
-
           app.admin.group.reports:
-                keep_open:       true
+                on_top:       true
                 label: app.admin.group.reports
                 label_catalogue: App
                 icon: '<i class="fa fa-folder-open"></i>'
                 items:
                     - app.admin.report
-                      
+
+          app.admin.group.logs:
+                on_top:          true
+                label: app.admin.group.logs
+                label_catalogue: App
+                icon: '<i class="fa fa-database"></i>'
+                items:
+                    - app.admin.log_entry
         blocks:
 #            - { type: sonata.admin.block.admin_list, position: left }
     security:

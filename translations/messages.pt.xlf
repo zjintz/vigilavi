@@ -101,6 +101,14 @@
           <source>label.date</source>
           <target>Data</target>
         </trans-unit>
+        <trans-unit id="label.view.report">
+          <source>label.view.report</source>
+          <target>Ver informe</target>
+        </trans-unit>
+        <trans-unit id="label.list.outcomes">
+          <source>label.list.outcomes</source>
+          <target>Ver Resultados</target>
+        </trans-unit>
         <trans-unit id="label.time">
           <source>label.time</source>
           <target>Hora</target>
@@ -148,6 +156,34 @@
         <trans-unit id="report.label.outcomes">
           <source>report.label.outcomes</source>
           <target>Resultados</target>
+        </trans-unit>
+        <trans-unit id="report.label.totalWords">
+          <source>report.label.totalWords</source>
+          <target>Total Palavras</target>
+        </trans-unit>
+        <trans-unit id="report.label.totalLogEntries">
+          <source>report.label.totalLogEntries</source>
+          <target>Total Registros</target>
+        </trans-unit>
+        <trans-unit id="report.label.totalAllowedLogEntries">
+          <source>report.label.totalAllowedLogEntries</source>
+          <target>Total Registros Permitidos</target>
+        </trans-unit>
+        <trans-unit id="report.label.totalDeniedLogEntries">
+          <source>report.label.totalDeniedLogEntries</source>
+          <target>Total Registros Denegados</target>
+        </trans-unit>
+        <trans-unit id="report.label.totalClassifiedLogEntries">
+          <source>report.label.totalClassifiedLogEntries</source>
+          <target>Total Registros Clasificados</target>
+        </trans-unit>
+        <trans-unit id="report.label.totalDeniedClassifiedLogEntries">
+          <source>report.label.totalDeniedClassifiedLogEntries</source>
+          <target>Total Registros Clasificados Permitidos</target>
+        </trans-unit>
+        <trans-unit id="report.label.totalAllowedClassifiedLogEntries">
+          <source>report.label.totalAllowedClassifiedLogEntries</source>
+          <target>Total Registros Clasificados Denegados</target>
         </trans-unit>
         <trans-unit id="Word">
           <source>Word</source>

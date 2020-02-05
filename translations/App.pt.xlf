@@ -12,7 +12,11 @@
         </trans-unit>
         <trans-unit id="app.admin.group.logs">
           <source>app.admin.group.logs</source>
-          <target>Logs</target>
+          <target>Registro</target>
+        </trans-unit>
+        <trans-unit id="app.admin.group.origins">
+          <source>app.admin.group.origins</source>
+          <target>Origems</target>
         </trans-unit>
         <trans-unit id="app.admin.group.reports">
           <source>app.admin.group.reports</source>
@@ -22,10 +26,7 @@
           <source>app.admin.group.words</source>
           <target>Palavras</target>
         </trans-unit>
-        <trans-unit id="mailer_logs">
-          <source>mailer_logs</source>
-          <target>Mailer Logs</target>
-        </trans-unit>
+     
         
       </body>
     </file>

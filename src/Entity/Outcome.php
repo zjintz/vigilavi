@@ -17,7 +17,7 @@ class Outcome
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=10)
      */
     private $classification;
 
@@ -33,6 +33,11 @@ class Outcome
      */
     private $logEntry;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $wordsFound;
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -73,10 +78,17 @@ class Outcome
 
         return $this;
     }
-    public function __toString()
+    
+    public function getWordsFound(): ?string
     {
-        $outString = $this->classification.' -- URL: ';
-        $outString = $outString.$this->logEntry->getUrl(); 
-        return  $outString;
+        return $this->wordsFound;
     }
+
+    public function setWordsFound(string $wordsFound): self
+    {
+        $this->wordsFound = $wordsFound;
+
+        return $this;
+    }
+
 }
