@@ -79,14 +79,6 @@ services:
             - [addChild, ['@app.admin.outcome', 'report']]
             - [setTemplate, ['show', 'report_admin/show.html.twig']]
 
-            
-    app.admin.word:
-        class: App\Admin\WordAdmin
-        arguments: [~, App\Entity\Word, ~]
-        tags:
-            - { name: sonata.admin, manager_type: orm, label: Word }
-        calls:
-            - [ setTranslationDomain, [messages]]
     app.admin.word_set:
         class: App\Admin\WordSetAdmin
         arguments: [~, App\Entity\WordSet, ~]

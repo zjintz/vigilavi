@@ -119,7 +119,7 @@
         </trans-unit>
         <trans-unit id="label.origin">
           <source>label.origin</source>
-          <target>Origem</target>
+          <target>Sede</target>
         </trans-unit>
         <trans-unit id="LogEntry">
           <source>LogEntry</source>
@@ -131,7 +131,7 @@
         </trans-unit>
         <trans-unit id="Origin">
           <source>Origin</source>
-        <target>Origem</target>
+        <target>Sede</target>
         </trans-unit>
         <trans-unit id="Report">
           <source>Report</source>
@@ -205,9 +205,51 @@
           <source>wordSet.label.name</source>
           <target>Nome</target>
         </trans-unit>
+        <trans-unit id="wordSet.label.words">
+          <source>wordSet.label.words</source>
+          <target>Palavras</target>
+        </trans-unit>
+        <trans-unit id="help.words">
+          <source>help.words</source>
+          <target xml:space="preserve">
+            <![CDATA[
+            * Uma palavra por linea.<br>
+            * Lineas con espacios internos se ignoran en los reportes.</br>
+            * Lineas que empiezan por # se asumen comentadas por tanto son ignoradas.]]>
+          </target>
+        </trans-unit>
+         
         <trans-unit id="wordSet.label.description">
           <source>wordSet.label.description</source>
           <target>Descrição</target>
+        </trans-unit>
+        <trans-unit id="wordSet.title.general">
+          <source>wordSet.title.general</source>
+          <target>General</target>
+        </trans-unit>
+        <trans-unit id="wordSet.title.words">
+          <source>wordSet.title.words</source>
+          <target>Palavras</target>
+        </trans-unit>
+        <trans-unit id="wordset.list">
+          <source>Word Set List</source>
+          <target>Lista Conjuntos de Palavras</target>
+        </trans-unit>
+        <trans-unit id="words.stats.total">
+          <source>words.stats.total</source>
+          <target>Total Palavras: </target>
+        </trans-unit>
+        <trans-unit id="words.stats.valid">
+          <source>words.stats.valid</source>
+          <target>Validas: </target>
+        </trans-unit>
+        <trans-unit id="words.stats.commented">
+          <source>words.stats.commented</source>
+          <target>Commentadas: </target>
+        </trans-unit>
+        <trans-unit id="words.stats.nulls">
+          <source>words.stats.nulls</source>
+          <target>Nulas: </target>
         </trans-unit>
     </body>
   </file>
