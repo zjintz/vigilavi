@@ -45,7 +45,7 @@ final class OriginAdmin extends AbstractAdmin
             ->with('General')
             ->add('name', TextType::class, ['label' => 'origin.label.name',])
             ->add('type', TextType::class, ['label' => 'origin.label.type',])
-            ->add('deviceId', TextType::class, ['label' => 'origin.label.deviceId',])
+            ->add('subnet', TextType::class, ['label' => 'origin.label.subnet',])
 
             ->end();
     }
@@ -64,9 +64,9 @@ final class OriginAdmin extends AbstractAdmin
             ['label' => 'origin.label.type']
         );
         $listMapper->add(
-            'deviceId',
+            'subnet',
             null,
-            ['label' => 'origin.label.deviceId']
+            ['label' => 'origin.label.subnet']
         );
 
         $listMapper->add('_action', 'actions', array(
@@ -96,9 +96,9 @@ final class OriginAdmin extends AbstractAdmin
                 ['label' => 'origin.label.type']
             )
             ->add(
-                'deviceId',
+                'subnet',
                 null,
-                ['label' => 'origin.label.deviceId']
+                ['label' => 'origin.label.subnet']
             )
             ->add(
                 'reports',

@@ -43,7 +43,7 @@ class Origin
     /**
      * @ORM\Column(type="string", length=30, nullable=true)
      */
-    private $deviceId;
+    private $subnet;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\LogEntry", mappedBy="origin")
@@ -128,14 +128,14 @@ class Origin
         return $this;
     }
 
-    public function getDeviceId(): ?string
+    public function getSubnet(): ?string
     {
-        return $this->deviceId;
+        return $this->subnet;
     }
 
-    public function setDeviceId(?string $deviceId): self
+    public function setSubnet(?string $subnet): self
     {
-        $this->deviceId = $deviceId;
+        $this->subnet = $subnet;
 
         return $this;
     }

@@ -42,16 +42,6 @@ final class LogEntryAdmin extends AbstractAdmin
             ['label' => 'label.date']
         );
         $listMapper->add(
-            'time',
-            null,
-            ['label' => 'label.time']
-        );
-        $listMapper->add(
-            'device_id',
-            null,
-            ['label' => 'logEntry.label.device_id']
-        );
-        $listMapper->add(
             'url',
             null,
             ['label' => 'logEntry.label.url']
@@ -80,16 +70,6 @@ final class LogEntryAdmin extends AbstractAdmin
                 'date',
                 null,
                 ['label' => 'logEntry.label.date']
-            )
-            ->add(
-                'time',
-                null,
-                ['label' => 'logEntry.label.time']
-            )
-            ->add(
-                'device_id',
-                null,
-                ['label' => 'logEntry.label.device_id']
             )
             ->add(
                 'url',
