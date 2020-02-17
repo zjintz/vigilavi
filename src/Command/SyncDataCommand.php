@@ -48,7 +48,7 @@ class SyncDataCommand extends Command
         ]);
 
         $collector = new SyslogDBCollector();
-        $collector->getRemoteOrigins();
+        $collector->getRemoteLogs();
         $io = new SymfonyStyle($input, $output);
         $io->success('Sync data finished.');
         return 0;

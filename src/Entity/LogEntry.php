@@ -21,11 +21,6 @@ class LogEntry
     /**
      * @ORM\Column(type="string", length=30)
      */
-    private $log_id;
-
-    /**
-     * @ORM\Column(type="string", length=30)
-     */
     private $log_type;
 
     /**
