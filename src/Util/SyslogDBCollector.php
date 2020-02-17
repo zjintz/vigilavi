@@ -11,6 +11,20 @@ use \PDO;
  */
 class SyslogDBCollector
 {
+
+    protected $sophosDNS;
+    protected $sophosUser;
+    protected $sophosPass;
+    public function __construct(
+        string $sophosDNS,
+        string $sophosUser,
+        string $sophosPass) {
+
+        $this->sophosDNS = $sophosDNS;
+        $this->sophosUser = $sophosUser;
+        $this->sophosPass = $sophosPass;
+    }
+    
     /**
      * Collects the data related to the origins .
      *
@@ -46,10 +60,9 @@ class SyslogDBCollector
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES   => false,
         ];
-        
 
         try {
-            $connection = new \PDO("mysql:host=200.160.126.57;dbname=Syslog", "root", "Ar4u705scj", $options);
+            $connection = new \PDO($this->sophosDNS, $this->sophosUser, $this->sophosPass, $options);
             $query = "select * from SophosEvents LIMIT 5";
             $result = $connection->query($query);
             while ($row = $result->fetch())

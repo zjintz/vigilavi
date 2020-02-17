@@ -23,6 +23,11 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+    App\Util\SyslogDBCollector:
+        $sophosDNS: '%env(SOPHOS_DNS)%'
+        $sophosUser: '%env(SOPHOS_USER)%'
+        $sophosPass: '%env(SOPHOS_PASS)%'
+        
     app.admin.emailsubscription:
         class: App\Admin\EmailSubscriptionAdmin
         arguments: [~, App\Entity\EmailSubscription, ~]
