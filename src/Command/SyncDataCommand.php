@@ -2,7 +2,6 @@
 
 namespace App\Command;
 
-use App\Util\SyslogDBCollector;
 use App\Util\OriginRetriever;
 use App\Util\LogRetriever;
 use Symfony\Component\Console\Command\Command;
@@ -19,17 +18,13 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class SyncDataCommand extends Command
 {
     protected static $defaultName = 'vigilavi:sync-data';
-
-    protected $syslogDBCollector;
     protected $originRetriever;
     protected $logRetriever;
 
     public function __construct(
-        SyslogDBCollector $syslogDBCollector,
         OriginRetriever $originRetriever,
         LogRetriever $logRetriever
     ) {
-        $this->syslogDBCollector = $syslogDBCollector;
         $this->originRetriever = $originRetriever;
         $this->logRetriever = $logRetriever;
         
@@ -43,16 +38,24 @@ class SyncDataCommand extends Command
             ->addArgument(
                 'date',
                 InputArgument::OPTIONAL,
-                'Date of the entry logs to sync. The format is "yyyy-mm-dd". If no date is given it will sync today\'s date.'
+                'Date of the entry logs to sync. The format is "yyyy-mm-dd". If no date is given it will sync yesterda\'s date.'
             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $inout = new SymfonyStyle($input, $output);
         $syncDate = $input->getArgument('date');
         if (!$syncDate) {
-            $syncDate = (new \DateTime())->format('yy-m-d');
+            $today = new \DateTime();
+            $yesterday = $today->sub(new \DateInterval('P1D'));
+            $syncDate = $yesterday->format('yy-m-d');
         }
+        if (!$this->validateDate($syncDate)) {
+            $inout->error('Wrong date format; Please used date format: yyyy-mm-dd.');
+            return 0;
+        }
+        
         $output->writeln([
             'Sync Data',
             '=========',
@@ -65,16 +68,26 @@ class SyncDataCommand extends Command
         foreach ($originSummary as $key => $value) {
             $output->writeln(["      ".$key." : ". $value]);
         }
-
-        //        $logSummary = $this->logRetriever->retrieveData();
         $output->writeln([
             '----- Sync origins done',
-            '----- Sync logs',
+            '----- Sync logs']
+        );
+        $logSummary = $this->logRetriever->retrieveData();
+        foreach ($logSummary as $key => $value) {
+            $output->writeln(["      ".$key." : ". $value]);
+        }
+
+        $output->writeln([
             '----- Sync logs done',
         ]);
-
-        $io = new SymfonyStyle($input, $output);
-        $io->success('Sync data finished.');
+        
+        $inout->success('Sync data finished.');
         return 0;
+    }
+
+    protected function validateDate($dateString, $format = 'Y-m-d')
+    {
+        $date = \DateTime::createFromFormat($format, $dateString);
+        return $date && $date->format($format) === $dateString;
     }
 }
