@@ -149,10 +149,11 @@ class OriginSynchronizer
             if ($isNewRemote) {
                 if ($remoteO["red"]) {
                     $totalOrigins += 1;
-                    $newOrigin = new Origin();
-                    $newOrigin->setName($remoteO["nomeSede"]);
-                    $newOrigin->setSubnet($remoteO["subnet"]);
-                    $newOrigin->setActive(true);
+                    $newOrigin = $this->makeOrigin( 
+                        $remoteO["subnet"],
+                        $remoteO["nomeSede"],
+                        true
+                    );
                     $newOrigins +=1;
                     $activeOrigins +=1;
                     $outputOrigins[]= $newOrigin;
