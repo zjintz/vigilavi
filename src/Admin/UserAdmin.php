@@ -175,7 +175,6 @@ final class UserAdmin extends AbstractAdmin
                 ->with('Origins')
                     ->add('origins',
                           ModelType::class,
-                          
                           [
                               'label' => 'user.label.origins',
                               'property' => 'name', 

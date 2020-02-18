@@ -45,7 +45,9 @@ class SyslogDBCollector
 
     public function getRemoteLogs($dateLog, $subnet)
     {
-        $query = "select * from SophosEvents LIMIT 5";
+        $subnet = $subnet.".";
+        $len = strlen($subnet);
+        $query = "select * from SophosEvents WHERE LEFT(src_ip,".$len.") = '".$subnet."' AND DATE(date) = '".$dateLog."' LIMIT 10";
         return $this->doQuery($query);
     }
     

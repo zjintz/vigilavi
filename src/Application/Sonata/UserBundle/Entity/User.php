@@ -4,6 +4,7 @@ namespace App\Application\Sonata\UserBundle\Entity;
 
 use App\Entity\EmailSubscription;
 use App\Entity\Headquarter;
+use App\Entity\Origin;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -39,10 +40,19 @@ class User extends BaseUser
      */
     private $emailSubscription;
 
+    /**
+     * Many Users have Many Origins.
+     * @ORM\ManyToMany(targetEntity="App\Entity\Origin")
+     * @ORM\JoinTable(name="users_origins",
+     *      joinColumns={@ORM\JoinColumn(name="origin_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
+     *      )
+     */
+    private $origins;
 
     public function __construct()
     {
-
+        $this->origins = new \Doctrine\Common\Collections\ArrayCollection();
     }
     /**
      * Get id.
@@ -88,6 +98,29 @@ class User extends BaseUser
         $this->emailSubscription = $emailSubscription;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getOrigins(): Collection
+    {
+        return $this->origins;
+    }
+
+    public function addOrigin(Origin $origin): self
+    {
+        if (!$this->origins->contains($origin)) {
+            $this->origins[] = $origin;
+        }
+        return $this;
+    }
+
+    public function removeOrigin(Origin $origin): self
+    {
+        if ($this->origins->contains($origin)) {
+            $this->origins->removeElement($origin);
+        }
     }
 
 }

@@ -131,7 +131,19 @@
         </trans-unit>
         <trans-unit id="Origin">
           <source>Origin</source>
-        <target>Sede</target>
+          <target>Sede</target>
+        </trans-unit>
+        <trans-unit id="origin.label.name">
+          <source>origin.label.name</source>
+          <target>Nome</target>
+        </trans-unit>
+        <trans-unit id="origin.label.type">
+          <source>origin.label.type</source>
+          <target>Tipo</target>
+        </trans-unit>
+        <trans-unit id="origin.label.subnet">
+          <source>origin.label.subnet</source>
+          <target>Subred</target>
         </trans-unit>
         <trans-unit id="Report">
           <source>Report</source>

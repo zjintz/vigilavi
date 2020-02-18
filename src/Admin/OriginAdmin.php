@@ -26,28 +26,13 @@ final class OriginAdmin extends AbstractAdmin
     public function configureRoutes(RouteCollection $collection)
     {
         $collection->remove('export');
+        $collection->remove('edit');
+        $collection->remove('create');
+        $collection->remove('batch');
     }
 
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
-    }
-
-    protected function configureFormFields(FormMapper $formMapper)
-    {
-        $formMapper
-            ->with(
-                'General',
-                ['class' => 'col-md-7', 'label' => 'title.general']
-            )
-            ->end();
-
-        $formMapper
-            ->with('General')
-            ->add('name', TextType::class, ['label' => 'origin.label.name',])
-            ->add('type', TextType::class, ['label' => 'origin.label.type',])
-            ->add('subnet', TextType::class, ['label' => 'origin.label.subnet',])
-
-            ->end();
     }
 
     protected function configureListFields(ListMapper $listMapper)
@@ -100,12 +85,6 @@ final class OriginAdmin extends AbstractAdmin
                 null,
                 ['label' => 'origin.label.subnet']
             )
-            ->add(
-                'reports',
-                AdminType::class,
-                ['label' => 'origin.label.reports']
-            )
-            
             ->end();
     }
 }
