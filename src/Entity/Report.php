@@ -19,7 +19,7 @@ class Report
     private $id;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Outcome", mappedBy="report", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Outcome", mappedBy="report", orphanRemoval=true, cascade={"persist"})
      */
     private $outcomes;
 
@@ -73,6 +73,11 @@ class Report
      * @ORM\Column(type="integer", nullable=true)
      */
     private $totalDeniedClassifiedLogEntries;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\ViewByWord", mappedBy="report", cascade={"persist", "remove"})
+     */
+    private $viewByWord;
 
     public function __construct()
     {
@@ -231,6 +236,23 @@ class Report
     public function setTotalDeniedClassifiedLogEntries(?int $totalDeniedClassifiedLogEntries): self
     {
         $this->totalDeniedClassifiedLogEntries = $totalDeniedClassifiedLogEntries;
+
+        return $this;
+    }
+
+    public function getViewByWord(): ?ViewByWord
+    {
+        return $this->viewByWord;
+    }
+
+    public function setViewByWord(ViewByWord $viewByWord): self
+    {
+        $this->viewByWord = $viewByWord;
+
+        // set the owning side of the relation if necessary
+        if ($viewByWord->getReport() !== $this) {
+            $viewByWord->setReport($this);
+        }
 
         return $this;
     }

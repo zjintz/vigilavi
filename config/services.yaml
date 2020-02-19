@@ -27,7 +27,17 @@ services:
         $sophosDNS: '%env(SOPHOS_DNS)%'
         $sophosUser: '%env(SOPHOS_USER)%'
         $sophosPass: '%env(SOPHOS_PASS)%'
-        
+
+    App\EventListener\ReportAnalizer:
+        tags:
+            -
+                name: 'doctrine.orm.entity_listener'
+                event: 'prePersist'
+                entity: 'App\Entity\Report'
+                # 'lazy' option to TRUE to instantiate listeners when they are used
+                lazy: true
+                method: 'addReportData'
+                
     app.admin.emailsubscription:
         class: App\Admin\EmailSubscriptionAdmin
         arguments: [~, App\Entity\EmailSubscription, ~]
@@ -76,7 +86,7 @@ services:
             
     app.admin.report:
         class: App\Admin\ReportAdmin
-        arguments: [~, App\Entity\Report, App\Controller\ReportCRUDController]
+        arguments: [~, App\Entity\Report, ~]
         tags:
             - { name: sonata.admin, manager_type: orm, label: Report }
         calls:
