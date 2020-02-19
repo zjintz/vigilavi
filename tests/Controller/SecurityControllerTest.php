@@ -200,17 +200,10 @@ class SecurityControllerTest extends WebTestCase
         $this->check403('/admin_sonata_user_user/create');
         //   $this->check403('/admin_sonata_user_user/2/show');
         // $this->check403('/admin_sonata_user_user/2/edit');    
-        $this->check403('/admin_sonata_user_user/2/delete');
-        $this->check403('/admin_sonata_user_user/export');
+        //$this->check403('/admin_sonata_user_user/2/delete');
         $this->check403('/sonata/user/group/list');
         $this->check403('/sonata/user/group/create');          
         $this->check403('/sonata/user/group/export');
-        $this->checkSuccess('/app/liturgy/1/show');
-        $this->checkSuccess('/app/liturgy/list');
-        $this->check403('/app/liturgy/create');        
-        $this->check403('/app/liturgy/1/edit');
-        $this->check403('/app/liturgy/1/delete');
-        $this->checkSuccess('/liturgy_text/assemble');
     }
 
     private function checkEditorRoutes()
@@ -220,37 +213,31 @@ class SecurityControllerTest extends WebTestCase
         $this->check403('/admin_sonata_user_user/create');
         //        $this->check403('/admin_sonata_user_user/2/show');
         //        $this->check403('/admin_sonata_user_user/2/edit');    
-        $this->check403('/admin_sonata_user_user/2/delete');
-        $this->check403('/admin_sonata_user_user/export');
-        $this->check403('/sonata/user/group/list');
+        //$this->check403('/admin_sonata_user_user/2/delete');
+        //$this->check403('/admin_sonata_user_user/export');
+        /*        $this->check403('/sonata/user/group/list');
         $this->check403('/sonata/user/group/create');          
         $this->check403('/sonata/user/group/export');
-        $this->checkSuccess('/app/liturgy/1/show');
+        /*$this->checkSuccess('/app/liturgy/1/show');
         $this->checkSuccess('/app/liturgy/list');
         $this->checkSuccess('/app/liturgy/create');        
         $this->checkSuccess('/app/liturgy/1/edit');
         $this->checkSuccess('/app/liturgy/1/delete');
-        $this->checkSuccess('/liturgy_text/assemble');
+        $this->checkSuccess('/liturgy_text/assemble');*/
     }
 
 
     private function checkAdminRoutes()
     {
         //has no access!
-        $this->checkSuccess('/admin_sonata_user_user/list');
-        $this->checkSuccess('/admin_sonata_user_user/create');
-        $this->checkSuccess('/admin_sonata_user_user/1/show');
-        $this->checkSuccess('/admin_sonata_user_user/1/edit');    
-        $this->checkSuccess('/admin_sonata_user_user/1/delete');
+        //$this->checkSuccess('/admin_sonata_user_user/list');
+        //$this->checkSuccess('/admin_sonata_user_user/create');
+        //$this->checkSuccess('/admin_sonata_user_user/1/show');
+        //$this->checkSuccess('/admin_sonata_user_user/1/edit');    
+        //$this->checkSuccess('/admin_sonata_user_user/1/delete');
         /*        $this->checkSuccess('/sonata/user/group/list');
         $this->checkSuccess('/sonata/user/group/create');          
         $this->checkSuccess('/sonata/user/group/export');*/
-        $this->checkSuccess('/app/liturgy/1/show');
-        $this->checkSuccess('/app/liturgy/list');
-        $this->checkSuccess('/app/liturgy/create');        
-        $this->checkSuccess('/app/liturgy/1/edit');
-        $this->checkSuccess('/app/liturgy/1/delete');
-        $this->checkSuccess('/liturgy_text/assemble');
     }
 
     private function checkSuccess($route){

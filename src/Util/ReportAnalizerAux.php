@@ -5,6 +5,7 @@ namespace App\Util;
 use App\Entity\LogEntry;
 use App\Entity\Outcome;
 use App\Entity\Report;
+use App\Entity\Word;
 
 /**
  * \brief     A service that helps to build the data of the reports. 
@@ -15,15 +16,14 @@ class ReportAnalizerAux
 {
     public function genReportOutcomes(Report $report, array $entries) : Report
     {
-        $wordSet = $report->getWordSet();
-        $words = $wordSet->getWords();
+        $words = $report->getWordSet()->getWords();
         $report->setTotalWords(count($words));
         $report->setTotalLogEntries(count($entries));
         $totalAllowedEntries =0;
         $totalDeniedEntries = 0;
-        $totalClassifiedEntries = 0;
-        $totalAllowedClassifiedEntries = 0;
-        $totalDeniedClassifiedEntries = 0;
+        $classifiedEntries = 0;
+        $allowedClassifiedEntries = 0;
+        $deniedClassifiedEntries = 0;
         //        $viewByWord = $this->initViewByWord($words);
         //$report->setViewByWord($viewByWord);
         foreach ($entries as $entry) {
@@ -35,41 +35,66 @@ class ReportAnalizerAux
                 $totalDeniedEntries +=1;
             }
             
-            $newOutcome = new Outcome();
-            $class = 'ok';
+            $classes = '';
             $wordsFound = '';
             $classified = false;
             
             foreach ($words as $word) {
-                if (strPos($entry->getUrl(), $word->getText()) !== false) {
+                $class = $this->classifyWord($entry , $word);
+                if ($class !== "ok") {
                     $classified = true;
-                    $wordsFound = $wordsFound." ".$word;
-                    $class = "(!!!)";
+                    if ( $wordsFound !== '') {
+                        $wordsFound = $wordsFound." ";
+                        $classes = $classes." ; ";
+                    }
+                    $wordsFound = $wordsFound.$word->getText();
+                    $classes = $classes.$class;
                 }
             }
             
             if ($classified) {
-                $totalClassifiedEntries +=1;
+                $classifiedEntries +=1;
                 if ($entry->getLogSubType() === "Allowed") {
-                    $totalAllowedClassifiedEntries +=1;
+                    $allowedClassifiedEntries +=1;
                 }
                 if ($entry->getLogSubType() === "Denied") {
-                    $totalDeniedClassifiedEntries +=1;
+                    $deniedClassifiedEntries +=1;
                 }
             }
-
-            $newOutcome->setClassification($class);
-            $newOutcome->setReport($report);
-            $newOutcome->setLogEntry($entry);
-            $newOutcome->setWordsFound($wordsFound);
+            $newOutcome = $this->makeOutcome($classes, $entry, $wordsFound);
             $report->addOutcome($newOutcome);
         }
         $report->setTotalAllowedLogEntries($totalAllowedEntries);
         $report->setTotalDeniedLogEntries($totalDeniedEntries);
-        $report->setTotalClassifiedLogEntries($totalClassifiedEntries);
-        $report->setTotalAllowedClassifiedLogEntries($totalAllowedClassifiedEntries);
-        $report->setTotalDeniedClassifiedLogEntries($totalDeniedClassifiedEntries);
+        $report->setTotalClassifiedLogEntries($classifiedEntries);
+        $report->setTotalAllowedClassifiedLogEntries($allowedClassifiedEntries);
+        $report->setTotalDeniedClassifiedLogEntries($deniedClassifiedEntries);
 
         return $report;
+    }
+
+    protected function makeOutcome($classes, $entry, $wordsFound)
+    {
+        $newOutcome = new Outcome();
+        $newOutcome->setClassification($classes);
+        $newOutcome->setLogEntry($entry);
+        $newOutcome->setWordsFound($wordsFound);
+        return $newOutcome;
+    }
+
+    protected function classifyWord(LogEntry $entry, Word $word)
+    {
+        $isInUrl = strPos($entry->getUrl(), $word->getText()) !== false;
+        $isInDomain = strPos($entry->getDomain(), $word->getText()) !== false;
+        if ($isInUrl && $isInDomain) {
+            return "URL&DOMAIN";
+        }
+        if ($isInUrl) {
+            return "URL";
+        }
+        if ($isInDomain) {
+            return "DOMAIN";
+        }
+        return "ok";
     }
 }
