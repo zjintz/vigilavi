@@ -16,7 +16,7 @@ class ReportAnalizerAuxTest extends TestCase
      * there are no entries.
      *
      */
-    public function testGetOutcomesNoEntries()
+    public function testGenReportOutcomesNoEntries()
     {
         $report = new Report();
         $wordset = new WordSet();
@@ -34,7 +34,7 @@ class ReportAnalizerAuxTest extends TestCase
      * there are no words.
      *
      */
-    public function testGetOutcomesNoWords()
+    public function testGenReportOutcomesNoWords()
     {
         $report = new Report();
         $wordset = new WordSet();
@@ -52,7 +52,7 @@ class ReportAnalizerAuxTest extends TestCase
      * Tests the genReportOutcomes function from the ReportAnalizerAux class.
      *
      */
-    public function testGetOutcomesBasic()
+    public function testGenReportOutcomesBasic()
     {
         $report = new Report();
         $wordset = new WordSet();
@@ -81,7 +81,7 @@ class ReportAnalizerAuxTest extends TestCase
      * words are found in the url.
      *
      */
-    public function testGetOutcomesUrlClassified()
+    public function testGenReportOutcomesUrlClassified()
     {
         $report = new Report();
         $wordset = new WordSet();
@@ -113,7 +113,7 @@ class ReportAnalizerAuxTest extends TestCase
      * words are found in the Domain.
      *
      */
-    public function testGetOutcomesDomainClassified()
+    public function testGenReportOutcomesDomainClassified()
     {
         $report = new Report();
         $wordset = new WordSet();
@@ -146,7 +146,7 @@ class ReportAnalizerAuxTest extends TestCase
      * several words are found in the entry. (be it in the url, domain or both).
      *
      */
-    public function testGetOutcomesNWords()
+    public function testGenReportOutcomesNWords()
     {
         $report = new Report();
         $wordset = new WordSet();
@@ -179,6 +179,178 @@ class ReportAnalizerAuxTest extends TestCase
         $this->assertEquals("URL ; URL&DOMAIN", $report->getOutcomes()[3]->getClassification());
     }
 
+    /**
+     * Tests the genViewByWord function from the ReportAnalizerAux class, when
+     * there are no outcomes and no words.
+     *
+     */
+    public function testGenViewByWordNothing()
+    {
+        $report = new Report();
+        $wordset = new WordSet();
+        $report->setWordSet($wordset);
+        $reportAnalizerAux = new ReportAnalizerAux();
+        $newView = $reportAnalizerAux->genViewByWord($report);
+        $this->assertEquals(0, count($newView->getWordStats()));
+    }
+
+    /**
+     * Tests the genViewByWord function from the ReportAnalizerAux class, when
+     * there are no outcomes.
+     *
+     */
+    public function testGenViewByWordNoOutcomes()
+    {
+        $report = new Report();
+        $report->setWordSet($this->make2WordSet());
+        $reportAnalizerAux = new ReportAnalizerAux();
+        $newView = $reportAnalizerAux->genViewByWord($report);
+        $this->assertEquals(2, count($newView->getWordStats()));
+        $this->assertEquals(0, count($newView->getWordStats()[0]->getOutcomes()));
+        $this->assertEquals(0, count($newView->getWordStats()[1]->getOutcomes()));
+        $this->assertEquals(
+            "key",
+            $newView->getWordStats()[0]->getWord()->getText()
+        );
+        $this->assertEquals(
+            "sin",
+            $newView->getWordStats()[1]->getWord()->getText()
+        );
+    }
+
+    /**
+     * Tests the genViewByWord function from the ReportAnalizerAux class, when
+     * there are only 'ok' outcomes.
+     *
+     */
+    public function testGenViewByWordOkOutcomes()
+    {
+        $report = new Report();
+        $report->setWordSet($this->make2WordSet());
+        $report= $this->addOkOutcomes($report);
+        $reportAnalizerAux = new ReportAnalizerAux();
+        $newView = $reportAnalizerAux->genViewByWord($report);
+        $this->assertEquals(2, count($newView->getWordStats()));
+        $this->assertEquals(0, count($newView->getWordStats()[0]->getOutcomes()));
+        $this->assertEquals(0, count($newView->getWordStats()[1]->getOutcomes()));
+        $this->assertEquals(
+            "key",
+            $newView->getWordStats()[0]->getWord()->getText()
+        );
+        $this->assertEquals(
+            "sin",
+            $newView->getWordStats()[1]->getWord()->getText()
+        );
+    }
+
+    /**
+     * Tests the genViewByWord function from the ReportAnalizerAux class, when
+     * in the outcome there is the word in the URL.
+     *
+     */
+    public function testGenViewByWordUrlOutcomes()
+    {
+        $report = new Report();
+        $report->setWordSet($this->make2WordSet());
+        $report= $this->addUrlOutcomes($report);
+        $reportAnalizerAux = new ReportAnalizerAux();
+        $newView = $reportAnalizerAux->genViewByWord($report);
+        $this->assertEquals(2, count($newView->getWordStats()));
+        $this->assertEquals(1, count($newView->getWordStats()[0]->getOutcomes()));
+        $this->assertEquals(3, count($newView->getWordStats()[1]->getOutcomes()));
+        $this->assertEquals(
+            "key",
+            $newView->getWordStats()[0]->getWord()->getText()
+        );
+        $this->assertEquals(
+            "sin",
+            $newView->getWordStats()[1]->getWord()->getText()
+        );
+    }
+
+    /**
+     * Tests the genViewByWord function from the ReportAnalizerAux class.
+     *
+     */
+    public function testGenViewByWord()
+    {
+        $report = new Report();
+        $report->setWordSet($this->make2WordSet());
+        $report= $this->addOutcomes($report);
+        $reportAnalizerAux = new ReportAnalizerAux();
+        $newView = $reportAnalizerAux->genViewByWord($report);
+        $this->assertEquals(2, count($newView->getWordStats()));
+        $this->assertEquals(4, count($newView->getWordStats()[0]->getOutcomes()));
+        $this->assertEquals(2, count($newView->getWordStats()[1]->getOutcomes()));
+        $this->assertEquals(
+            "key",
+            $newView->getWordStats()[0]->getWord()->getText()
+        );
+        $this->assertEquals(
+            "sin",
+            $newView->getWordStats()[1]->getWord()->getText()
+        );
+    }
+    protected function addOkOutcomes($report)
+    {
+        $outcome = new Outcome();
+        $outcome->setClassification('');
+        $report->addOutcome($outcome);
+        $report->addOutcome($outcome);
+        $report->addOutcome($outcome);
+        return $report;
+    }
+
+    protected function addUrlOutcomes($report)
+    {
+        $outcome1 = new Outcome();
+        $outcome1->setClassification('URL');
+        $outcome1->setWordsFound("sin");
+        $outcome2 = new Outcome();
+        $outcome2->setClassification('URL');
+        $outcome2->setWordsFound("sin");
+        $outcome3 = new Outcome();
+        $outcome3->setClassification('URL - URL');
+        $outcome3->setWordsFound("sin key");
+        $report->addOutcome($outcome1);
+        $report->addOutcome($outcome2);
+        $report->addOutcome($outcome3);
+        return $report;
+    }
+
+    protected function addOutcomes($report)
+    {
+        $outcome1 = new Outcome();
+        $outcome1->setClassification('DOMAIN - DOMAIN');
+        $outcome1->setWordsFound("key sin");
+        $outcome2 = new Outcome();
+        $outcome2->setClassification('URL');
+        $outcome2->setWordsFound("key");
+        $outcome3 = new Outcome();
+        $outcome3->setClassification('URL - URL');
+        $outcome3->setWordsFound("sin key");
+        $outcome4 = new Outcome();
+        $outcome4->setClassification('DOMAIN');
+        $outcome4->setWordsFound("key");
+        $report->addOutcome($outcome1);
+        $report->addOutcome($outcome2);
+        $report->addOutcome($outcome3);
+        $report->addOutcome($outcome4);
+        return $report;
+    }
+
+    protected function make2WordSet()
+    {
+        $wordset = new WordSet();
+        $keyWord = new Word();
+        $keyWord->setText("key");
+        $sinWord = new Word();
+        $sinWord->setText("sin");
+        $wordset->addWord($keyWord);
+        $wordset->addWord($sinWord);
+        return $wordset;
+    }
+    
     protected function makeLogEntries($logData)
     {
         $logEntries = [];

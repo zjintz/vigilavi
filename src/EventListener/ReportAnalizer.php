@@ -32,5 +32,7 @@ class ReportAnalizer
         $entriesRepo = $this->entityManager->getRepository(LogEntry::class);
         $entries = $entriesRepo->findBy(['date'=>$report->getDate()]);
         $report  = $this->auxiliar->genReportOutcomes($report, $entries);
+        $viewByWord  = $this->auxiliar->genViewByWord($report);
+        $report->setViewByWord($viewByWord);
     }
 }

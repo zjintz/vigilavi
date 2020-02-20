@@ -6,6 +6,8 @@ use App\Entity\LogEntry;
 use App\Entity\Outcome;
 use App\Entity\Report;
 use App\Entity\Word;
+use App\Entity\ViewByWord;
+use App\Entity\WordStat;
 
 /**
  * \brief     A service that helps to build the data of the reports. 
@@ -24,8 +26,6 @@ class ReportAnalizerAux
         $classifiedEntries = 0;
         $allowedClassifiedEntries = 0;
         $deniedClassifiedEntries = 0;
-        //        $viewByWord = $this->initViewByWord($words);
-        //$report->setViewByWord($viewByWord);
         foreach ($entries as $entry) {
             if ($entry->getLogSubType() === "Allowed") {
                 $totalAllowedEntries +=1;
@@ -73,6 +73,53 @@ class ReportAnalizerAux
         return $report;
     }
 
+    public function genViewByWord(Report $report): ViewByWord
+    {
+        $words = $report->getWordSet()->getWords();
+        $outcomes = $report->getOutcomes();
+        $view = new ViewByWord();
+        foreach ($words as $word) {
+            $wordStat = new WordStat();
+            $wordStat->setWord($word);
+            $view->addWordStat($wordStat);
+            foreach ($outcomes as $outcome) {
+                if ($this->isOutcomeClassified($outcome)) {
+     
+                    if (
+                        $this->isWordInOutcome(
+                            $word->getText(),
+                            $outcome->getWordsFound()
+                        )
+                    ) {
+                        $wordStat->addOutcome($outcome);
+                    }
+                }
+            }
+        }
+        return $view;
+    }
+
+    protected function isOutcomeClassified($outcome)
+    {
+        $classification = $outcome->getClassification();
+        if ($classification !== "") {
+            return true;
+        }
+        return false;
+    }
+    protected function isWordInOutcome(string $word, ?string $wordsFound)
+    {
+        if($word === $wordsFound) {
+            return true;
+        }
+        $wordsFound = explode(" ", $wordsFound);
+        foreach ($wordsFound as $found) {
+            if ($word === $found) {
+                return true;
+            }
+        }
+        return false;
+    }
     protected function makeOutcome($classes, $entry, $wordsFound)
     {
         $newOutcome = new Outcome();
