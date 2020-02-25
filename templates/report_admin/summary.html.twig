@@ -1,0 +1,6 @@
+{% if admin.hasRoute('summary') %}
+    <a href="{{ admin.generateObjectUrl('summary', object) }}" class="btn btn-sm btn-default" title="{{ 'action_summary'|trans({}, 'SonataAdminBundle') }}">
+        <i class="fa fa-eye" aria-hidden="true"></i>
+        {{ 'action_summary'|trans({}, 'SonataAdminBundle') }}
+    </a>
+{% endif %}

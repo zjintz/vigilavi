@@ -25,7 +25,7 @@ class ViewByWord
     private $report;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\WordStat", mappedBy="viewByWord", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\WordStat", mappedBy="viewByWord", orphanRemoval=true, cascade={"persist", "remove"})
      */
     private $wordStats;
 

@@ -24,7 +24,7 @@ class Report
     private $outcomes;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\WordSet", inversedBy="reports")
+     * @ORM\ManyToOne(targetEntity="App\Entity\WordSet", inversedBy="reports", cascade={"persist"})
      */
     private $wordSet;
 

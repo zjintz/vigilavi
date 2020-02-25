@@ -42,10 +42,13 @@ final class ReportAdmin extends AbstractAdmin
                 'uri' => $this->getChild('app.admin.outcome')->generateUrl('list')]);
         }
     }
+    
     public function configureRoutes(RouteCollection $collection)
     {
         $collection->remove('export');
         $collection->remove('edit');
+        $collection->add('summary', $this->getRouterIdParameter().'/make_summary');
+        
     }
     
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
@@ -109,6 +112,9 @@ final class ReportAdmin extends AbstractAdmin
         $listMapper->add('_action', 'actions', array(
             'actions' => array(
                 'show' => array(),
+                'summary' => array('template' =>  'report_admin/summary.html.twig'
+                    //                    'template' => '::your_template.html.twig'
+                )
             )
         ));
     }
@@ -127,13 +133,7 @@ final class ReportAdmin extends AbstractAdmin
                     'associated_property' => 'name'
                 ]
             )
-            ->add(
-                'outcomes',
-                null,
-                [
-                    'associated_property'=> 'id'
-                ]
-            )
+
             ->end()
             ->with('Stats', ['class' => 'col-md-7'])
             ->add('totalWords', null, ['label' => 'report.label.totalWords'])
@@ -158,7 +158,7 @@ final class ReportAdmin extends AbstractAdmin
             $title = $object->getDate()->format("Y-m-d");
             $title = 'do '.$title;
         }
-        return $object instanceof Liturgy
+        return $object instanceof Report
             ? $object->getTitle()
             : 'Informe '.$title; // shown in the breadcrumb on the create view
     }
