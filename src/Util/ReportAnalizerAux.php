@@ -80,21 +80,30 @@ class ReportAnalizerAux
         $view = new ViewByWord();
         foreach ($words as $word) {
             $wordStat = new WordStat();
-            $wordStat->setWord($word);
+            $wordStat->setWordText($word->getText());
             $view->addWordStat($wordStat);
+            $deniedCount = 0;
             foreach ($outcomes as $outcome) {
                 if ($this->isOutcomeClassified($outcome)) {
      
-                    if (
-                        $this->isWordInOutcome(
-                            $word->getText(),
-                            $outcome->getWordsFound()
-                        )
+                    if ( $this->isWordInOutcome(
+                        $word->getText(),
+                        $outcome->getWordsFound()
+                    )
                     ) {
                         $wordStat->addOutcome($outcome);
+                        $logSubType = $outcome->getLogEntry()->getLogSubType();
+                        $isDenied = $logSubType === "Denied";
+                        if( $isDenied ) {
+                            $deniedCount += 1;
+                        }
+                        
                     }
                 }
             }
+            $allowedCount = count($wordStat->getOutcomes()) - $deniedCount;
+            $wordStat->setDeniedEntries($deniedCount);
+            $wordStat->setAllowedEntries($allowedCount);
         }
         return $view;
     }

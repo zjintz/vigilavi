@@ -1,0 +1,244 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head><meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+        <style type="text/css">
+         body {
+	         font-size: 12px;
+	         font-family: Arial;
+         }
+
+         span.resumenumber {
+             font-size: 12px;
+             font-weight: bold;
+             color: black;
+         }
+
+         span.libnumber {
+             font-size: 12px;
+             font-weight: bold;
+             color: green;
+         }
+
+         span.negnumber {
+             font-size: 12px;
+             font-weight: bold;
+             color: red;
+         }
+
+         span.user {
+             color: blue;
+             font-weight: bold;
+         }
+
+         span.palavra {
+	         color: #660000;
+	         font-weight: bold;
+	         font-style: normal;
+         }
+
+         span.url {
+	         color: #660000;
+	         font-weight: bold;
+	         font-style: normal;
+	         background-color: #87CEFF;
+         }
+
+         span.local {
+	         font-size: 16px;
+	         font-weight: bold;
+	         color: #000055;
+         }
+         span.info {
+	         font-size: 16px;
+	         color: black;
+         }
+         span.title {
+	         font-size: 18px;
+	         font-weight: bold;
+	         color: #000055;
+             font-style: italic;
+         }
+
+         #resumo1 {
+	         vertical-align: center;
+	         background-color: #87CEFF;
+	         font-size: 14px;
+	         text-align: left;
+	         font-family: Arial;
+	         font-style: italic;
+	         font-weight: bold;
+	         color: #003800;
+         }
+
+         #resumo2 {
+	         vertical-align: center;
+	         background-color: #F4F2E6;
+	         font-size: 12px;
+	         text-align: left;
+	         font-weight: normal;
+	         font-family: Arial;
+	         color: #003800;
+         }
+
+         #resumo3 {
+	         vertical-align: center;
+	         background-color: #E0FFFF;
+	         font-size: 14px;
+	         text-align: left;
+	         font-weight: normal;
+	         font-family: Arial;
+	         color: #003800;
+         }
+         table.word_detail {
+             text-align: center;
+         }
+
+         div.details{
+             display: none;
+             width: 90%;
+             margin:auto;
+             text-align: center;
+         }
+         table.blueTable {
+             border: 1px solid #1C6EA4;
+             background-color: #ffffff;
+             text-align: left;
+             border-collapse: collapse;
+         }
+         table.blueTable td, table.blueTable th {
+             border: 1px solid #AAAAAA;
+             padding: 3px 2px;
+             text-align: center;
+         }
+         table.blueTable tbody td {
+             font-size: 13px;
+             padding-bottom: 1em;
+         }
+
+         table.blueTable thead {
+             background: #1C6EA4;
+             background: -moz-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+             background: -webkit-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+             background: linear-gradient(to bottom, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+             border-bottom: 2px solid #444444;
+         }
+         table.blueTable tbody tr:nth-child(even) {
+             background: #FAFAFF;
+         }
+         table.blueTable tbody th {
+             font-size: 15px;
+             font-weight: bold;
+             background-color: #cFcFFF;
+             text-align: center;
+             border-left: 2px solid #D0E4F5;
+         }
+
+        </style>
+        <script>
+         function showHideDetail(id) {
+             var x = document.getElementById(id);
+             if (x.style.display === "none") {
+                 x.style.display = "block";
+             } else {
+                 x.style.display = "none";
+             }
+         } 
+        </script>
+        <title>Vigilavi - Sistema de Relatório de Acesso Web</title></head>
+    <body link='#660000' vlink='#660000' alink='#660000' >
+        <span class='title'> VIGILAVI</span>
+        <br>
+        <br>
+        <span class='local'>
+            Acesso por PALAVRA
+        </span> <br>
+        <span class='local'>
+            Data:
+        </span><span class='info'>{{ report.date|date("Y-m-d") }}</span>
+        <br>
+        <span class='local'>
+            Unidade:
+        </span><span class='info'>{{ report.origin.name }}</span>
+        <br>
+        <span class='local'>
+            Conjunto de Palavras:
+        </span> <span class='info'>{{ report.wordSet.name }}</span>
+        <br>
+        <br>
+        <table class="blueTable">
+            <thead>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>Palavra</th>
+                    <th>Acessos Negados</th>
+                    <th>Acessos Liberados</th>
+                    <th>Total</th>
+                    <th>Detalhes por Usuário</th>
+                    <th>Detalhes Log</th>
+                </tr>
+                {% for wordStat in report.viewByWord.wordStats %}
+                    <tr>
+                        <td>
+                            <span class='palavra'><a class='palavra' href=#album>{{ wordStat.wordText }}</a>
+                            </span>
+                        </td>
+                        <td>
+                            <span class=negnumber> {{ wordStat.deniedEntries }}</span>
+                        </td>
+                        <td>
+                            <span class=libnumber>
+                                {{ wordStat.allowedEntries }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class=resumenumber>
+                                {{ wordStat.outcomes|length }}
+                            </span>
+                        </td>
+                        <td>
+                            <div id='resumo2'><span class='user'>NOAUTH</span> - <span class=libnumber>ACESSOS LIBERADOS: 6</span></div>
+                        </td>
+                        <td>
+                            {% if wordStat.outcomes|length > 0 %}
+                                <button onclick="showHideDetail('table_{{wordStat.id }}')">Detalles</button>
+                            {% endif  %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            {% if wordStat.outcomes|length > 0 %}
+                                <div id="table_{{ wordStat.id }}" class="details">    
+                                    <table class ="word_detail">
+                                        <thead>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th>Data</th> <th>Hora</th> <th>Usuário</th> <th>URL</th>
+                                                <th>Dominio</th> <th>Ip</th> <th>Clase</th>
+                                            </tr>
+                                            {% for outcome in wordStat.outcomes  %}
+                                                <tr>
+                                                    <td>{{ outcome.logEntry.date|date("Y-m-d") }}</td>
+                                                    <td>{{ outcome.logEntry.date|date("H:m:s") }}</td>
+                                                    <td>{{ outcome.logEntry.userName }}</td>
+                                                    <td>{{ outcome.logEntry.url }}</td>
+                                                    <td>{{ outcome.logEntry.domain }}</td>
+                                                    <td>{{ outcome.logEntry.srcIp }}</td>
+                                                    <td>{{ outcome.logEntry.logSubtype }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    <button onclick="showHideDetail('table_{{wordStat.id }}')">Cerrar</button>
+                                    
+                                </div>
+                            {% endif  %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </span>
+    </body>
+</html>

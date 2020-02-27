@@ -35,11 +35,11 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
         $origin->setSubnet("193.77.1");
         $origin->setName("Comala");
         $origin->setType("Sede");
+        $origin->setActive(true);
         $manager->persist($origin);
         while (!feof($csv)) {
             $timeLog = \DateTime::createFromFormat($format24H,$line[2]);
             $logEntry[$num] = new LogEntry();
-            $logEntry[$num]->setDevice($line[0]);
             $logEntry[$num]->setDate($timeLog);
             $logEntry[$num]->setLogType($line[7]);
             $logEntry[$num]->setLogSubtype($line[9]);

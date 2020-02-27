@@ -30,10 +30,19 @@ class WordStat
     private $outcomes;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Word")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $word;
+    private $deniedEntries;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $allowedEntries;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $wordText;
 
     public function __construct()
     {
@@ -83,14 +92,38 @@ class WordStat
         return $this;
     }
 
-    public function getWord(): ?Word
+    public function getDeniedEntries(): ?int
     {
-        return $this->word;
+        return $this->deniedEntries;
     }
 
-    public function setWord(?Word $word): self
+    public function setDeniedEntries(?int $deniedEntries): self
     {
-        $this->word = $word;
+        $this->deniedEntries = $deniedEntries;
+
+        return $this;
+    }
+
+    public function getAllowedEntries(): ?int
+    {
+        return $this->allowedEntries;
+    }
+
+    public function setAllowedEntries(?int $allowedEntries): self
+    {
+        $this->allowedEntries = $allowedEntries;
+
+        return $this;
+    }
+
+    public function getWordText(): ?string
+    {
+        return $this->wordText;
+    }
+
+    public function setWordText(string $wordText): self
+    {
+        $this->wordText = $wordText;
 
         return $this;
     }

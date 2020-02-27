@@ -210,12 +210,29 @@ class ReportAnalizerAuxTest extends TestCase
         $this->assertEquals(0, count($newView->getWordStats()[1]->getOutcomes()));
         $this->assertEquals(
             "key",
-            $newView->getWordStats()[0]->getWord()->getText()
+            $newView->getWordStats()[0]->getWordText()
+        );
+        $this->assertEquals(
+            0,
+            $newView->getWordStats()[0]->getDeniedEntries()
+        );
+        $this->assertEquals(
+            0,
+            $newView->getWordStats()[0]->getAllowedEntries()
         );
         $this->assertEquals(
             "sin",
-            $newView->getWordStats()[1]->getWord()->getText()
+            $newView->getWordStats()[1]->getWordText()
         );
+        $this->assertEquals(
+            0,
+            $newView->getWordStats()[1]->getDeniedEntries()
+        );
+        $this->assertEquals(
+            0,
+            $newView->getWordStats()[1]->getAllowedEntries()
+        );
+        
     }
 
     /**
@@ -235,11 +252,27 @@ class ReportAnalizerAuxTest extends TestCase
         $this->assertEquals(0, count($newView->getWordStats()[1]->getOutcomes()));
         $this->assertEquals(
             "key",
-            $newView->getWordStats()[0]->getWord()->getText()
+            $newView->getWordStats()[0]->getWordText()
+        );
+        $this->assertEquals(
+            0,
+            $newView->getWordStats()[0]->getDeniedEntries()
+        );
+        $this->assertEquals(
+            0,
+            $newView->getWordStats()[0]->getAllowedEntries()
         );
         $this->assertEquals(
             "sin",
-            $newView->getWordStats()[1]->getWord()->getText()
+            $newView->getWordStats()[1]->getWordText()
+        );
+        $this->assertEquals(
+            0,
+            $newView->getWordStats()[1]->getDeniedEntries()
+        );
+        $this->assertEquals(
+            0,
+            $newView->getWordStats()[1]->getAllowedEntries()
         );
     }
 
@@ -260,11 +293,27 @@ class ReportAnalizerAuxTest extends TestCase
         $this->assertEquals(3, count($newView->getWordStats()[1]->getOutcomes()));
         $this->assertEquals(
             "key",
-            $newView->getWordStats()[0]->getWord()->getText()
+            $newView->getWordStats()[0]->getWordText()
+        );
+        $this->assertEquals(
+            1,
+            $newView->getWordStats()[0]->getDeniedEntries()
+        );
+        $this->assertEquals(
+            0,
+            $newView->getWordStats()[0]->getAllowedEntries()
         );
         $this->assertEquals(
             "sin",
-            $newView->getWordStats()[1]->getWord()->getText()
+            $newView->getWordStats()[1]->getWordText()
+        );
+        $this->assertEquals(
+            2,
+            $newView->getWordStats()[1]->getDeniedEntries()
+        );
+        $this->assertEquals(
+            1,
+            $newView->getWordStats()[1]->getAllowedEntries()
         );
     }
 
@@ -284,11 +333,27 @@ class ReportAnalizerAuxTest extends TestCase
         $this->assertEquals(2, count($newView->getWordStats()[1]->getOutcomes()));
         $this->assertEquals(
             "key",
-            $newView->getWordStats()[0]->getWord()->getText()
+            $newView->getWordStats()[0]->getWordText()
+        );
+        $this->assertEquals(
+            4,
+            $newView->getWordStats()[0]->getDeniedEntries()
+        );
+        $this->assertEquals(
+            0,
+            $newView->getWordStats()[0]->getAllowedEntries()
         );
         $this->assertEquals(
             "sin",
-            $newView->getWordStats()[1]->getWord()->getText()
+            $newView->getWordStats()[1]->getWordText()
+        );
+        $this->assertEquals(
+            2,
+            $newView->getWordStats()[1]->getDeniedEntries()
+        );
+        $this->assertEquals(
+            0,
+            $newView->getWordStats()[1]->getAllowedEntries()
         );
     }
     protected function addOkOutcomes($report)
@@ -306,12 +371,21 @@ class ReportAnalizerAuxTest extends TestCase
         $outcome1 = new Outcome();
         $outcome1->setClassification('URL');
         $outcome1->setWordsFound("sin");
+        $logEntry1 = new LogEntry();
+        $logEntry1->setLogSubType("Denied");
+        $outcome1->setLogEntry($logEntry1);
         $outcome2 = new Outcome();
         $outcome2->setClassification('URL');
         $outcome2->setWordsFound("sin");
+        $logEntry2 = new LogEntry();
+        $logEntry2->setLogSubType("Allowed");
+        $outcome2->setLogEntry($logEntry2);
         $outcome3 = new Outcome();
         $outcome3->setClassification('URL - URL');
         $outcome3->setWordsFound("sin key");
+        $logEntry3 = new LogEntry();
+        $logEntry3->setLogSubType("Denied");
+        $outcome3->setLogEntry($logEntry3);
         $report->addOutcome($outcome1);
         $report->addOutcome($outcome2);
         $report->addOutcome($outcome3);
@@ -322,16 +396,28 @@ class ReportAnalizerAuxTest extends TestCase
     {
         $outcome1 = new Outcome();
         $outcome1->setClassification('DOMAIN - DOMAIN');
+        $logEntry1 = new LogEntry();
+        $logEntry1->setLogSubType("Denied");
+        $outcome1->setLogEntry($logEntry1);
         $outcome1->setWordsFound("key sin");
         $outcome2 = new Outcome();
         $outcome2->setClassification('URL');
         $outcome2->setWordsFound("key");
+        $logEntry2 = new LogEntry();
+        $logEntry2->setLogSubType("Denied");
+        $outcome2->setLogEntry($logEntry2);
         $outcome3 = new Outcome();
         $outcome3->setClassification('URL - URL');
         $outcome3->setWordsFound("sin key");
+        $logEntry3 = new LogEntry();
+        $logEntry3->setLogSubType("Denied");
+        $outcome3->setLogEntry($logEntry3);
         $outcome4 = new Outcome();
         $outcome4->setClassification('DOMAIN');
         $outcome4->setWordsFound("key");
+        $logEntry4 = new LogEntry();
+        $logEntry4->setLogSubType("Denied");
+        $outcome4->setLogEntry($logEntry4);
         $report->addOutcome($outcome1);
         $report->addOutcome($outcome2);
         $report->addOutcome($outcome3);

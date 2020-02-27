@@ -16,10 +16,15 @@ class ReportCRUDController extends CRUDController
 
         $object = $this->admin->getObject($id);
          // Provide a name for your file with extension
-        $filename = 'TextFile.txt';
+        $date = $object->getDate()->format("Y-m-d");
+        $filename = 'Informe-'.$date."-".
+                  $object->getOrigin()->getName().".html";
         
         // The dinamically created content of the file
-        $fileContent = "Hello, this is the content of my File". $object->getDate();
+        $fileContent = $this->renderView(
+            "report/by-words.html.twig",
+            array('report'=> $object)
+        );
         
         // Return a response with a specific content
         $response = new Response($fileContent);
