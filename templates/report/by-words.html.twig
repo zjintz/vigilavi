@@ -31,17 +31,27 @@
          }
 
          span.palavra {
-	         color: #660000;
+	         color: #20000;
 	         font-weight: bold;
 	         font-style: normal;
+             background-color: #EAFF39;
+             text-decoration : underline;
          }
 
-         span.url {
-	         color: #660000;
+         span.highlight {
+	         color: black;
 	         font-weight: bold;
 	         font-style: normal;
-	         background-color: #87CEFF;
+	         background-color: #EAFF39;
          }
+
+         div.link {
+	         color: #200000;
+	         font-weight: bold;
+	         font-style: normal;
+	         background-color: #EFEFFF;
+         }
+
 
          span.local {
 	         font-size: 16px;
@@ -178,64 +188,96 @@
                     <th>Detalhes Log</th>
                 </tr>
                 {% for wordStat in report.viewByWord.wordStats %}
-                    <tr>
-                        <td>
-                            <span class='palavra'><a class='palavra' href=#album>{{ wordStat.wordText }}</a>
-                            </span>
-                        </td>
-                        <td>
-                            <span class=negnumber> {{ wordStat.deniedEntries }}</span>
-                        </td>
-                        <td>
-                            <span class=libnumber>
-                                {{ wordStat.allowedEntries }}
-                            </span>
-                        </td>
-                        <td>
-                            <span class=resumenumber>
-                                {{ wordStat.outcomes|length }}
-                            </span>
-                        </td>
-                        <td>
-                            <div id='resumo2'><span class='user'>NOAUTH</span> - <span class=libnumber>ACESSOS LIBERADOS: 6</span></div>
-                        </td>
-                        <td>
-                            {% if wordStat.outcomes|length > 0 %}
+                    {% if wordStat.outcomes|length > 0 %}
+                        <tr>
+                            <td>
+                                <span class='palavra'>{{ wordStat.wordText }} </span>
+                            </td>
+                            <td>
+                                <span class=negnumber> {{ wordStat.deniedEntries }}</span>
+                            </td>
+                            <td>
+                                <span class=libnumber>
+                                    {{ wordStat.allowedEntries }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class=resumenumber>
+                                    {{ wordStat.outcomes|length }}
+                                </span>
+                            </td>
+                            <td>
+                                {% for userStat in wordStat.userStats  %}
+                                    {% if userStat.allowedEntries > 0 %}
+                                        <div id='resumo2'>
+                                            <span class='user'>{{ userStat.name  }}</span> - <span class=libnumber>ACESSOS LIBERADOS: {{ userStat.allowedEntries  }}</span>
+                                            
+                                        </div>
+                                    {% endif %}
+                                    {% if userStat.deniedEntries > 0 %}
+                                        <div id='resumo2'>
+                                            <span class='user'>{{ userStat.name  }}</span> - <span class=negnumber>ACESSOS NEGADOS: {{ userStat.deniedEntries  }}</span>
+                                            
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>
                                 <button onclick="showHideDetail('table_{{wordStat.id }}')">Detalles</button>
-                            {% endif  %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="6">
-                            {% if wordStat.outcomes|length > 0 %}
-                                <div id="table_{{ wordStat.id }}" class="details">    
-                                    <table class ="word_detail">
-                                        <thead>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <th>Data</th> <th>Hora</th> <th>Usuário</th> <th>URL</th>
-                                                <th>Dominio</th> <th>Ip</th> <th>Clase</th>
-                                            </tr>
-                                            {% for outcome in wordStat.outcomes  %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="6">
+                                {% if wordStat.outcomes|length > 0 %}
+                                    <div id="table_{{ wordStat.id }}" class="details">    
+                                        <table class ="word_detail">
+                                            <thead>
+                                            </thead>
+                                            <tbody>
                                                 <tr>
-                                                    <td>{{ outcome.logEntry.date|date("Y-m-d") }}</td>
-                                                    <td>{{ outcome.logEntry.date|date("H:m:s") }}</td>
-                                                    <td>{{ outcome.logEntry.userName }}</td>
-                                                    <td>{{ outcome.logEntry.url }}</td>
-                                                    <td>{{ outcome.logEntry.domain }}</td>
-                                                    <td>{{ outcome.logEntry.srcIp }}</td>
-                                                    <td>{{ outcome.logEntry.logSubtype }}</td>
+                                                    <th>Data</th> <th>Hora</th> <th>Usuário</th> <th>URL</th>
+                                                    <th>Dominio</th> <th>Ip</th> <th>Clase</th>
                                                 </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                    <button onclick="showHideDetail('table_{{wordStat.id }}')">Cerrar</button>
-                                    
-                                </div>
-                            {% endif  %}
-                        </td>
-                    </tr>
+                                                {% set text= wordStat.wordText %}
+
+                                                {% for outcome in wordStat.outcomes  %}
+                                                    {% set urlText = (outcome.logEntry.url) | replace({  (text) : "<span class='highlight'>--replaceme--</span>" }) %}
+                                                    {% set hlUrl = (urlText) | replace({  '--replaceme--' : (text) }) %}
+                                                    {% set domText = (outcome.logEntry.domain) | replace({  (text) : "<span class='highlight'>--replaceme--</span>" }) %}
+                                                    {% set hlDom = (domText) | replace({  '--replaceme--' : (text) }) %}
+                                                    <tr>
+                                                        <td>{{ outcome.logEntry.date|date("Y-m-d") }}</td>
+                                                        <td>{{ outcome.logEntry.date|date("H:m:s") }}</td>
+                                                        <td><span class='user'>
+                                                            {{ outcome.logEntry.userName }}
+                                                        </span></td>
+                                                        <td><div class= "link">{{ hlUrl|raw }}</div></td>
+                                                        <td><div class= "link">{{ hlDom|raw }}</div>
+                                                            </td>
+                                                        <td>{{ outcome.logEntry.srcIp }}</td>
+                                                        <td>
+                                                            {% if ( outcome.logEntry.logSubtype ) == 'Allowed'  %}
+                                                                <span class="libnumber">
+                                                                    Allowed
+                                                                </span>
+                                                            {% endif %}
+                                                            {% if ( outcome.logEntry.logSubtype ) == 'Denied'  %}
+                                                                <span class="negnumber">
+                                                                    Denied
+                                                                </span>
+                                                            {% endif %}
+                                                            </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                        <button onclick="showHideDetail('table_{{wordStat.id }}')">Cerrar</button>
+                                        
+                                    </div>
+                                {% endif  %}
+                            </td>
+                        </tr>
+                    {% endif  %}
                     {% endfor %}
                 </tbody>
             </table>

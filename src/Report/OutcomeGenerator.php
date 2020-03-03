@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Util;
+namespace App\Report;
 
 use App\Entity\LogEntry;
 use App\Entity\Outcome;
@@ -14,9 +14,14 @@ use App\Entity\WordStat;
  *
  *
  */
-class ReportAnalizerAux
+class OutcomeGenerator
 {
-    public function genReportOutcomes(Report $report, array $entries) : Report
+    /**
+     * Generates all the outcomes of a report given a set of entries.
+     *
+     * \returns The report modified with the outcomes. 
+     */
+    public function genOutcomes(Report $report, array $entries) : Report
     {
         $words = $report->getWordSet()->getWords();
         $report->setTotalWords(count($words));
@@ -72,63 +77,7 @@ class ReportAnalizerAux
 
         return $report;
     }
-
-    public function genViewByWord(Report $report): ViewByWord
-    {
-        $words = $report->getWordSet()->getWords();
-        $outcomes = $report->getOutcomes();
-        $view = new ViewByWord();
-        foreach ($words as $word) {
-            $wordStat = new WordStat();
-            $wordStat->setWordText($word->getText());
-            $view->addWordStat($wordStat);
-            $deniedCount = 0;
-            foreach ($outcomes as $outcome) {
-                if ($this->isOutcomeClassified($outcome)) {
-     
-                    if ( $this->isWordInOutcome(
-                        $word->getText(),
-                        $outcome->getWordsFound()
-                    )
-                    ) {
-                        $wordStat->addOutcome($outcome);
-                        $logSubType = $outcome->getLogEntry()->getLogSubType();
-                        $isDenied = $logSubType === "Denied";
-                        if( $isDenied ) {
-                            $deniedCount += 1;
-                        }
-                        
-                    }
-                }
-            }
-            $allowedCount = count($wordStat->getOutcomes()) - $deniedCount;
-            $wordStat->setDeniedEntries($deniedCount);
-            $wordStat->setAllowedEntries($allowedCount);
-        }
-        return $view;
-    }
-
-    protected function isOutcomeClassified($outcome)
-    {
-        $classification = $outcome->getClassification();
-        if ($classification !== "") {
-            return true;
-        }
-        return false;
-    }
-    protected function isWordInOutcome(string $word, ?string $wordsFound)
-    {
-        if($word === $wordsFound) {
-            return true;
-        }
-        $wordsFound = explode(" ", $wordsFound);
-        foreach ($wordsFound as $found) {
-            if ($word === $found) {
-                return true;
-            }
-        }
-        return false;
-    }
+    
     protected function makeOutcome($classes, $entry, $wordsFound)
     {
         $newOutcome = new Outcome();

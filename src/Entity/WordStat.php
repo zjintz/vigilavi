@@ -44,9 +44,15 @@ class WordStat
      */
     private $wordText;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\UserStat", mappedBy="wordStat", orphanRemoval=true, cascade={"persist", "remove"})
+     */
+    private $userStats;
+
     public function __construct()
     {
         $this->outcomes = new ArrayCollection();
+        $this->userStats = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -124,6 +130,37 @@ class WordStat
     public function setWordText(string $wordText): self
     {
         $this->wordText = $wordText;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserStat[]
+     */
+    public function getUserStats(): Collection
+    {
+        return $this->userStats;
+    }
+
+    public function addUserStat(UserStat $userStat): self
+    {
+        if (!$this->userStats->contains($userStat)) {
+            $this->userStats[] = $userStat;
+            $userStat->setWordStat($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserStat(UserStat $userStat): self
+    {
+        if ($this->userStats->contains($userStat)) {
+            $this->userStats->removeElement($userStat);
+            // set the owning side to null (unless already changed)
+            if ($userStat->getWordStat() === $this) {
+                $userStat->setWordStat(null);
+            }
+        }
 
         return $this;
     }
