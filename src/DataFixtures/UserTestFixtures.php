@@ -23,6 +23,7 @@ class UserTestFixtures extends Fixture
         $testUser->setEmail('user@test.com');
         $testUser->setRoles(["ROLE_USER"]);
         $testUser->setHeadquarter($testHQ);
+        $this->setReference('user', $testUser);
         $testAdmin = new User();
         $testAdmin->setUsername('admin@test.com');
         $testAdmin->setPlainPassword('testPass');
@@ -30,6 +31,7 @@ class UserTestFixtures extends Fixture
         $testAdmin->setEmail('admin@test.com');
         $testAdmin->setRoles(["ROLE_ADMIN"]);
         $testAdmin->setHeadquarter($testHQ);
+        $this->setReference('admin', $testAdmin);
         $testEditor = new User();
         $testEditor->setUsername('editor@test.com');
         $testEditor->setPlainPassword('testPass');
@@ -37,6 +39,7 @@ class UserTestFixtures extends Fixture
         $testEditor->setEmail('editor@test.com');
         $testEditor->setRoles(["ROLE_EDITOR"]);
         $testEditor->setHeadquarter($testHQ);
+        $this->setReference('editor', $testEditor);
         $manager->persist($testUser);
         $manager->persist($testAdmin);
         $manager->persist($testEditor);

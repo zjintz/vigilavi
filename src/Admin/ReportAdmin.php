@@ -47,6 +47,7 @@ final class ReportAdmin extends AbstractAdmin
     {
         $collection->remove('export');
         $collection->remove('edit');
+        $collection->remove('create');
         $collection->add('summary', $this->getRouterIdParameter().'/make_summary');
         
     }

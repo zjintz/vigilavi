@@ -26,6 +26,7 @@ final class LogEntryAdmin extends AbstractAdmin
         $collection->remove('delete');
         $collection->remove('create');
         $collection->remove('edit');
+        $collection->remove('batch');
     }
 
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)

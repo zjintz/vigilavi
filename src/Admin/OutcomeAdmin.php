@@ -24,11 +24,11 @@ final class OutcomeAdmin extends AbstractAdmin
 
     public function configureRoutes(RouteCollection $collection)
     {
-        
         $collection->remove('export');
         $collection->remove('edit');
         $collection->remove('delete');
-        
+        $collection->remove('create');
+        $collection->remove('batch');
     }
 
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)

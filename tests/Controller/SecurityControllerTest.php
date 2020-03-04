@@ -65,7 +65,7 @@ class SecurityControllerTest extends WebTestCase
      */
     public function testLoginUser()
     {
-        $this->loadFixtures([UserTestFixtures::class]);
+        $fixtures = $this->loadFixtures([UserTestFixtures::class])->getReferenceRepository();
         $this->client = static::createClient();
         $this->client->setServerParameters([]);
 
@@ -80,8 +80,38 @@ class SecurityControllerTest extends WebTestCase
         $this->assertRedirect('http://localhost/');
         $crawler = $this->client->followRedirect();
         //check that the user with ROLE_USER has no access to certain stuff.
-        $this->checkUserRoutes();
+        $userId = $fixtures->getReference('user')->getId();
+        $editorId = $fixtures->getReference('editor')->getId();
+        $adminId = $fixtures->getReference('admin')->getId();
+        $this->checkUserRoutes($userId, $editorId, $adminId);
         // now logout
+        $crawler = $this->client->request('GET', '/logout');
+        $this->assertRedirect('http://localhost/login');
+    }
+
+    /**
+     * Tests allowed routes of the ROLE_EDITOR.
+     */
+    public function testLoginEditor()
+    {
+        $fixtures = $this->loadFixtures([UserTestFixtures::class])->getReferenceRepository();
+        $userId = $fixtures->getReference('user')->getId();
+        $editorId = $fixtures->getReference('editor')->getId();
+        $adminId = $fixtures->getReference('admin')->getId();
+        $this->client = static::createClient();
+        $this->client->setServerParameters([]);
+
+        //now login:
+        $crawler = $this->client->request('GET', '/');
+        $crawler=$this->client->followRedirect();
+        $form = $crawler->selectButton('Entrar')->form(array(
+            '_username'  => 'editor@test.com',
+            '_password'  => 'testPass',
+        ));
+        $this->client->submit($form);
+        $this->assertRedirect('http://localhost/');
+        $crawler = $this->client->followRedirect();
+        $this->checkEditorRoutes($userId, $editorId, $adminId);
         $crawler = $this->client->request('GET', '/logout');
         $this->assertRedirect('http://localhost/login');
     }
@@ -91,7 +121,10 @@ class SecurityControllerTest extends WebTestCase
      */
     public function testLoginAdmin()
     {
-        $this->loadFixtures([UserTestFixtures::class]);
+        $fixtures = $this->loadFixtures([UserTestFixtures::class])->getReferenceRepository();
+        $userId = $fixtures->getReference('user')->getId();
+        $editorId = $fixtures->getReference('editor')->getId();
+        $adminId = $fixtures->getReference('admin')->getId();
         $this->client = static::createClient();
         $this->client->setServerParameters([]);
 
@@ -106,40 +139,14 @@ class SecurityControllerTest extends WebTestCase
         $this->assertRedirect('http://localhost/');
         $crawler = $this->client->followRedirect();
         //check that the user with ROLE_USER has no access to certain stuff.
-        $this->checkAdminRoutes();
+        $this->checkAdminRoutes($userId, $editorId, $adminId);
         // now logout
         $crawler = $this->client->request('GET', '/logout');
         $this->assertRedirect('http://localhost/login');
     }
 
     /**
-     * Tests allowed routes of the ROLE_EDITOR.
-     */
-    public function testLoginEditor()
-    {
-        $this->loadFixtures([UserTestFixtures::class]);
-        $this->client = static::createClient();
-        $this->client->setServerParameters([]);
-
-        //now login:
-        $crawler = $this->client->request('GET', '/');
-        $crawler=$this->client->followRedirect();
-        $form = $crawler->selectButton('Entrar')->form(array(
-            '_username'  => 'editor@test.com',
-            '_password'  => 'testPass',
-        ));
-        $this->client->submit($form);
-        $this->assertRedirect('http://localhost/');
-        $crawler = $this->client->followRedirect();
-        //check that the user with ROLE_USER has no access to certain stuff.
-        $this->checkEditorRoutes();
-        // now logout
-        $crawler = $this->client->request('GET', '/logout');
-        $this->assertRedirect('http://localhost/login');
-    }
-
-    /**
-     * Tests acces denied when the user is not neabled.
+     * Tests acces denied when the user is not enabled.
      *
      */
     public function testNotEnabled()
@@ -193,51 +200,65 @@ class SecurityControllerTest extends WebTestCase
         );
     }
 
-    private function checkUserRoutes()
+    private function checkUserRoutes($userId, $editorId, $adminId)
     {
         //has no access!
         $this->check403('/admin_sonata_user_user/list');
         $this->check403('/admin_sonata_user_user/create');
-        //   $this->check403('/admin_sonata_user_user/2/show');
-        // $this->check403('/admin_sonata_user_user/2/edit');    
-        //$this->check403('/admin_sonata_user_user/2/delete');
+        $this->check403('/admin_sonata_user_user/'.$editorId.'/show');
+        $this->check403('/admin_sonata_user_user/'.$editorId.'/edit');    
+        $this->check403('/admin_sonata_user_user/'.$editorId.'/delete');
+        $this->check403('/admin_sonata_user_user/'.$adminId.'/show');
+        $this->check403('/admin_sonata_user_user/'.$adminId.'/edit');    
+        $this->check403('/admin_sonata_user_user/'.$adminId.'/delete');
+        $this->check403('/admin_sonata_user_user/'.$userId.'/delete');    
         $this->check403('/sonata/user/group/list');
         $this->check403('/sonata/user/group/create');          
         $this->check403('/sonata/user/group/export');
+        //has access
+        $this->checkSuccess('/admin_sonata_user_user/'.$userId.'/edit');
     }
 
-    private function checkEditorRoutes()
+    private function checkEditorRoutes($userId, $editorId, $adminId)
     {
         //has no access!
         $this->check403('/admin_sonata_user_user/list');
         $this->check403('/admin_sonata_user_user/create');
-        //        $this->check403('/admin_sonata_user_user/2/show');
-        //        $this->check403('/admin_sonata_user_user/2/edit');    
-        //$this->check403('/admin_sonata_user_user/2/delete');
-        //$this->check403('/admin_sonata_user_user/export');
-        /*        $this->check403('/sonata/user/group/list');
+        $this->check403('/admin_sonata_user_user/'.$userId.'/show');
+        $this->check403('/admin_sonata_user_user/'.$userId.'/edit');    
+        $this->check403('/admin_sonata_user_user/'.$userId.'/delete');
+        $this->check403('/admin_sonata_user_user/'.$adminId.'/show');
+        $this->check403('/admin_sonata_user_user/'.$adminId.'/edit');    
+        $this->check403('/admin_sonata_user_user/'.$adminId.'/delete');
+        $this->check403('/admin_sonata_user_user/'.$editorId.'/delete');    
+        $this->check403('/sonata/user/group/list');
         $this->check403('/sonata/user/group/create');          
         $this->check403('/sonata/user/group/export');
-        /*$this->checkSuccess('/app/liturgy/1/show');
-        $this->checkSuccess('/app/liturgy/list');
-        $this->checkSuccess('/app/liturgy/create');        
-        $this->checkSuccess('/app/liturgy/1/edit');
-        $this->checkSuccess('/app/liturgy/1/delete');
-        $this->checkSuccess('/liturgy_text/assemble');*/
+        //has access
+        $this->checkSuccess('/admin_sonata_user_user/'.$editorId.'/edit');
+
     }
 
 
-    private function checkAdminRoutes()
+    private function checkAdminRoutes($userId, $editorId, $adminId)
     {
-        //has no access!
-        //$this->checkSuccess('/admin_sonata_user_user/list');
-        //$this->checkSuccess('/admin_sonata_user_user/create');
-        //$this->checkSuccess('/admin_sonata_user_user/1/show');
-        //$this->checkSuccess('/admin_sonata_user_user/1/edit');    
-        //$this->checkSuccess('/admin_sonata_user_user/1/delete');
-        /*        $this->checkSuccess('/sonata/user/group/list');
-        $this->checkSuccess('/sonata/user/group/create');          
-        $this->checkSuccess('/sonata/user/group/export');*/
+        $this->checkSuccess('/admin_sonata_user_user/list');
+        $this->checkSuccess('/admin_sonata_user_user/create');
+        $this->checkSuccess('/admin_sonata_user_user/'.$userId.'/show');
+        $this->checkSuccess('/admin_sonata_user_user/'.$userId.'/edit');    
+        $this->checkSuccess('/admin_sonata_user_user/'.$userId.'/delete');
+        $this->checkSuccess('/admin_sonata_user_user/'.$editorId.'/show');
+        $this->checkSuccess('/admin_sonata_user_user/'.$editorId.'/edit');
+        $this->checkSuccess('/admin_sonata_user_user/'.$editorId.'/delete');
+        $this->checkSuccess('/admin_sonata_user_user/'.$adminId.'/show');
+        $this->checkSuccess('/admin_sonata_user_user/'.$adminId.'/edit');
+        $this->checkSuccess('/admin_sonata_user_user/'.$adminId.'/delete');
+        $this->check403('/sonata/user/group/list');
+        $this->check403('/sonata/user/group/create');          
+        $this->check403('/sonata/user/group/export');
+        //has access
+
+        
     }
 
     private function checkSuccess($route){
