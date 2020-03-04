@@ -3,6 +3,7 @@
 namespace App\Tests\Controller;
 
 use App\DataFixtures\UserTestFixtures;
+use App\DataFixtures\AppExampleFixtures;
 use App\DataFixtures\UserNotEnabledTestFixtures;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
@@ -65,7 +66,9 @@ class SecurityControllerTest extends WebTestCase
      */
     public function testLoginUser()
     {
-        $fixtures = $this->loadFixtures([UserTestFixtures::class])->getReferenceRepository();
+        $fixtures = $this->loadFixtures(
+            [UserTestFixtures::class, AppExampleFixtures::class]
+        )->getReferenceRepository();
         $this->client = static::createClient();
         $this->client->setServerParameters([]);
 
@@ -84,6 +87,8 @@ class SecurityControllerTest extends WebTestCase
         $editorId = $fixtures->getReference('editor')->getId();
         $adminId = $fixtures->getReference('admin')->getId();
         $this->checkUserRoutes($userId, $editorId, $adminId);
+        $wordsetId = $fixtures->getReference('wordset')->getId();
+        $this->checkUserWordset($wordsetId);
         // now logout
         $crawler = $this->client->request('GET', '/logout');
         $this->assertRedirect('http://localhost/login');
@@ -202,6 +207,7 @@ class SecurityControllerTest extends WebTestCase
 
     private function checkUserRoutes($userId, $editorId, $adminId)
     {
+        //********** USER RELATED**********
         //has no access!
         $this->check403('/admin_sonata_user_user/list');
         $this->check403('/admin_sonata_user_user/create');
@@ -217,6 +223,15 @@ class SecurityControllerTest extends WebTestCase
         $this->check403('/sonata/user/group/export');
         //has access
         $this->checkSuccess('/admin_sonata_user_user/'.$userId.'/edit');
+    }
+    
+    private function checkUserWordset($wordsetId)
+    {
+        $this->checkSuccess('/app/wordset/list');
+        $this->check403('/app/wordset/create');
+         $this->checkSuccess('/app/wordset/'.$wordsetId.'/show');
+        $this->check403('/app/wordset/'.$wordsetId.'/edit');
+        $this->check403('/app/wordset/'.$wordsetId.'/delete');
     }
 
     private function checkEditorRoutes($userId, $editorId, $adminId)

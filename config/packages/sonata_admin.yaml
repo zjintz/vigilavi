@@ -36,7 +36,7 @@ sonata_admin:
                 label_catalogue: App
                 icon: '<i class="fa fa-tags"></i>'
                 items:
-                    - app.admin.word_set
+                    - app.admin.wordset
                     
           app.admin.group.reports:
                 on_top:       true

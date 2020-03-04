@@ -94,7 +94,7 @@ services:
             - [addChild, ['@app.admin.outcome', 'report']]
             - [setTemplate, ['show', 'report_admin/show.html.twig']]
 
-    app.admin.word_set:
+    app.admin.wordset:
         class: App\Admin\WordSetAdmin
         arguments: [~, App\Entity\WordSet, ~]
         tags:
