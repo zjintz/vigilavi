@@ -2,6 +2,7 @@
 
 namespace App\Admin;
 
+use App\Application\Sonata\UserBundle\Entity\User;
 use App\Entity\Origin;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -10,10 +11,11 @@ use Sonata\AdminBundle\Form\Type\AdminType;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Show\ShowMapper;
+use Sonata\Form\Type\EqualType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Sonata\Form\Type\EqualType;
+
 
 /**
  * Sonata Admin for the Origin.
@@ -33,6 +35,17 @@ final class OriginAdmin extends AbstractAdmin
     {
     }
 
+    public function createQuery($context = 'list')
+    {
+        $user = $this->getConfigurationPool()->getContainer()->get('security.token_storage')
+                     ->getToken()->getUser();
+        $query = parent::createQuery($context);
+        $query->from(User::class, 'u');
+        $query->innerJoin('o.users', 'uo');
+        $query->andWhere('u.id = '.$user->getId());
+        return $query;
+    }
+    
     protected function configureListFields(ListMapper $listMapper)
     {
 

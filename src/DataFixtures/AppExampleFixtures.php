@@ -15,6 +15,10 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class AppExampleFixtures extends Fixture implements FixtureGroupInterface
 {
+    public const COMALA_ORIGIN_REFERENCE = 'comala-origin';
+    public const MACONDO_ORIGIN_REFERENCE = 'macondo-origin';
+    public const AREA51_ORIGIN_REFERENCE = 'area51-origin';
+
     private $parameterBag;
 
     public function __construct(ParameterBagInterface $parameterBag)
@@ -31,12 +35,15 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
         
         $num = 0;
         $line = fgetcsv($csv);
-        $origin = new Origin();
-        $origin->setSubnet("193.77.1");
-        $origin->setName("Comala");
-        $origin->setType("Sede");
-        $origin->setActive(true);
-        $manager->persist($origin);
+        $comalaOrigin = $this->makeOrigin("Comala", "193.77.1", "sede");
+        $macondoOrigin = $this->makeOrigin("Macondo", "193.77.2", "sede");
+        $area51Origin = $this->makeOrigin("Area51", "193.77.3", "sede");
+        $this->addReference(self::COMALA_ORIGIN_REFERENCE, $comalaOrigin);
+        $this->addReference(self::MACONDO_ORIGIN_REFERENCE, $macondoOrigin);
+        $this->addReference(self::AREA51_ORIGIN_REFERENCE, $area51Origin);
+        $manager->persist($comalaOrigin);
+        $manager->persist($macondoOrigin);
+        $manager->persist($area51Origin);
         while (!feof($csv)) {
             $timeLog = \DateTime::createFromFormat($format24H,$line[2]);
             $logEntry[$num] = new LogEntry();
@@ -48,13 +55,13 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
             $logEntry[$num]->setSrcIp($line[22]);
             $logEntry[$num]->setDstIp($line[23]);
             $logEntry[$num]->setDomain($line[29]);
-            $logEntry[$num]->setOrigin($origin);
+            $logEntry[$num]->setOrigin($comalaOrigin);
             $manager->persist($logEntry[$num]);
             $num += 1;
             $line = fgetcsv($csv);
         }
         fclose($csv);
-        $this->addTestUser($manager, $origin);
+        $this->addTestUser($manager, $comalaOrigin);
         $this->addWords($manager);
 
         $manager->flush();
@@ -120,6 +127,16 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
         $newWord = new Word();
         $newWord->setText($text);
         return $newWord;
+    }
+
+    private function makeOrigin(string $name, string $subnet, string $type)
+    {
+        $origin = new Origin();
+        $origin->setSubnet($subnet);
+        $origin->setName($name);
+        $origin->setType($type);
+        $origin->setActive(true);
+        return $origin;
     }
 
     public static function getGroups(): array

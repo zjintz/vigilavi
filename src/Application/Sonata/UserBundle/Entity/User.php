@@ -42,11 +42,8 @@ class User extends BaseUser
 
     /**
      * Many Users have Many Origins.
-     * @ORM\ManyToMany(targetEntity="App\Entity\Origin")
-     * @ORM\JoinTable(name="users_origins",
-     *      joinColumns={@ORM\JoinColumn(name="origin_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
-     *      )
+     * @ORM\ManyToMany(targetEntity="App\Entity\Origin", inversedBy="users")
+     * @ORM\JoinTable(name="users_origins")
      */
     private $origins;
 

@@ -67,7 +67,7 @@ class SecurityControllerTest extends WebTestCase
     public function testLoginUser()
     {
         $fixtures = $this->loadFixtures(
-            [UserTestFixtures::class, AppExampleFixtures::class]
+            [AppExampleFixtures::class, UserTestFixtures::class]
         )->getReferenceRepository();
         $this->client = static::createClient();
         $this->client->setServerParameters([]);
@@ -89,6 +89,7 @@ class SecurityControllerTest extends WebTestCase
         $this->checkUserRoutes($userId, $editorId, $adminId);
         $wordsetId = $fixtures->getReference('wordset')->getId();
         $this->checkUserWordset($wordsetId);
+        $this->checkUserOrigins();
         // now logout
         $crawler = $this->client->request('GET', '/logout');
         $this->assertRedirect('http://localhost/login');
@@ -99,7 +100,9 @@ class SecurityControllerTest extends WebTestCase
      */
     public function testLoginEditor()
     {
-        $fixtures = $this->loadFixtures([UserTestFixtures::class])->getReferenceRepository();
+        $fixtures = $this->loadFixtures(
+            [AppExampleFixtures::class, UserTestFixtures::class]
+        )->getReferenceRepository();
         $userId = $fixtures->getReference('user')->getId();
         $editorId = $fixtures->getReference('editor')->getId();
         $adminId = $fixtures->getReference('admin')->getId();
@@ -126,7 +129,9 @@ class SecurityControllerTest extends WebTestCase
      */
     public function testLoginAdmin()
     {
-        $fixtures = $this->loadFixtures([UserTestFixtures::class])->getReferenceRepository();
+        $fixtures = $this->loadFixtures(
+            [AppExampleFixtures::class, UserTestFixtures::class]
+        )->getReferenceRepository();
         $userId = $fixtures->getReference('user')->getId();
         $editorId = $fixtures->getReference('editor')->getId();
         $adminId = $fixtures->getReference('admin')->getId();
@@ -234,6 +239,30 @@ class SecurityControllerTest extends WebTestCase
         $this->check403('/app/wordset/'.$wordsetId.'/delete');
     }
 
+    private function checkUserOrigins()
+    {
+        $this->checkSuccess('/app/origin/list');
+        $crawler = $this->client->request('GET', '/app/origin/list');
+        $this->assertEquals(
+            1,
+            $crawler->filter(
+                'td:contains("Comala")'
+            )->count()
+        );
+        $this->assertEquals(
+            1,
+            $crawler->filter(
+                'td:contains("Macondo")'
+            )->count()
+        );
+        $this->assertEquals(
+            2,
+            $crawler->filter(
+                'tbody tr'
+            )->count()
+        );
+    }
+
     private function checkEditorRoutes($userId, $editorId, $adminId)
     {
         //has no access!
@@ -279,7 +308,6 @@ class SecurityControllerTest extends WebTestCase
     private function checkSuccess($route){
         $this->client->request('GET', $route);
         $this->assertResponseIsSuccessful($this->client->getResponse());
-
     }
     private function check403($route)
     {

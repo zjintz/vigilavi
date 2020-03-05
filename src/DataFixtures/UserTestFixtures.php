@@ -23,6 +23,14 @@ class UserTestFixtures extends Fixture
         $testUser->setEmail('user@test.com');
         $testUser->setRoles(["ROLE_USER"]);
         $testUser->setHeadquarter($testHQ);
+        $comalaOrigin = $this->getReference(
+            AppExampleFixtures::COMALA_ORIGIN_REFERENCE
+        );
+        $macondoOrigin = $this->getReference(
+            AppExampleFixtures::MACONDO_ORIGIN_REFERENCE
+        );
+        $testUser->addOrigin($comalaOrigin);
+        $testUser->addOrigin($macondoOrigin);
         $this->setReference('user', $testUser);
         $testAdmin = new User();
         $testAdmin->setUsername('admin@test.com');

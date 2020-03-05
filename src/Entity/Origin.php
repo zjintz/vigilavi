@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Application\Sonata\UserBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -49,10 +50,19 @@ class Origin
      */
     private $active;
 
+
+    /**
+     * Many Origins have Many Users.
+     * @ORM\ManyToMany(targetEntity="App\Application\Sonata\UserBundle\Entity\User", mappedBy="origins")
+     */
+    private $users;
+
+    
     public function __construct()
     {
         $this->reports = new ArrayCollection();
         $this->logEntries = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -168,5 +178,28 @@ class Origin
         $this->active = $active;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Origin[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->origins;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+        }
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->contains($user)) {
+            $this->users->removeElement($user);
+        }
     }
 }
