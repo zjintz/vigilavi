@@ -2,7 +2,9 @@
 
 namespace App\Admin;
 
+use App\Application\Sonata\UserBundle\Entity\User;
 use App\Entity\LogEntry;
+use App\Entity\Origin;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
@@ -29,6 +31,19 @@ final class LogEntryAdmin extends AbstractAdmin
         $collection->remove('batch');
     }
 
+    public function createQuery($context = 'list')
+    {
+        $user = $this->getConfigurationPool()->getContainer()->get('security.token_storage')
+                     ->getToken()->getUser();
+        $query = parent::createQuery($context);
+        $query->from(User::class, 'u');
+        $query->from(Origin::class, 'r');
+        $query->innerJoin('o.origin', 'oo');
+        $query->innerJoin('oo.users', 'uo');
+        $query->andWhere('u.id = '.$user->getId());
+        return $query;
+    }
+    
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
     }
@@ -51,6 +66,11 @@ final class LogEntryAdmin extends AbstractAdmin
             'domain',
             null,
             ['label' => 'logEntry.label.domain']
+        );
+        $listMapper->add(
+            'origin.name',
+            null,
+            ['label' => 'logEntry.label.origin']
         );
         $listMapper->add('_action', 'actions', array(
             'actions' => array(
@@ -81,6 +101,11 @@ final class LogEntryAdmin extends AbstractAdmin
                 'domain',
                 null,
                 ['label' => 'logEntry.label.domain']
+            )
+            ->add(
+                'origin.name',
+                null,
+                ['label' => 'logEntry.label.origin']
             )
             ->end();
     }

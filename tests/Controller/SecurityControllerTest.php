@@ -90,6 +90,7 @@ class SecurityControllerTest extends WebTestCase
         $wordsetId = $fixtures->getReference('wordset')->getId();
         $this->checkUserWordset($wordsetId);
         $this->checkUserOrigins();
+        $this->checkUserLogEntries();
         // now logout
         $crawler = $this->client->request('GET', '/logout');
         $this->assertRedirect('http://localhost/login');
@@ -261,6 +262,30 @@ class SecurityControllerTest extends WebTestCase
                 'tbody tr'
             )->count()
         );
+    }
+
+    private function checkUserLogEntries()
+    {
+        $this->checkSuccess('/app/logentry/list');
+        $crawler = $this->client->request('GET', '/app/logentry/list');
+        $this->assertEquals(
+            5,
+            $crawler->filter(
+                'td:contains("Comala")'
+            )->count()
+        );
+        $this->assertEquals(
+            3,
+            $crawler->filter(
+                'td:contains("Macondo")'
+            )->count()
+        );
+        $this->assertEquals(
+            8,
+            $crawler->filter(
+                'tbody tr'
+            )->count()
+            );
     }
 
     private function checkEditorRoutes($userId, $editorId, $adminId)

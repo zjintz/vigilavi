@@ -50,6 +50,8 @@ security:
             - ROLE_APP_ADMIN_ORIGIN_LIST
             - ROLE_APP_ADMIN_WORDSET_LIST
             - ROLE_APP_ADMIN_WORDSET_VIEW
+            - ROLE_APP_ADMIN_LOG_ENTRY_LIST
+            - ROLE_APP_ADMIN_LOG_ENTRY_VIEW
 
         ROLE_APP_ADMIN_EDITOR:
 

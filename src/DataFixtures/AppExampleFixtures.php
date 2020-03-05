@@ -55,7 +55,18 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
             $logEntry[$num]->setSrcIp($line[22]);
             $logEntry[$num]->setDstIp($line[23]);
             $logEntry[$num]->setDomain($line[29]);
-            $logEntry[$num]->setOrigin($comalaOrigin);
+            if ($num < 5) {
+                $logEntry[$num]->setOrigin($comalaOrigin);
+
+            }
+            if ($num >= 5 && $num <= 7) {
+                $logEntry[$num]->setOrigin($macondoOrigin);
+
+            }
+            if ($num > 7) {
+                $logEntry[$num]->setOrigin($area51Origin);
+            }
+            
             $manager->persist($logEntry[$num]);
             $num += 1;
             $line = fgetcsv($csv);
