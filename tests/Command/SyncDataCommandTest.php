@@ -4,6 +4,7 @@ namespace App\Tests\Command;
 
 use App\Util\OriginRetriever;
 use App\Util\LogRetriever;
+use App\Report\ReportGenerator;
 use App\Command\SyncDataCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -44,7 +45,15 @@ class SyncDataCommandTest extends KernelTestCase
                        'active_origins' => 1,
                        'logs_found' => 1   
                    ]);
-        $application->add(new SyncDataCommand($oRetriever, $logRetriever));
+        $reportGenerator = $this->createMock(ReportGenerator::class);
+        $reportGenerator->expects($this->once())
+                   ->method('generateAllReports')
+                   ->willReturn([
+                       'total' => 0,
+                   ]);
+        $application->add(
+            new SyncDataCommand($oRetriever, $logRetriever, $reportGenerator)
+        );
 
         $this->command = $application->find('vigilavi:sync-data');
         $this->commandTester = new CommandTester($this->command);
@@ -75,6 +84,7 @@ class SyncDataCommandTest extends KernelTestCase
         $yesterday = $today->sub(new \DateInterval('P1D'));
         $testDate =  $yesterday->format('yy-m-d');
         $this->assertStartDisplay($testDate);
+        $this->assertMakingReportsDisplay();
         $this->assertSuccessDisplay();
     }
     
@@ -88,6 +98,7 @@ class SyncDataCommandTest extends KernelTestCase
             // e.g: '--some-option' => 'option_value',
         ]);
         $this->assertStartDisplay($testDate);
+        $this->assertMakingReportsDisplay();
         $this->assertSuccessDisplay();
     }
 
@@ -112,6 +123,23 @@ class SyncDataCommandTest extends KernelTestCase
         );
 
         
+    }
+
+    private function assertMakingReportsDisplay()
+    {
+        $output = $this->commandTester->getDisplay();
+        $this->assertStringContainsString(
+            '----- Creating Reports',
+            $output
+        );
+        $this->assertStringContainsString(
+            '      Total new reports: 0',
+            $output
+        );
+        $this->assertStringContainsString(
+            '----- Reports Created',
+            $output
+        );
     }
 
     private function assertSuccessDisplay()

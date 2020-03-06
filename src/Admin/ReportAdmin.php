@@ -50,7 +50,7 @@ final class ReportAdmin extends AbstractAdmin
     {
         $user = $this->getConfigurationPool()->getContainer()->get('security.token_storage')
                      ->getToken()->getUser();
-        $query = parent::createQuery($context);
+        $query = parent::createQuery();
         $query->innerJoin('o.origin', 'oo');
         $query->innerJoin('oo.users', 'uo');
         $query->andWhere('uo.id = '.$user->getId());

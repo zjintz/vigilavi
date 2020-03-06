@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Util\OriginRetriever;
 use App\Util\LogRetriever;
+use App\Report\ReportGenerator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,13 +21,16 @@ class SyncDataCommand extends Command
     protected static $defaultName = 'vigilavi:sync-data';
     protected $originRetriever;
     protected $logRetriever;
+    protected $reportGenerator;
 
     public function __construct(
         OriginRetriever $originRetriever,
-        LogRetriever $logRetriever
+        LogRetriever $logRetriever,
+        ReportGenerator $reportGenerator
     ) {
         $this->originRetriever = $originRetriever;
         $this->logRetriever = $logRetriever;
+        $this->reportGenerator = $reportGenerator;
         
         parent::__construct();
     }
@@ -72,7 +76,7 @@ class SyncDataCommand extends Command
             '----- Sync origins done',
             '----- Sync logs']
         );
-        $logSummary = $this->logRetriever->retrieveData();
+        $logSummary = $this->logRetriever->retrieveData($syncDate);
         foreach ($logSummary as $key => $value) {
             $output->writeln(["      ".$key." : ". $value]);
         }
@@ -80,6 +84,20 @@ class SyncDataCommand extends Command
         $output->writeln([
             '----- Sync logs done',
         ]);
+
+        $output->writeln([
+            '----- Creating Reports',
+        ]);
+        
+        $newReports = 0;
+        $newReports = $this->reportGenerator->generateAllReports($syncDate)['total'];
+        $output->writeln([
+            '      Total new reports: '.$newReports,
+        ]);
+        $output->writeln([
+            '----- Reports Created',
+        ]);
+        
         
         $inout->success('Sync data finished.');
         return 0;
