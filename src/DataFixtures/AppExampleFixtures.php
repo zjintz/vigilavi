@@ -8,6 +8,7 @@ use App\Entity\Word;
 use App\Entity\WordSet;
 use App\Entity\Origin;
 use App\Entity\Headquarter;
+use App\Entity\Report;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -74,8 +75,8 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
         fclose($csv);
         $this->addTestUser($manager, $comalaOrigin);
         $this->addWords($manager);
-
         $manager->flush();
+        $this->addReports($manager);
     }
 
     private function addTestUser($manager, $origin)
@@ -131,6 +132,27 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
         }
         $manager->flush();
  
+    }
+
+    private function addReports(ObjectManager $manager)
+    {
+        $origins = $manager->getRepository(Origin::class)->findAll();
+        $wordsets = $manager->getRepository(WordSet::class)->findAll();
+        $format = "Y-m-d";
+        $count = 0;
+        foreach ($origins as $origin) {
+            foreach ($wordsets as $wordset) {
+                $newReport = new Report();
+                $newReport->setWordSet($wordset);
+                $newReport->setOrigin($origin);
+                $newDate = \DateTime::createFromFormat($format, "2019-09-23");
+                $newReport->setDate($newDate);
+                $this->addReference("report-".$count ,$newReport);
+                $manager->persist($newReport);
+                $count +=1;
+            }
+        }
+        $manager->flush();
     }
 
     private function makeWord(string $text)

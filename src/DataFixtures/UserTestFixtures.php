@@ -3,11 +3,14 @@
 namespace App\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use App\Application\Sonata\UserBundle\Entity\User;
 use App\Entity\Headquarter;
 
 class UserTestFixtures extends Fixture
+    implements FixtureGroupInterface, DependentFixtureInterface 
 {
 
     public function load(ObjectManager $manager)
@@ -39,6 +42,7 @@ class UserTestFixtures extends Fixture
         $testAdmin->setEmail('admin@test.com');
         $testAdmin->setRoles(["ROLE_ADMIN"]);
         $testAdmin->setHeadquarter($testHQ);
+        $testAdmin->addOrigin($macondoOrigin);
         $this->setReference('admin', $testAdmin);
         $testEditor = new User();
         $testEditor->setUsername('editor@test.com');
@@ -47,10 +51,23 @@ class UserTestFixtures extends Fixture
         $testEditor->setEmail('editor@test.com');
         $testEditor->setRoles(["ROLE_EDITOR"]);
         $testEditor->setHeadquarter($testHQ);
+        $testEditor->addOrigin($comalaOrigin);
         $this->setReference('editor', $testEditor);
         $manager->persist($testUser);
         $manager->persist($testAdmin);
         $manager->persist($testEditor);
         $manager->flush();
+    }
+
+    public function getDependencies()
+    {
+        return array(
+            AppExampleFixtures::class,
+        );
+    }
+
+    public static function getGroups(): array
+    {
+        return ['app-example'];
     }
 }

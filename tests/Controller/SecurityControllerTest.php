@@ -86,11 +86,13 @@ class SecurityControllerTest extends WebTestCase
         $userId = $fixtures->getReference('user')->getId();
         $editorId = $fixtures->getReference('editor')->getId();
         $adminId = $fixtures->getReference('admin')->getId();
+        $reportId = $fixtures->getReference('report-0')->getId();
         $this->checkUserRoutes($userId, $editorId, $adminId);
         $wordsetId = $fixtures->getReference('wordset')->getId();
         $this->checkUserWordset($wordsetId);
         $this->checkUserOrigins();
         $this->checkUserLogEntries();
+        $this->checkUserReports($reportId);
         // now logout
         $crawler = $this->client->request('GET', '/logout');
         $this->assertRedirect('http://localhost/login');
@@ -104,12 +106,9 @@ class SecurityControllerTest extends WebTestCase
         $fixtures = $this->loadFixtures(
             [AppExampleFixtures::class, UserTestFixtures::class]
         )->getReferenceRepository();
-        $userId = $fixtures->getReference('user')->getId();
-        $editorId = $fixtures->getReference('editor')->getId();
-        $adminId = $fixtures->getReference('admin')->getId();
+                        
         $this->client = static::createClient();
         $this->client->setServerParameters([]);
-
         //now login:
         $crawler = $this->client->request('GET', '/');
         $crawler=$this->client->followRedirect();
@@ -120,7 +119,20 @@ class SecurityControllerTest extends WebTestCase
         $this->client->submit($form);
         $this->assertRedirect('http://localhost/');
         $crawler = $this->client->followRedirect();
+
+        $userId = $fixtures->getReference('user')->getId();
+        $editorId = $fixtures->getReference('editor')->getId();
+        $adminId = $fixtures->getReference('admin')->getId();
+        $reportId = $fixtures->getReference('report-0')->getId();
+        $wordsetId = $fixtures->getReference('wordset')->getId();
+
+        //check that the user with ROLE_EDITOR has no access to certain stuff.
         $this->checkEditorRoutes($userId, $editorId, $adminId);
+        $this->checkEditorWordset($wordsetId);
+        $this->checkEditorOrigins();
+        $this->checkEditorLogEntries();
+        $this->checkEditorReports($reportId);
+        //now logout
         $crawler = $this->client->request('GET', '/logout');
         $this->assertRedirect('http://localhost/login');
     }
@@ -133,9 +145,6 @@ class SecurityControllerTest extends WebTestCase
         $fixtures = $this->loadFixtures(
             [AppExampleFixtures::class, UserTestFixtures::class]
         )->getReferenceRepository();
-        $userId = $fixtures->getReference('user')->getId();
-        $editorId = $fixtures->getReference('editor')->getId();
-        $adminId = $fixtures->getReference('admin')->getId();
         $this->client = static::createClient();
         $this->client->setServerParameters([]);
 
@@ -149,8 +158,19 @@ class SecurityControllerTest extends WebTestCase
         $this->client->submit($form);
         $this->assertRedirect('http://localhost/');
         $crawler = $this->client->followRedirect();
-        //check that the user with ROLE_USER has no access to certain stuff.
+
+        $userId = $fixtures->getReference('user')->getId();
+        $editorId = $fixtures->getReference('editor')->getId();
+        $adminId = $fixtures->getReference('admin')->getId();
+        $reportId = $fixtures->getReference('report-0')->getId();
+        $wordsetId = $fixtures->getReference('wordset')->getId();
+
+        //check that the user with ROLE_EDITOR has no access to certain stuff.
         $this->checkAdminRoutes($userId, $editorId, $adminId);
+        $this->checkAdminWordset($wordsetId);
+        $this->checkAdminOrigins();
+        $this->checkAdminLogEntries();
+        $this->checkAdminReports($reportId);
         // now logout
         $crawler = $this->client->request('GET', '/logout');
         $this->assertRedirect('http://localhost/login');
@@ -240,6 +260,23 @@ class SecurityControllerTest extends WebTestCase
         $this->check403('/app/wordset/'.$wordsetId.'/delete');
     }
 
+    private function checkEditorWordset($wordsetId)
+    {
+        $this->checkSuccess('/app/wordset/list');
+        $this->checkSuccess('/app/wordset/create');
+        $this->checkSuccess('/app/wordset/'.$wordsetId.'/show');
+        $this->checkSuccess('/app/wordset/'.$wordsetId.'/edit');
+        $this->checkSuccess('/app/wordset/'.$wordsetId.'/delete');
+    }
+    private function checkAdminWordset($wordsetId)
+    {
+        $this->checkSuccess('/app/wordset/list');
+        $this->checkSuccess('/app/wordset/create');
+        $this->checkSuccess('/app/wordset/'.$wordsetId.'/show');
+        $this->checkSuccess('/app/wordset/'.$wordsetId.'/edit');
+        $this->checkSuccess('/app/wordset/'.$wordsetId.'/delete');
+    }
+
     private function checkUserOrigins()
     {
         $this->checkSuccess('/app/origin/list');
@@ -258,6 +295,54 @@ class SecurityControllerTest extends WebTestCase
         );
         $this->assertEquals(
             2,
+            $crawler->filter(
+                'tbody tr'
+            )->count()
+        );
+    }
+
+    private function checkEditorOrigins()
+    {
+        $this->checkSuccess('/app/origin/list');
+        $crawler = $this->client->request('GET', '/app/origin/list');
+        $this->assertEquals(
+            1,
+            $crawler->filter(
+                'td:contains("Comala")'
+            )->count()
+        );
+        $this->assertEquals(
+            0,
+            $crawler->filter(
+                'td:contains("Macondo")'
+            )->count()
+        );
+        $this->assertEquals(
+            1,
+            $crawler->filter(
+                'tbody tr'
+            )->count()
+        );
+    }
+
+    private function checkAdminOrigins()
+    {
+        $this->checkSuccess('/app/origin/list');
+        $crawler = $this->client->request('GET', '/app/origin/list');
+        $this->assertEquals(
+            0,
+            $crawler->filter(
+                'td:contains("Comala")'
+            )->count()
+        );
+        $this->assertEquals(
+            1,
+            $crawler->filter(
+                'td:contains("Macondo")'
+            )->count()
+        );
+        $this->assertEquals(
+            1,
             $crawler->filter(
                 'tbody tr'
             )->count()
@@ -288,6 +373,131 @@ class SecurityControllerTest extends WebTestCase
             );
     }
 
+    private function checkEditorLogEntries()
+    {
+        $this->checkSuccess('/app/logentry/list');
+        $crawler = $this->client->request('GET', '/app/logentry/list');
+        $this->assertEquals(
+            5,
+            $crawler->filter(
+                'td:contains("Comala")'
+            )->count()
+        );
+        $this->assertEquals(
+            0,
+            $crawler->filter(
+                'td:contains("Macondo")'
+            )->count()
+        );
+        $this->assertEquals(
+            5,
+            $crawler->filter(
+                'tbody tr'
+            )->count()
+            );
+    }
+
+    private function checkAdminLogEntries()
+    {
+        $this->checkSuccess('/app/logentry/list');
+        $crawler = $this->client->request('GET', '/app/logentry/list');
+        $this->assertEquals(
+            0,
+            $crawler->filter(
+                'td:contains("Comala")'
+            )->count()
+        );
+        $this->assertEquals(
+            3,
+            $crawler->filter(
+                'td:contains("Macondo")'
+            )->count()
+        );
+        $this->assertEquals(
+            3,
+            $crawler->filter(
+                'tbody tr'
+            )->count()
+            );
+    }
+
+    private function checkUserReports($reportId)
+    {
+        $this->checkSuccess('/app/report/list');
+        $crawler = $this->client->request('GET', '/app/report/list');
+        $this->assertEquals(
+            2,
+            $crawler->filter(
+                'td:contains("Comala")'
+            )->count()
+        );
+        $this->assertEquals(
+            2,
+            $crawler->filter(
+                'td:contains("Macondo")'
+            )->count()
+        );
+        $this->assertEquals(
+            4,
+            $crawler->filter(
+                'tbody tr'
+            )->count()
+        );
+        $this->checkSuccess('/app/report/'.$reportId.'/show');
+        $this->check403('/app/report/'.$reportId.'/delete');
+    }
+
+    private function checkEditorReports($reportId)
+    {
+        $this->checkSuccess('/app/report/list');
+        $crawler = $this->client->request('GET', '/app/report/list');
+        $this->assertEquals(
+            2,
+            $crawler->filter(
+                'td:contains("Comala")'
+            )->count()
+        );
+        $this->assertEquals(
+            0,
+            $crawler->filter(
+                'td:contains("Macondo")'
+            )->count()
+        );
+        $this->assertEquals(
+            2,
+            $crawler->filter(
+                'tbody tr'
+            )->count()
+        );
+        $this->checkSuccess('/app/report/'.$reportId.'/show');
+        $this->check403('/app/report/'.$reportId.'/delete');
+    }
+
+    private function checkAdminReports($reportId)
+    {
+        $this->checkSuccess('/app/report/list');
+        $crawler = $this->client->request('GET', '/app/report/list');
+        $this->assertEquals(
+            0,
+            $crawler->filter(
+                'td:contains("Comala")'
+            )->count()
+        );
+        $this->assertEquals(
+            2,
+            $crawler->filter(
+                'td:contains("Macondo")'
+            )->count()
+        );
+        $this->assertEquals(
+            2,
+            $crawler->filter(
+                'tbody tr'
+            )->count()
+        );
+        $this->checkSuccess('/app/report/'.$reportId.'/show');
+        $this->checkSuccess('/app/report/'.$reportId.'/delete');
+    }
     private function checkEditorRoutes($userId, $editorId, $adminId)
     {
         //has no access!

@@ -2,6 +2,9 @@
 
 namespace App\Admin;
 
+use App\Application\Sonata\UserBundle\Entity\User;
+use App\Entity\Report;
+use App\Entity\Origin;
 use Knp\Menu\ItemInterface as MenuItemInterface;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Admin\AdminInterface;
@@ -41,6 +44,17 @@ final class ReportAdmin extends AbstractAdmin
             $menu->addChild('label.list.outcomes', [
                 'uri' => $this->getChild('app.admin.outcome')->generateUrl('list')]);
         }
+    }
+
+    public function createQuery($context = 'list')
+    {
+        $user = $this->getConfigurationPool()->getContainer()->get('security.token_storage')
+                     ->getToken()->getUser();
+        $query = parent::createQuery($context);
+        $query->innerJoin('o.origin', 'oo');
+        $query->innerJoin('oo.users', 'uo');
+        $query->andWhere('uo.id = '.$user->getId());
+        return $query;
     }
     
     public function configureRoutes(RouteCollection $collection)
@@ -160,7 +174,7 @@ final class ReportAdmin extends AbstractAdmin
             $title = 'do '.$title;
         }
         return $object instanceof Report
-            ? $object->getTitle()
+            ? $object->getDate()->format("Y-m-d")
             : 'Informe '.$title; // shown in the breadcrumb on the create view
     }
 }

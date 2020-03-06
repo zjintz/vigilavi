@@ -39,10 +39,9 @@ final class OriginAdmin extends AbstractAdmin
     {
         $user = $this->getConfigurationPool()->getContainer()->get('security.token_storage')
                      ->getToken()->getUser();
-        $query = parent::createQuery($context);
-        $query->from(User::class, 'u');
+        $query = parent::createQuery();
         $query->innerJoin('o.users', 'uo');
-        $query->andWhere('u.id = '.$user->getId());
+        $query->andWhere('uo.id = '.$user->getId());
         return $query;
     }
     
