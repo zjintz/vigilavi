@@ -50,7 +50,7 @@ class OriginRetriever
         }
         $updatedOrigins = $this->originSynchronizer->syncOrigins(
             $localOrigins,
-            $remoteOrigins,
+            $remoteOrigins
         );
         foreach($updatedOrigins['entities'] as $origin) {
             $this->entityManager->persist($origin);
