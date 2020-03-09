@@ -55,9 +55,6 @@ class ReportGenerator
         }
         $this->entityManager->flush();
         return ['total'=> $counter];
-        
-            //            $this->entityManager->getRepository()
-
 
     }
     

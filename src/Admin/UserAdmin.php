@@ -90,12 +90,7 @@ final class UserAdmin extends AbstractAdmin
             ->with('Profile')
                 ->add('firstname')
                 ->add('lastname')
-                
-            ->end()
-            ->with('Subscription')
-            ->add('emailsubscription')
-            ->end()
-        ;
+            ->end();
     }
 
     

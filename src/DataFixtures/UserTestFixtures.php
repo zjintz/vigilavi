@@ -2,12 +2,13 @@
 
 namespace App\DataFixtures;
 
+use App\Application\Sonata\UserBundle\Entity\User;
+use App\Entity\EmailSubscription;
+use App\Entity\Headquarter;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use App\Application\Sonata\UserBundle\Entity\User;
-use App\Entity\Headquarter;
 
 class UserTestFixtures extends Fixture
     implements FixtureGroupInterface, DependentFixtureInterface 
@@ -34,6 +35,7 @@ class UserTestFixtures extends Fixture
         );
         $testUser->addOrigin($comalaOrigin);
         $testUser->addOrigin($macondoOrigin);
+        $testUser->setEmailSubscription($this->createSubscription($manager));
         $this->setReference('user', $testUser);
         $testAdmin = new User();
         $testAdmin->setUsername('admin@test.com');
@@ -43,6 +45,7 @@ class UserTestFixtures extends Fixture
         $testAdmin->setRoles(["ROLE_ADMIN"]);
         $testAdmin->setHeadquarter($testHQ);
         $testAdmin->addOrigin($macondoOrigin);
+        $testAdmin->setEmailSubscription($this->createSubscription($manager));
         $this->setReference('admin', $testAdmin);
         $testEditor = new User();
         $testEditor->setUsername('editor@test.com');
@@ -52,11 +55,20 @@ class UserTestFixtures extends Fixture
         $testEditor->setRoles(["ROLE_EDITOR"]);
         $testEditor->setHeadquarter($testHQ);
         $testEditor->addOrigin($comalaOrigin);
+        $testEditor->setEmailSubscription($this->createSubscription($manager));
         $this->setReference('editor', $testEditor);
         $manager->persist($testUser);
         $manager->persist($testAdmin);
         $manager->persist($testEditor);
         $manager->flush();
+    }
+
+    protected function createSubscription(ObjectManager $manager)
+    {
+        $inactiveSubs = new EmailSubscription();
+        $inactiveSubs->setIsActive(true);
+        $manager->persist($inactiveSubs);
+        return $inactiveSubs;
     }
 
     public function getDependencies()
