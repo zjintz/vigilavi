@@ -38,7 +38,7 @@ services:
                 lazy: true
                 method: 'addReportData'
 
-     App\EventListener\UserChangedNotifier:
+    App\EventListener\UserChangedNotifier:
         tags:
             -
                 # these are the basic options that define the entity listener
