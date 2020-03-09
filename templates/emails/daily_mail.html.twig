@@ -1,0 +1,20 @@
+<h3>Textos Litúrgicos</h3>
+
+Assinatura do liturgiacheznous.org.
+
+{% if last_date %}
+    Textos correspondentes à : {{ start_date }} até {{ last_date }} .
+{% else  %}
+    Textos correspondentes à data: {{ start_date }}
+{% endif %}
+
+{% if not_found_list  %}
+    <br>
+    Os seguintes documentos não foram encontrados:
+    <ul>
+    
+    {% for doc in not_found_list %}
+        <li> {{ doc }}</li>
+    {% endfor %}
+    </ul>
+{% endif  %}

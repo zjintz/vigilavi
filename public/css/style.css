@@ -1,0 +1,14 @@
+
+.liturgy-login {
+    background-image : url("../images/login-bg.jpg");
+    background-position: center;
+    background-size: cover;
+}
+
+div.regg-form div label{
+    width: 40%;
+}
+
+div.login-box-body{
+    opacity: 0.9;
+}
