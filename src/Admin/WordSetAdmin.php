@@ -26,6 +26,7 @@ final class WordSetAdmin extends AbstractAdmin
     public function configureRoutes(RouteCollection $collection)
     {
         $collection->remove('export');
+        $collection->remove('batch');
     }
     
     protected function configureFormFields(FormMapper $formMapper)

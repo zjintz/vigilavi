@@ -167,6 +167,30 @@ class ReportMailerAttacherTest extends TestCase
         );
     }
 
+    /**
+     * Makes sure that the makeAllView method cretes the dir if is not created.
+     *
+     *
+     */
+    public function testMakeAllViewsNoDir()
+    {
+        $templating = $this->createMock(\Twig\Environment::class);
+        $attacher = new ReportMailerAttacher(
+            $this->mockEntityManagerVoid(),
+            $templating
+        );
+        $dirPath = '/tmp/vigilavi_test/';
+        $this->clearPath($dirPath);
+        if (is_dir($dirPath)) {
+            rmdir($dirPath);
+        }
+        $fileList = $attacher->makeAllViews("2020-01-01", $dirPath);
+        $this->assertTrue(file_exists($dirPath) && is_dir( $dirPath));
+        $this->assertEquals([], $fileList);
+        $realDirList = scandir($dirPath);
+        $this->assertEquals([], array_diff($realDirList, array('..', '.')));
+    }
+    
     public function testMakeAllViewsVoid()
     {
         $templating = $this->createMock(\Twig\Environment::class);

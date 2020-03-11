@@ -7,8 +7,6 @@ use App\Entity\Origin;
 use App\Entity\Report;
 use App\Entity\WordSet;
 use Doctrine\ORM\EntityManagerInterface;
-//use Twig\Environment;
-//use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /**
  * \brief     Mails the Report texts.
@@ -81,8 +79,9 @@ class ReportMailerAttacher
         if (empty($wordsets)) {
             return [];            
         }
-        $origins = $user->getOrigins(); 
-        if (empty($origins)) {
+        $origins = $user->getOrigins();
+        //isEmpty is a doctrine colletion method!
+        if ($origins->isEmpty()) {
             return [];            
         }
         $fileList = [];

@@ -48,12 +48,11 @@ class ViewByWordMaker
                         if( $isDenied ) {
                             $deniedCount += 1;
                         }
-                        $userStats = $this->addUserStat(
+                        $userStats = $this->updateUserStats(
                             $userStats,
                             $userName,
                             $isDenied
                         );
-                        
                     }
                 }
             }
@@ -67,7 +66,13 @@ class ViewByWordMaker
         return $view;
     }
 
-    protected function addUserStat($stats, $userName, $isDenied)
+    /**
+     * Given an array of UserStat this function push a new UserStat for an
+     * user if is not in the array. If is in the array it updates the count of 
+     * denied or allowed entries for that user.
+     *
+     */
+    protected function updateUserStats(array $stats, string $userName, bool $isDenied)
     {
         foreach($stats as $userStat) {
             if ($userStat->getName() === $userName) {

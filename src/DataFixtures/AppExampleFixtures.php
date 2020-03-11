@@ -36,9 +36,9 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
         
         $num = 0;
         $line = fgetcsv($csv);
-        $comalaOrigin = $this->makeOrigin("Comala", "193.77.1", "sede");
-        $macondoOrigin = $this->makeOrigin("Macondo", "193.77.2", "sede");
-        $area51Origin = $this->makeOrigin("Area51", "193.77.3", "sede");
+        $comalaOrigin = $this->makeOrigin("Comala", "193.77.1");
+        $macondoOrigin = $this->makeOrigin("Macondo", "193.77.2");
+        $area51Origin = $this->makeOrigin("Area51", "193.77.3");
         $this->addReference(self::COMALA_ORIGIN_REFERENCE, $comalaOrigin);
         $this->addReference(self::MACONDO_ORIGIN_REFERENCE, $macondoOrigin);
         $this->addReference(self::AREA51_ORIGIN_REFERENCE, $area51Origin);
@@ -162,12 +162,11 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
         return $newWord;
     }
 
-    private function makeOrigin(string $name, string $subnet, string $type)
+    private function makeOrigin(string $name, string $subnet)
     {
         $origin = new Origin();
         $origin->setSubnet($subnet);
         $origin->setName($name);
-        $origin->setType($type);
         $origin->setActive(true);
         return $origin;
     }

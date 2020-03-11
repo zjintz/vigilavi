@@ -118,8 +118,8 @@ class ViewByWordMakerTest extends TestCase
         $report = new Report();
         $report->setWordSet($this->make2WordSet());
         $report= $this->addUrlOutcomes($report);
-        $outcomeGenerator = new ViewByWordMaker();
-        $newView = $outcomeGenerator->makeView($report);
+        $viewMaker = new ViewByWordMaker();
+        $newView = $viewMaker->makeView($report);
         $this->assertEquals(2, count($newView->getWordStats()));
         $this->assertEquals(1, count($newView->getWordStats()[0]->getOutcomes()));
         $this->assertEquals(3, count($newView->getWordStats()[1]->getOutcomes()));
@@ -152,11 +152,11 @@ class ViewByWordMakerTest extends TestCase
             $newView->getWordStats()[1]->getWordText()
         );
         $this->assertEquals(
-            2,
+            1,
             $newView->getWordStats()[1]->getDeniedEntries()
         );
         $this->assertEquals(
-            1,
+            2,
             $newView->getWordStats()[1]->getAllowedEntries()
         );
         $this->assertEquals(
@@ -164,11 +164,11 @@ class ViewByWordMakerTest extends TestCase
             $newView->getWordStats()[1]->getUserStats()[0]->getName()
         );
         $this->assertEquals(
-            2,
+            1,
             $newView->getWordStats()[1]->getUserStats()[0]->getDeniedEntries()
         );
         $this->assertEquals(
-            1,
+            2,
             $newView->getWordStats()[1]->getUserStats()[0]->getAllowedEntries()
         );
     }
@@ -182,8 +182,8 @@ class ViewByWordMakerTest extends TestCase
         $report = new Report();
         $report->setWordSet($this->make2WordSet());
         $report= $this->addOutcomes($report);
-        $outcomeGenerator = new ViewByWordMaker();
-        $newView = $outcomeGenerator->makeView($report);
+        $viewMaker = new ViewByWordMaker();
+        $newView = $viewMaker->makeView($report);
         $this->assertEquals(2, count($newView->getWordStats()));
         $this->assertEquals(4, count($newView->getWordStats()[0]->getOutcomes()));
         $this->assertEquals(2, count($newView->getWordStats()[1]->getOutcomes()));
@@ -264,7 +264,7 @@ class ViewByWordMakerTest extends TestCase
         $outcome1->setClassification('URL');
         $outcome1->setWordsFound("sin");
         $logEntry1 = new LogEntry();
-        $logEntry1->setLogSubType("Denied");
+        $logEntry1->setLogSubType("Allowed");
         $logEntry1->setUserName("Tester");
         $outcome1->setLogEntry($logEntry1);
         $outcome2 = new Outcome();
