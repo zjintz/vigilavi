@@ -91,7 +91,8 @@ class SecurityControllerTest extends WebTestCase
         $wordsetId = $fixtures->getReference('wordset')->getId();
         $this->checkUserWordset($wordsetId);
         $this->checkUserOrigins();
-        $this->checkUserLogEntries();
+        $logEntryId = $fixtures->getReference('comala_log_entry')->getId();
+        $this->checkUserLogEntries($logEntryId);
         $this->checkUserReports($reportId);
         // now logout
         $crawler = $this->client->request('GET', '/logout');
@@ -130,7 +131,8 @@ class SecurityControllerTest extends WebTestCase
         $this->checkEditorRoutes($userId, $editorId, $adminId);
         $this->checkEditorWordset($wordsetId);
         $this->checkEditorOrigins();
-        $this->checkEditorLogEntries();
+        $logEntryId = $fixtures->getReference('comala_log_entry')->getId();
+        $this->checkEditorLogEntries($logEntryId);
         $this->checkEditorReports($reportId);
         //now logout
         $crawler = $this->client->request('GET', '/logout');
@@ -165,11 +167,11 @@ class SecurityControllerTest extends WebTestCase
         $reportId = $fixtures->getReference('report-0')->getId();
         $wordsetId = $fixtures->getReference('wordset')->getId();
 
-        //check that the user with ROLE_EDITOR has no access to certain stuff.
         $this->checkAdminRoutes($userId, $editorId, $adminId);
         $this->checkAdminWordset($wordsetId);
         $this->checkAdminOrigins();
-        $this->checkAdminLogEntries();
+        $logEntryId = $fixtures->getReference('macondo_log_entry')->getId();
+        $this->checkAdminLogEntries($logEntryId);
         $this->checkAdminReports($reportId);
         // now logout
         $crawler = $this->client->request('GET', '/logout');
@@ -349,7 +351,7 @@ class SecurityControllerTest extends WebTestCase
         );
     }
 
-    private function checkUserLogEntries()
+    private function checkUserLogEntries($logEntryId)
     {
         $this->checkSuccess('/app/logentry/list');
         $crawler = $this->client->request('GET', '/app/logentry/list');
@@ -371,9 +373,10 @@ class SecurityControllerTest extends WebTestCase
                 'tbody tr'
             )->count()
             );
+        $this->checkSuccess('/app/logentry/'.$logEntryId.'/show');
     }
 
-    private function checkEditorLogEntries()
+    private function checkEditorLogEntries($logEntryId)
     {
         $this->checkSuccess('/app/logentry/list');
         $crawler = $this->client->request('GET', '/app/logentry/list');
@@ -395,9 +398,10 @@ class SecurityControllerTest extends WebTestCase
                 'tbody tr'
             )->count()
             );
+        $this->checkSuccess('/app/logentry/'.$logEntryId.'/show');
     }
 
-    private function checkAdminLogEntries()
+    private function checkAdminLogEntries($logEntryId)
     {
         $this->checkSuccess('/app/logentry/list');
         $crawler = $this->client->request('GET', '/app/logentry/list');
@@ -418,7 +422,8 @@ class SecurityControllerTest extends WebTestCase
             $crawler->filter(
                 'tbody tr'
             )->count()
-            );
+        );
+        $this->checkSuccess('/app/logentry/'.$logEntryId.'/show');
     }
 
     private function checkUserReports($reportId)

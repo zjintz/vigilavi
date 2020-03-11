@@ -72,6 +72,8 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
             $num += 1;
             $line = fgetcsv($csv);
         }
+        $this->addReference("comala_log_entry", $logEntry[0]);
+        $this->addReference("macondo_log_entry", $logEntry[5]);
         fclose($csv);
         $this->addTestUser($manager, $comalaOrigin);
         $this->addWords($manager);

@@ -4,7 +4,7 @@ namespace App\EventSubscriber;
 
 use App\Application\Sonata\UserBundle\Entity\User;
 use App\Entity\EmailSubscription;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Controller\UserMailerController;
 use FOS\UserBundle\FOSUserEvents;
 use FOS\UserBundle\Event\GetResponseUserEvent;
 use FOS\UserBundle\Event\FormEvent;
@@ -12,28 +12,24 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Twig\Environment;
 
 class UserRegistrationSubscriber implements EventSubscriberInterface
 {
     private $router;
     private $session;
-    private $entityManager;
+    private $userMailer;
     private $mailer;
-    private $twig;
     
     public function __construct(
         RouterInterface $router,
         SessionInterface $session,
-        EntityManagerInterface $entityManager,
-        \Swift_Mailer $mailer,
-        Environment $twig
+        UserMailerController $userMailer,
+        \Swift_Mailer $mailer
     ) {
         $this->router = $router;
         $this->session = $session;
-        $this->entityManager = $entityManager;
+        $this->userMailer = $userMailer;
         $this->mailer = $mailer;
-        $this->twig = $twig;
     }
     
     public static function getSubscribedEvents()
@@ -70,37 +66,8 @@ class UserRegistrationSubscriber implements EventSubscriberInterface
             'regg-success',
             'user_registration.activation_notice'
         );
-        $this->sendAdminNotification();
+        $this->userMailer->notifyNewUserToAdmins($this->mailer);
         $event->setResponse($response);
     }
 
-    private function sendAdminNotification()
-    {
-        $userRepo = $this->entityManager->getRepository(User::class);
-        $enabledUsers = $userRepo->findBy(['enabled'=>true]);
-        $adminUsers =[];
-        foreach ($enabledUsers as $user) {
-            if (in_array('ROLE_ADMIN', $user->getRoles())) {
-                $adminUsers[] = $user;
-            }
-        }
-        foreach ($adminUsers as $admin) {
-            $message = (new \Swift_Message('Novo Usuario do vigilavi.org'))
-                          ->setFrom('no_reply@vigilavi.org')
-                          ->setTo($admin->getEmail())
-                          ->setBody(
-                              $this->twig->render(
-                                  'emails/new_user_notify.html.twig'
-                              ),
-                              'text/html'
-                          )
-                          ->addPart(
-                              $this->twig->render(
-                                  'emails/new_user_notify.txt.twig'
-                              ),
-                              'text/plain'
-                          );
-                 $this->mailer->send($message);
-        }
-    }
 }

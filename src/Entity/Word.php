@@ -51,17 +51,6 @@ class Word
         return $this;
     }
 
-    
-    public function __toString()
-    {
-        return $this->text; 
-    }
-
-    public function getWordSet(): ?WordSet
-    {
-        return $this->wordSet;
-    }
-
     public function setWordSet(?WordSet $wordSet): self
     {
         $this->wordSet = $wordSet;

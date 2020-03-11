@@ -8,9 +8,7 @@ use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\Type\AdminType;
-use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
-use Sonata\AdminBundle\Show\ShowMapper;
 use Sonata\Form\Type\EqualType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -27,7 +25,7 @@ final class OriginAdmin extends AbstractAdmin
 
     public function configureRoutes(RouteCollection $collection)
     {
-        $collection->clearExcept(array('list', 'view'));
+        $collection->clearExcept(array('list'));
 
     }
 
@@ -54,40 +52,10 @@ final class OriginAdmin extends AbstractAdmin
             ['label' => 'origin.label.name']
         );
         $listMapper->add(
-            'type',
-            null,
-            ['label' => 'origin.label.type']
-        );
-        $listMapper->add(
             'subnet',
             null,
             ['label' => 'origin.label.subnet']
         );
 
-    }
-
-    protected function configureShowFields(ShowMapper $showMapper)
-    {
-        $showMapper
-                ->with('General', ['class' => 'col-md-7'])->end();
-
-        $showMapper
-            ->with('General', ['label' => 'origin.title.general'])
-            ->add(
-                'name',
-                null,
-                ['label' => 'origin.label.name']
-            )
-            ->add(
-                'type',
-                null,
-                ['label' => 'origin.label.type']
-            )
-            ->add(
-                'subnet',
-                null,
-                ['label' => 'origin.label.subnet']
-            )
-            ->end();
     }
 }

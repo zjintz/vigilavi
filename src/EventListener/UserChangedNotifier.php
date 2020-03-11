@@ -4,18 +4,20 @@
 namespace App\EventListener;
 
 use App\Application\Sonata\UserBundle\Entity\User;
+use App\Controller\UserMailerController;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
-use Twig\Environment;
 
 class UserChangedNotifier
 {
     private $mailer;
-    private $twig;
+    private $userMailer;
     
-    public function __construct(Environment $twig, \Swift_Mailer $mailer)
-    {
-        $this->twig = $twig;
+    public function __construct(
+        \Swift_Mailer $mailer,
+        UserMailerController $userMailer
+    ) {
         $this->mailer = $mailer;
+        $this->userMailer = $userMailer;        
     }
     // the entity listener methods receive two arguments:
     // the entity instance and the lifecycle event
@@ -23,24 +25,7 @@ class UserChangedNotifier
     {
         if ($event->hasChangedField('enabled')) {
             if ($event->getNewValue('enabled')) {
-                 $message = (new \Swift_Message('Sua conta foi ativada'))
-                          ->setFrom('no_reply@liturgiacheznous.org')
-                          ->setTo($user->getEmail())
-                          ->setBody(
-                              $this->twig->render(
-                                  'emails/account_enabled.html.twig',
-                                  ['name' => $user->getFirstname()]
-                              ),
-                              'text/html'
-                          )
-                          ->addPart(
-                              $this->twig->render(
-                                  'emails/account_enabled.txt.twig',
-                                  ['name' => $user->getFirstname()]
-                              ),
-                              'text/plain'
-                          );
-                 $this->mailer->send($message);
+                $this->userMailer->notifyActivation($user->getId(),$this->mailer);
             }
         }
     }

@@ -10,7 +10,6 @@ use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Admin\AdminInterface;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
-use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\AdminType;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Show\ShowMapper;
@@ -79,28 +78,6 @@ final class ReportAdmin extends AbstractAdmin
 
     }
 
-    protected function configureFormFields(FormMapper $formMapper)
-    {
-        $formMapper
-            ->with(
-                'General',
-                ['class' => 'col-md-7', 'label' => 'word.title.general']
-            )
-            ->end();
-
-        $formMapper
-            ->with('General', ['label' => 'report.title.general'])
-            ->add('wordSet', null, ['label' => 'report.label.wordSet'])
-            ->add('date', null, ['label' => 'report.label.date'])
-            ->add(
-                'origin',
-                null,
-                ['label' => 'label.origin', 'choice_label' => 'name']
-            )
-            
-            ->end();
-    }
-    
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper->addIdentifier(

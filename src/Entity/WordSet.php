@@ -141,16 +141,4 @@ class WordSet
         return $this;
     }
 
-    /**
-     * This method had to be added because reasons
-     */
-    public function removeStringWord(String $word): self
-    {
-        if ($this->words->contains($word)) {
-            $this->words->removeElement($word);
-        }
-        
-        return $this;
-    }
-
 }
