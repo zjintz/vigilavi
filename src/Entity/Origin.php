@@ -77,37 +77,6 @@ class Origin
         return $this;
     }
 
-    /**
-     * @return Collection|Report[]
-     */
-    public function getReports(): Collection
-    {
-        return $this->reports;
-    }
-
-    public function addReport(Report $report): self
-    {
-        if (!$this->reports->contains($report)) {
-            $this->reports[] = $report;
-            $report->setOrigin($this);
-        }
-
-        return $this;
-    }
-
-    public function removeReport(Report $report): self
-    {
-        if ($this->reports->contains($report)) {
-            $this->reports->removeElement($report);
-            // set the owning side to null (unless already changed)
-            if ($report->getOrigin() === $this) {
-                $report->setOrigin(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getSubnet(): ?string
     {
         return $this->subnet;
@@ -116,37 +85,6 @@ class Origin
     public function setSubnet(?string $subnet): self
     {
         $this->subnet = $subnet;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|LogEntry[]
-     */
-    public function getLogEntries(): Collection
-    {
-        return $this->logEntries;
-    }
-
-    public function addLogEntry(LogEntry $logEntry): self
-    {
-        if (!$this->logEntries->contains($logEntry)) {
-            $this->logEntries[] = $logEntry;
-            $logEntry->setOrigin($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLogEntry(LogEntry $logEntry): self
-    {
-        if ($this->logEntries->contains($logEntry)) {
-            $this->logEntries->removeElement($logEntry);
-            // set the owning side to null (unless already changed)
-            if ($logEntry->getOrigin() === $this) {
-                $logEntry->setOrigin(null);
-            }
-        }
 
         return $this;
     }
