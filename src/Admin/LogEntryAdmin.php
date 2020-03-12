@@ -91,6 +91,16 @@ final class LogEntryAdmin extends AbstractAdmin
                 ['label' => 'logEntry.label.date']
             )
             ->add(
+                'log_type',
+                null,
+                ['label' => 'logEntry.label.log_type']
+            )
+            ->add(
+                'log_subtype',
+                null,
+                ['label' => 'logEntry.label.log_subtype']
+            )
+            ->add(
                 'url',
                 null,
                 ['label' => 'logEntry.label.url']
@@ -101,9 +111,24 @@ final class LogEntryAdmin extends AbstractAdmin
                 ['label' => 'logEntry.label.domain']
             )
             ->add(
+                'src_ip',
+                null,
+                ['label' => 'logEntry.label.src_ip']
+            )
+            ->add(
+                'dst_ip',
+                null,
+                ['label' => 'logEntry.label.dst_ip']
+            )
+            ->add(
                 'origin.name',
                 null,
                 ['label' => 'logEntry.label.origin']
+            )
+            ->add(
+                'outcomes',
+                null,
+                ['label' => 'logEntry.label.outcomes']
             )
             ->end();
     }
