@@ -3,6 +3,7 @@
 namespace App\Admin;
 
 use App\Entity\Word;
+use App\Util\WordCounter;
 use Doctrine\ORM\EntityRepository;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -21,8 +22,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
  */
 final class WordSetAdmin extends AbstractAdmin
 {
-
-
+    private $wordCounter;
+    
+    public function setWordCounter(WordCounter $wordCounter)
+    {
+        $this->wordCounter = $wordCounter;
+    }
+    
     public function configureRoutes(RouteCollection $collection)
     {
         $collection->remove('export');
@@ -45,7 +51,8 @@ final class WordSetAdmin extends AbstractAdmin
             )
             ->end();
 
-        $wordsStats = $this->getWordsStats();
+        $words = $this->getSubject()->getWords();
+        $wordsStats = $this->formatWordStats($this->wordCounter->getWordsStats($words));
         $formMapper
             ->with('General')
             ->add('name', TextType::class, ['label' => 'wordSet.label.name',])
@@ -93,9 +100,6 @@ final class WordSetAdmin extends AbstractAdmin
                         return $wordsText;
                     },
                     function ($wordsAsString) {
-                        if ($wordsAsString === "") {
-                            return [];
-                        }
                         $wordsTexts = explode("\n", $wordsAsString);
                         $wordsAsArray=[];
                         foreach ($wordsTexts as $text) {
@@ -151,54 +155,21 @@ final class WordSetAdmin extends AbstractAdmin
             ;
     }
 
-
-    /**
-     * Checks if a string is empty or has only white spaces.
-     *
-     */
-    private function isStringVoid($text)
+    protected function formatWordStats(array $stats)
     {
-        if (ctype_space($text) || ($text === '')) {
-            return true;
-        }
-        return false;
-    }
-    
-    private function getWordsStats()
-    {
-        $words = $this->getSubject()->getWords();
-        $totalWords = count($words);
-
-        if ($totalWords == 0){
+        if (!$stats) {
             return '';
         }
-        $nullWords = 0;
-        $addedWords = 0;
-        $commentedWords = 0;
-        foreach ($words as $word) {
-            $text = $word->getText();
-            if ($this->isStringVoid($text)) {
-                $nullWords+=1;
-                continue;
-            }
-            if (!(preg_match('/\s/', $text))) {
-                if ($text[0] !== "#") {
-                    $addedWords +=1;
-                    continue;
-                }
-                $commentedWords +=1;
-                continue;
-            }
-            $nullWords+=1;
-        }
-
         $total = $this->translator->trans("words.stats.total");
         $valid = $this->translator->trans("words.stats.valid");
         $commented = $this->translator->trans("words.stats.commented");
         $nulls = $this->translator->trans("words.stats.nulls");
-        $stats = $total."<span class='badge'>".$totalWords."</span>";
-        $stats=$stats." <br>---- ".$valid.$addedWords." , ".$commented.$commentedWords." , "."<span class='alert-warning'>".$nulls."</span>".$nullWords;
-        return $stats;
-        
+        $line = $total."<span class='badge'>".$stats['total_words']."</span>";
+        $line = $line." <br>---- ".$valid.$stats['added_words']." , ";
+        $line = $line.$commented.$stats['commented_words']." , ";
+               
+        $line=$line."<span class='alert-warning'>".$nulls."</span>".$stats["null_words"];
+        return $line;
     }
+    
 }

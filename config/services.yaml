@@ -111,5 +111,6 @@ services:
             - { name: sonata.admin, manager_type: orm, label: WordSet }
         calls:
             - [ setTranslationDomain, [messages]]
+            - [ setWordCounter, ['@App\Util\WordCounter']]
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

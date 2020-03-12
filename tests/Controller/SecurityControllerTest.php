@@ -88,8 +88,6 @@ class SecurityControllerTest extends WebTestCase
         $adminId = $fixtures->getReference('admin')->getId();
         $reportId = $fixtures->getReference('report-0')->getId();
         $this->checkUserRoutes($userId, $editorId, $adminId);
-        $wordsetId = $fixtures->getReference('wordset')->getId();
-        $this->checkUserWordset($wordsetId);
         $this->checkUserOrigins();
         $logEntryId = $fixtures->getReference('comala_log_entry')->getId();
         $this->checkUserLogEntries($logEntryId);
@@ -125,11 +123,9 @@ class SecurityControllerTest extends WebTestCase
         $editorId = $fixtures->getReference('editor')->getId();
         $adminId = $fixtures->getReference('admin')->getId();
         $reportId = $fixtures->getReference('report-0')->getId();
-        $wordsetId = $fixtures->getReference('wordset')->getId();
 
         //check that the user with ROLE_EDITOR has no access to certain stuff.
         $this->checkEditorRoutes($userId, $editorId, $adminId);
-        $this->checkEditorWordset($wordsetId);
         $this->checkEditorOrigins();
         $logEntryId = $fixtures->getReference('comala_log_entry')->getId();
         $this->checkEditorLogEntries($logEntryId);
@@ -165,10 +161,8 @@ class SecurityControllerTest extends WebTestCase
         $editorId = $fixtures->getReference('editor')->getId();
         $adminId = $fixtures->getReference('admin')->getId();
         $reportId = $fixtures->getReference('report-0')->getId();
-        $wordsetId = $fixtures->getReference('wordset')->getId();
 
         $this->checkAdminRoutes($userId, $editorId, $adminId);
-        $this->checkAdminWordset($wordsetId);
         $this->checkAdminOrigins();
         $logEntryId = $fixtures->getReference('macondo_log_entry')->getId();
         $this->checkAdminLogEntries($logEntryId);
@@ -253,32 +247,6 @@ class SecurityControllerTest extends WebTestCase
         $this->checkSuccess('/admin_sonata_user_user/'.$userId.'/edit');
     }
     
-    private function checkUserWordset($wordsetId)
-    {
-        $this->checkSuccess('/app/wordset/list');
-        $this->check403('/app/wordset/create');
-         $this->checkSuccess('/app/wordset/'.$wordsetId.'/show');
-        $this->check403('/app/wordset/'.$wordsetId.'/edit');
-        $this->check403('/app/wordset/'.$wordsetId.'/delete');
-    }
-
-    private function checkEditorWordset($wordsetId)
-    {
-        $this->checkSuccess('/app/wordset/list');
-        $this->checkSuccess('/app/wordset/create');
-        $this->checkSuccess('/app/wordset/'.$wordsetId.'/show');
-        $this->checkSuccess('/app/wordset/'.$wordsetId.'/edit');
-        $this->checkSuccess('/app/wordset/'.$wordsetId.'/delete');
-    }
-    private function checkAdminWordset($wordsetId)
-    {
-        $this->checkSuccess('/app/wordset/list');
-        $this->checkSuccess('/app/wordset/create');
-        $this->checkSuccess('/app/wordset/'.$wordsetId.'/show');
-        $this->checkSuccess('/app/wordset/'.$wordsetId.'/edit');
-        $this->checkSuccess('/app/wordset/'.$wordsetId.'/delete');
-    }
-
     private function checkUserOrigins()
     {
         $this->checkSuccess('/app/origin/list');

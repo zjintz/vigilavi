@@ -51,6 +51,11 @@ class Word
         return $this;
     }
 
+    public function getWordSet(): ?WordSet
+    {
+        return $this->wordSet;
+    }
+    
     public function setWordSet(?WordSet $wordSet): self
     {
         $this->wordSet = $wordSet;
