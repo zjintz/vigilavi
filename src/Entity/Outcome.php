@@ -55,11 +55,6 @@ class Outcome
         return $this;
     }
 
-    public function getReport(): ?Report
-    {
-        return $this->report;
-    }
-
     public function setReport(?Report $report): self
     {
         $this->report = $report;

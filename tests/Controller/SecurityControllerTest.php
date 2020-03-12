@@ -417,6 +417,7 @@ class SecurityControllerTest extends WebTestCase
             )->count()
         );
         $this->checkSuccess('/app/report/'.$reportId.'/show');
+        $this->checkSuccess('/app/report/'.$reportId.'/summary');
         $this->check403('/app/report/'.$reportId.'/delete');
     }
 

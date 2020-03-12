@@ -78,10 +78,6 @@ class UserStat
         return $this;
     }
 
-    public function getWordStat(): ?WordStat
-    {
-        return $this->wordStat;
-    }
 
     public function setWordStat(?WordStat $wordStat): self
     {

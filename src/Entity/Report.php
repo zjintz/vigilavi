@@ -107,19 +107,6 @@ class Report
         return $this;
     }
 
-    public function removeOutcome(Outcome $outcome): self
-    {
-        if ($this->outcomes->contains($outcome)) {
-            $this->outcomes->removeElement($outcome);
-            // set the owning side to null (unless already changed)
-            if ($outcome->getReport() === $this) {
-                $outcome->setReport(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getWordSet(): ?WordSet
     {
         return $this->wordSet;

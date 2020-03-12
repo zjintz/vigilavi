@@ -2,6 +2,9 @@
 
 namespace App\Tests\Command;
 
+use App\DataFixtures\AppExampleFixtures;
+use App\DataFixtures\UserTestFixtures;
+use App\Entity\Report;
 use App\Util\OriginRetriever;
 use App\Util\LogRetriever;
 use App\Report\ReportGenerator;
@@ -9,7 +12,8 @@ use App\Command\SyncDataCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
-
+use Liip\FunctionalTestBundle\Test\WebTestCase;
+use Liip\TestFixturesBundle\Test\FixturesTrait;
 
 /**
  * Tests the vigilavi sync-data command.
@@ -18,6 +22,8 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class SyncDataCommandTest extends KernelTestCase
 {
+    use FixturesTrait;
+
     protected $command;
     protected $commandTester;
     
@@ -102,6 +108,73 @@ class SyncDataCommandTest extends KernelTestCase
         $this->assertSuccessDisplay();
     }
 
+
+    protected function specialSetup($entityManager, $kernel)
+    {      
+        $application = new Application($kernel);
+        $fixtures = $this->loadFixtures(
+            [AppExampleFixtures::class, UserTestFixtures::class]
+        )->getReferenceRepository();
+        $oRetriever = $this->createMock(OriginRetriever::class);
+        $oRetriever->expects($this->once())
+            ->method('retrieveData')
+            ->willReturn([
+                'new_origins' => 0,
+                'modified_origins' =>3,
+                'active_origins'=>0,
+                'inactive_origins' =>3,
+                'total_origins' =>3
+            ]);
+        
+        $logRetriever = $this->createMock(LogRetriever::class);
+        $logRetriever->expects($this->once())
+                   ->method('retrieveData')
+                   ->willReturn([
+                       'date' => '',
+                       'active_origins' => 1,
+                       'logs_found' => 1   
+                   ]);
+        
+        $reportGenerator = new ReportGenerator($entityManager);
+        $application->add(
+            new SyncDataCommand($oRetriever, $logRetriever, $reportGenerator)
+        );
+
+        $this->command = $application->find('vigilavi:sync-data');
+        
+        $this->commandTester = new CommandTester($this->command);
+    }
+    
+    /**
+     * In this tests the DataFixtures are loaded. And a real ReportGenerator is used.
+     *
+     *
+     */
+    public function testExecute()
+    {
+        $kernel = self::bootKernel();
+        $container = self::$container;
+        $entityManager = $container->get('doctrine.orm.entity_manager');
+        $this->specialSetUp($entityManager, $kernel);
+        $testDate = '2019-08-22';
+        $this->commandTester->execute([
+            'date' => $testDate, // pass arguments to the helper
+            // prefix the key with two dashes when passing options,
+            // e.g: '--some-option' => 'option_value',
+        ]);
+        $this->assertStartDisplay($testDate);
+        $this->assertMakingReportsDisplay(6);
+        $this->assertSuccessDisplay();
+        $newDate = \DateTime::createFromFormat("Y-m-d", "2019-08-22");
+        $reports = $entityManager->getRepository(Report::class)->findByDate($newDate);
+        $this->assertEquals(6, count($reports));
+        //lets make sure it generates some reports and the views.
+        $report22 = $reports[2];
+        $this->assertEquals("Macondo", $report22->getOrigin()->getName());
+        $this->assertEquals("English words", $report22->getWordSet()->getName());
+        $this->assertEquals(4, count($report22->getViewByWord()->getWordStats()));
+    }
+
     private function assertStartDisplay($dateGiven)
     {
         $output = $this->commandTester->getDisplay();
@@ -125,7 +198,7 @@ class SyncDataCommandTest extends KernelTestCase
         
     }
 
-    private function assertMakingReportsDisplay()
+    private function assertMakingReportsDisplay($newReports = 0)
     {
         $output = $this->commandTester->getDisplay();
         $this->assertStringContainsString(
@@ -133,7 +206,7 @@ class SyncDataCommandTest extends KernelTestCase
             $output
         );
         $this->assertStringContainsString(
-            '      Total new reports: 0',
+            '      Total new reports: '.$newReports,
             $output
         );
         $this->assertStringContainsString(

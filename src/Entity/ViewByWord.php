@@ -60,15 +60,6 @@ class ViewByWord
     }
 
 
-    public function getWordStatByWord(Word $word): ?WordStat
-    {
-        foreach ($this->wordStats as $wordStat) {
-            if($wordStat->getWord()->getText() === $word->getText() ) {
-                return $wordStat;
-            }
-        }
-        return null;
-    }
 
     public function addWordStat(WordStat $wordStat): self
     {
@@ -80,16 +71,4 @@ class ViewByWord
         return $this;
     }
 
-    public function removeWordStat(WordStat $wordStat): self
-    {
-        if ($this->wordStats->contains($wordStat)) {
-            $this->wordStats->removeElement($wordStat);
-            // set the owning side to null (unless already changed)
-            if ($wordStat->getViewByWord() === $this) {
-                $wordStat->setViewByWord(null);
-            }
-        }
-
-        return $this;
-    }
 }

@@ -101,26 +101,4 @@ class Origin
         return $this;
     }
 
-    /**
-     * @return Collection|Origin[]
-     */
-    public function getUsers(): Collection
-    {
-        return $this->origins;
-    }
-
-    public function addUser(User $user): self
-    {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-        }
-        return $this;
-    }
-
-    public function removeUser(User $user): self
-    {
-        if ($this->users->contains($user)) {
-            $this->users->removeElement($user);
-        }
-    }
 }

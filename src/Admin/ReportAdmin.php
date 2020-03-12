@@ -61,7 +61,7 @@ final class ReportAdmin extends AbstractAdmin
         $collection->remove('export');
         $collection->remove('edit');
         $collection->remove('create');
-        $collection->add('summary', $this->getRouterIdParameter().'/make_summary');
+        $collection->add('summary', $this->getRouterIdParameter().'/summary');
         
     }
     
@@ -105,7 +105,6 @@ final class ReportAdmin extends AbstractAdmin
             'actions' => array(
                 'show' => array(),
                 'summary' => array('template' =>  'report_admin/summary.html.twig'
-                    //                    'template' => '::your_template.html.twig'
                 )
             )
         ));

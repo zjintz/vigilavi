@@ -44,21 +44,5 @@ class EmailSubscription
         return $this;
     }
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(User $user): self
-    {
-        $this->user = $user;
-                // set the owning side of the relation if necessary
-        if ($this !== $user->getEmailSubscription()) {
-            $user->setEmailSubscription($this);
-        }
-
-
-        return $this;
-    }
 
 }

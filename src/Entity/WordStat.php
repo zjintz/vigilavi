@@ -60,10 +60,6 @@ class WordStat
         return $this->id;
     }
 
-    public function getViewByWord(): ?ViewByWord
-    {
-        return $this->viewByWord;
-    }
 
     public function setViewByWord(?ViewByWord $viewByWord): self
     {
@@ -89,14 +85,6 @@ class WordStat
         return $this;
     }
 
-    public function removeOutcome(Outcome $outcome): self
-    {
-        if ($this->outcomes->contains($outcome)) {
-            $this->outcomes->removeElement($outcome);
-        }
-
-        return $this;
-    }
 
     public function getDeniedEntries(): ?int
     {
@@ -152,16 +140,4 @@ class WordStat
         return $this;
     }
 
-    public function removeUserStat(UserStat $userStat): self
-    {
-        if ($this->userStats->contains($userStat)) {
-            $this->userStats->removeElement($userStat);
-            // set the owning side to null (unless already changed)
-            if ($userStat->getWordStat() === $this) {
-                $userStat->setWordStat(null);
-            }
-        }
-
-        return $this;
-    }
 }
