@@ -122,78 +122,12 @@ class WordSetAdminTest extends WebTestCase
         $this->checkSuccess('/app/wordset/'.$wordsetId.'/show');
         $this->checkSuccess('/app/wordset/'.$wordsetId.'/edit');
         $this->checkSuccess('/app/wordset/'.$wordsetId.'/delete');
-
-        //testing it can create a WS
-        $crawler = $this->client->request('GET','/app/wordset/create');
-        $values = $crawler->selectButton('btn_create_and_edit')->form()->getValues();
-        foreach ($values as $key=>$value) {
-            if ((substr($key, -6) === '[name]')) {
-                $values[$key] = "TestName";
-            }
-            if ((substr($key, -13) === '[description]')) {
-                $values[$key] = "TestDesc";
-            }
-        }
-        $form = $crawler->selectButton('btn_create_and_edit')->form($values);
-        $this->client->submit($form);
-        $crawler = $this->client->followRedirect();
-        //assert that the new form has the fields we edited
-        $this->assertEquals(
-            1,
-            $crawler->filter(
-                'input[value=TestName]'
-            )->count()
-        );
-        $this->assertEquals(
-            1,
-            $crawler->filter(
-                'textarea:contains("TestDesc")'
-            )->count()
-        );
-
-        //check it can edit
-        $values = $crawler->selectButton('btn_update_and_edit')->form()->getValues();
-        foreach ($values as $key=>$value) {
-            if ((substr($key, -6) === '[name]')) {
-                $values[$key] = "TestName2";
-            }
-            if ((substr($key, -13) === '[description]')) {
-                $values[$key] = "TestDesc2";
-            }
-            if ((substr($key, -7) === '[words]')) {
-                $values[$key] = "w1\nw2";
-            }
-        }
-        $form = $crawler->selectButton('btn_update_and_edit')->form($values);
-        $this->client->submit($form);
-        $crawler = $this->client->followRedirect();
-        $this->assertEquals(
-            1,
-            $crawler->filter(
-                'input[value=TestName2]'
-            )->count()
-        );
-        $this->assertEquals(
-            1,
-            $crawler->filter(
-                'textarea:contains("TestDesc2")'
-            )->count()
-        );
-        $this->assertEquals(
-            1,
-            $crawler->filter(
-                'textarea:contains("w1")'
-            )->count()
-        );
-        $this->assertEquals(
-            1,
-            $crawler->filter(
-                'textarea:contains("w2")'
-            )->count()
-        );
-        //now add some words.
-        
+        $this->checkCreateAndEdit();
+        //now delete a wordset.
+        $this->checkDelete($wordsetId);
     }
+
+    
     private function checkAdminWordset($wordsetId)
     {
         $this->checkSuccess('/app/wordset/list');
@@ -201,8 +135,14 @@ class WordSetAdminTest extends WebTestCase
         $this->checkSuccess('/app/wordset/'.$wordsetId.'/show');
         $this->checkSuccess('/app/wordset/'.$wordsetId.'/edit');
         $this->checkSuccess('/app/wordset/'.$wordsetId.'/delete');
+        //testing it can create a WS
+        $this->checkCreateAndEdit();
+        //now delete a wordset.
+        $this->checkDelete($wordsetId);
+    }
 
-                //testing it can create a WS
+    private function checkCreateAndEdit()
+    {
         $crawler = $this->client->request('GET','/app/wordset/create');
         $values = $crawler->selectButton('btn_create_and_edit')->form()->getValues();
         foreach ($values as $key=>$value) {
@@ -267,10 +207,18 @@ class WordSetAdminTest extends WebTestCase
                 'textarea:contains("TestDesc2")'
             )->count()
         );
-        //now add some words.
+    }
+    private function checkDelete($wordsetId)
+    {
+        $crawler = $this->client->request('GET','/app/wordset/'.$wordsetId.'/delete');
+        $this->assertResponseIsSuccessful($this->client->getResponse());
+        $this->client->submitForm('Sim, eliminar');
+        $crawler = $this->client->followRedirect();
+        $this->assertResponseIsSuccessful($this->client->getResponse());
     }
 
-    private function checkSuccess($route){
+    private function checkSuccess($route)
+    {
         $this->client->request('GET', $route);
         $this->assertResponseIsSuccessful($this->client->getResponse());
     }

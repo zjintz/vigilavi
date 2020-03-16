@@ -109,7 +109,6 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
         $latWordSet = new WordSet();
         $latWordSet->setName("Portunol");
         $latWordSet->setDescription("Solo esp y pr.");
-        $this->setReference('wordset', $englishWordSet);
         $manager->persist($englishWordSet);
         $manager->persist($latWordSet);
         foreach($words as $lastWord)
@@ -132,6 +131,7 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
             $newWord->setWordSet($latWordSet);
             $manager->persist($newWord);
         }
+        $this->setReference('wordset', $englishWordSet);
         $manager->flush();
  
     }

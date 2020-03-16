@@ -47,7 +47,7 @@ class SyslogDBCollector
     {
         $subnet = $subnet.".";
         $len = strlen($subnet);
-        $query = "select * from SophosEvents WHERE LEFT(src_ip,".$len.") = '".$subnet."' AND DATE(date) = '".$dateLog;
+        $query = "select * from SophosEvents WHERE LEFT(src_ip,".$len.") = '".$subnet."' AND DATE(date) = '".$dateLog." LIMIT 50';";
         return $this->doQuery($query);
     }
     
