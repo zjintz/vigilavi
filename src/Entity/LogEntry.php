@@ -49,7 +49,7 @@ class LogEntry
     private $dst_ip;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="text")
      */
     private $domain;
 
