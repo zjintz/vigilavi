@@ -12,25 +12,13 @@ use PHPUnit\Framework\TestCase;
 
 class LogRetrieverTest extends TestCase
 {
-    protected function mockEntityManagerVoid()
-    {
-        $originRepository = $this->createMock(OriginRepository::class);
-        $originRepository->expects($this->once())
-            ->method('findAll')
-            ->willReturn([]);
-        $entityManager = $this->createMock(EntityManagerInterface::class);
-        $entityManager->expects($this->once())
-            ->method('getRepository')
-            ->willReturn($originRepository);
-        return $entityManager;
-    }
 
     protected function mockEntityManager()
     {
         $originA = $this->makeOrigin('192.168.21', 'Sede A', true); 
         $originRepository = $this->createMock(OriginRepository::class);
         $originRepository->expects($this->once())
-            ->method('findAll')
+            ->method('findBy')
             ->willReturn([$originA]);
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager->expects($this->once())
@@ -98,9 +86,18 @@ class LogRetrieverTest extends TestCase
   
 
     protected function makeLogRetrieverVoid()
-    {        
+    {
+        $originRepository = $this->createMock(OriginRepository::class);
+        $originRepository->expects($this->once())
+            ->method('findBy')
+            ->willReturn([]);
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager->expects($this->once())
+            ->method('getRepository')
+            ->willReturn($originRepository);
+
         $logRetriever = new LogRetriever(
-            $this->mockEntityManagerVoid(),
+            $entityManager,
             $this->mockSyslogDBCollectorVoid(),
         );
         return $logRetriever;
@@ -118,20 +115,19 @@ class LogRetrieverTest extends TestCase
     protected function makeLogRetrieverFull()
     {
         $originA = $this->makeOrigin('192.168.21', 'Sede A', true);
-        $originB = $this->makeOrigin('192.168.22', 'Sede B', false);
         $originC = $this->makeOrigin('192.168.23', 'Sede C', true);
         $originD = $this->makeOrigin('192.168.24', 'Sede D', true);
         $originRepository = $this->createMock(OriginRepository::class);
         $originRepository->expects($this->once())
-                         ->method('findAll')
-                         ->willReturn([$originA, $originB, $originC, $originD]);
+                         ->method('findBy')
+                         ->willReturn([$originA, $originC, $originD]);
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager->expects($this->once())
             ->method('getRepository')
             ->willReturn($originRepository);
         $entityManager->expects($this->exactly(6))
                       ->method('persist');
-        $entityManager->expects($this->once())
+        $entityManager->expects($this->exactly(3))
                       ->method('flush');
 
         $logExample = [
