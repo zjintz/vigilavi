@@ -39,7 +39,7 @@ class LogRetriever
             return ['error' => 'Date format not supported, the format should be yy-m-d.'];
         }
 
-        $origins = $this->entityManager->getRepository(Origin::class)->findAll();
+        $origins = $this->entityManager->getRepository(Origin::class)->findBy(["active"=>true]);
         if (empty($origins)) {
             return [
                 'date' => $dateLog,
@@ -54,31 +54,33 @@ class LogRetriever
             $yesterday = $today->sub(new \DateInterval('P1D'));
             $dateLog =  date_format($yesterday, 'yy-m-d');
         }
-        $activeOrigins =0;
         $logsFound= 0;
         foreach ($origins as $origin) {
-            if ($origin->getActive()) {
-                $activeOrigins +=1;
-                $remoteLogs = $this->syslogDBCollector->getRemoteLogs(
-                    $dateLog,
-                    $origin->getSubnet()
-                );
-                foreach ($remoteLogs as $log) {
-                    $logEntry = $this->createLogEntry($log, $origin);
-                    $this->entityManager->persist($logEntry);
-                              
-                }
-                $logsFound += count($remoteLogs);
-            }
+            $logsFound += $this->fetchLogsByOrigin($dateLog, $origin);
         }
-        $this->entityManager->flush();
         return [
             'date' => $dateLog,
-            'active_origins' => $activeOrigins,
+            'active_origins' => count($origins),
             'logs_found' => $logsFound
         ];
     }
 
+
+    protected function fetchLogsByOrigin($dateLog, $origin)
+    {
+        $remoteLogs = $this->syslogDBCollector->getRemoteLogs(
+            $dateLog,
+            $origin->getSubnet()
+        );
+        foreach ($remoteLogs as $log) {
+            $logEntry = $this->createLogEntry($log, $origin);
+            $this->entityManager->persist($logEntry);
+        }
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+        return count($remoteLogs);
+    }
+    
     protected function createLogEntry(array $log, Origin $origin): LogEntry
     {
         $logEntry = new LogEntry();
