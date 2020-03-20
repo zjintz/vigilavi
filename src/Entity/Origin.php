@@ -25,7 +25,7 @@ class Origin
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Report", mappedBy="origin", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Report", mappedBy="origin", orphanRemoval=true, cascade={"persist"})
      */
     private $reports;
 
@@ -36,7 +36,7 @@ class Origin
     private $subnet;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\LogEntry", mappedBy="origin")
+     * @ORM\OneToMany(targetEntity="App\Entity\LogEntry", mappedBy="origin", cascade={"persist"})
      */
     private $logEntries;
 
@@ -100,5 +100,8 @@ class Origin
 
         return $this;
     }
-
+    public function __toString()
+    {
+        return $this->name;
+    }
 }

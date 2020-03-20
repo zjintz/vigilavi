@@ -20,8 +20,11 @@ class LogRetrieverTest extends TestCase
         $originRepository->expects($this->once())
             ->method('findBy')
             ->willReturn([$originA]);
+        $originRepository->expects($this->once())
+            ->method('findOneBy')
+            ->willReturn($originA);
         $entityManager = $this->createMock(EntityManagerInterface::class);
-        $entityManager->expects($this->once())
+        $entityManager->expects($this->exactly(2))
             ->method('getRepository')
             ->willReturn($originRepository);
         $entityManager->expects($this->once())
@@ -92,7 +95,7 @@ class LogRetrieverTest extends TestCase
             ->method('findBy')
             ->willReturn([]);
         $entityManager = $this->createMock(EntityManagerInterface::class);
-        $entityManager->expects($this->once())
+        $entityManager->expects($this->exactly(1))
             ->method('getRepository')
             ->willReturn($originRepository);
 
@@ -118,11 +121,14 @@ class LogRetrieverTest extends TestCase
         $originC = $this->makeOrigin('192.168.23', 'Sede C', true);
         $originD = $this->makeOrigin('192.168.24', 'Sede D', true);
         $originRepository = $this->createMock(OriginRepository::class);
-        $originRepository->expects($this->once())
+        $originRepository->expects($this->exactly(1))
                          ->method('findBy')
                          ->willReturn([$originA, $originC, $originD]);
+        $originRepository->expects($this->exactly(3))
+                         ->method('findOneBy')
+                         ->will($this->onConsecutiveCalls($originA, $originC, $originD));
         $entityManager = $this->createMock(EntityManagerInterface::class);
-        $entityManager->expects($this->once())
+        $entityManager->expects($this->exactly(4))
             ->method('getRepository')
             ->willReturn($originRepository);
         $entityManager->expects($this->exactly(6))

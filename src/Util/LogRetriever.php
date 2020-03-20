@@ -39,7 +39,9 @@ class LogRetriever
             return ['error' => 'Date format not supported, the format should be yy-m-d.'];
         }
 
-        $origins = $this->entityManager->getRepository(Origin::class)->findBy(["active"=>true]);
+        $origins = $this->entityManager->getRepository(Origin::class)->findBy(
+            ["active"=>true]
+        );
         if (empty($origins)) {
             return [
                 'date' => $dateLog,
@@ -56,7 +58,7 @@ class LogRetriever
         }
         $logsFound= 0;
         foreach ($origins as $origin) {
-            $logsFound += $this->fetchLogsByOrigin($dateLog, $origin);
+            $logsFound += $this->fetchLogsByOrigin($dateLog, $origin->getId());
         }
         return [
             'date' => $dateLog,
@@ -66,19 +68,35 @@ class LogRetriever
     }
 
 
-    protected function fetchLogsByOrigin($dateLog, $origin)
+    protected function fetchLogsByOrigin($dateLog, $originId)
     {
+        $origin = $this->entityManager->getRepository(Origin::class)->findOneBy(
+            ["id"=>$originId]
+        );
         $remoteLogs = $this->syslogDBCollector->getRemoteLogs(
             $dateLog,
             $origin->getSubnet()
         );
+        $counter = 0 ;
         foreach ($remoteLogs as $log) {
-            $logEntry = $this->createLogEntry($log, $origin);
-            $this->entityManager->persist($logEntry);
+            $this->entityManager->persist($this->createLogEntry($log, $origin));
+            $counter+=1;
+            //batching!!
+            if($counter == 4000) {
+                $this->entityManager->flush();
+                $this->entityManager->clear();
+                $counter = 0;
+            }                   
         }
         $this->entityManager->flush();
         $this->entityManager->clear();
-        return count($remoteLogs);
+        $totalLogs= count($remoteLogs);
+        $remoteLogs = null;
+        $origin = null;
+        unset($remoteLogs);
+        unset($origin);
+        gc_collect_cycles();
+        return $totalLogs;
     }
     
     protected function createLogEntry(array $log, Origin $origin): LogEntry
