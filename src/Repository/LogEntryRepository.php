@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\LogEntry;
+use App\Entity\Report;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -19,22 +20,25 @@ class LogEntryRepository extends ServiceEntityRepository
         parent::__construct($registry, LogEntry::class);
     }
 
-    // /**
-    //  * @return LogEntry[] Returns an array of LogEntry objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return LogEntry[] Returns an array of LogEntry objects
+     */
+    public function findEntriesToReport($report)
     {
-        return $this->createQueryBuilder('l')
-            ->andWhere('l.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('l.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $dateTime = $report->getDate();
+        $qBuilder = $this->createQueryBuilder('l');
+        $qBuilder->andWhere('l.date BETWEEN :dateMin AND :dateMax')
+                 ->setParameters(
+                     [
+                         'dateMin' => $dateTime->format('Y-m-d 00:00:00'),
+                         'dateMax' => $dateTime->format('Y-m-d 23:59:59'),
+                     ]
+                 );
+        $qBuilder->andWhere('l.origin = :val')
+                 ->setParameter('val', $report->getOrigin());
+
+        return $qBuilder->getQuery()->getResult();
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?LogEntry

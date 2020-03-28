@@ -68,6 +68,7 @@ class SyncDataCommand extends Command
             '    - Date: '.$syncDate,
             '----- Sync origins',
         ]);
+        ///////////////
         $originSummary = $this->originRetriever->retrieveData();
         foreach ($originSummary as $key => $value) {
             $output->writeln(["      ".$key." : ". $value]);
@@ -84,7 +85,7 @@ class SyncDataCommand extends Command
         $output->writeln([
             '----- Sync logs done',
         ]);
-
+        ///////
         $output->writeln([
             '----- Creating Reports',
         ]);

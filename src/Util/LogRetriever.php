@@ -78,6 +78,7 @@ class LogRetriever
             $origin->getSubnet()
         );
         $counter = 0 ;
+        echo "\nhaciendo ".$origin->getName(); 
         foreach ($remoteLogs as $log) {
             $this->entityManager->persist($this->createLogEntry($log, $origin));
             $counter+=1;

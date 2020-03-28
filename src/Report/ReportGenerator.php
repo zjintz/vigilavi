@@ -45,12 +45,15 @@ class ReportGenerator
         $counter = 0;
         foreach ($origins as $origin) {
             foreach ($wordsets as $wordset) {
+                echo "\n haciendo ahora reporte para".$origin->getName(); 
                 $newReport = new Report();
                 $newReport->setDate($date);
                 $newReport->setWordSet($wordset);
                 $newReport->setOrigin($origin);
                 $counter += 1;
+                echo "prepersist ..\n";
                 $this->entityManager->persist($newReport);
+                echo "postpersist ..\n";
             }
         }
         $this->entityManager->flush();
