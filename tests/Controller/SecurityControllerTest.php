@@ -86,7 +86,7 @@ class SecurityControllerTest extends WebTestCase
         $userId = $fixtures->getReference('user')->getId();
         $editorId = $fixtures->getReference('editor')->getId();
         $adminId = $fixtures->getReference('admin')->getId();
-        $reportId = $fixtures->getReference('report-0')->getId();
+        $reportId = $fixtures->getReference('report-23-0')->getId();
         $this->checkUserRoutes($userId, $editorId, $adminId);
         $this->checkUserOrigins();
         $logEntryId = $fixtures->getReference('comala_log_entry')->getId();
@@ -122,7 +122,7 @@ class SecurityControllerTest extends WebTestCase
         $userId = $fixtures->getReference('user')->getId();
         $editorId = $fixtures->getReference('editor')->getId();
         $adminId = $fixtures->getReference('admin')->getId();
-        $reportId = $fixtures->getReference('report-0')->getId();
+        $reportId = $fixtures->getReference('report-23-0')->getId();
 
         //check that the user with ROLE_EDITOR has no access to certain stuff.
         $this->checkEditorRoutes($userId, $editorId, $adminId);
@@ -160,7 +160,7 @@ class SecurityControllerTest extends WebTestCase
         $userId = $fixtures->getReference('user')->getId();
         $editorId = $fixtures->getReference('editor')->getId();
         $adminId = $fixtures->getReference('admin')->getId();
-        $reportId = $fixtures->getReference('report-0')->getId();
+        $reportId = $fixtures->getReference('report-23-0')->getId();
 
         $this->checkAdminRoutes($userId, $editorId, $adminId);
         $this->checkAdminOrigins();
@@ -399,19 +399,19 @@ class SecurityControllerTest extends WebTestCase
         $this->checkSuccess('/app/report/list');
         $crawler = $this->client->request('GET', '/app/report/list');
         $this->assertEquals(
-            2,
+            4,
             $crawler->filter(
                 'td:contains("Comala")'
             )->count()
         );
         $this->assertEquals(
-            2,
+            4,
             $crawler->filter(
                 'td:contains("Macondo")'
             )->count()
         );
         $this->assertEquals(
-            4,
+            8,
             $crawler->filter(
                 'tbody tr'
             )->count()
@@ -426,7 +426,7 @@ class SecurityControllerTest extends WebTestCase
         $this->checkSuccess('/app/report/list');
         $crawler = $this->client->request('GET', '/app/report/list');
         $this->assertEquals(
-            2,
+            4,
             $crawler->filter(
                 'td:contains("Comala")'
             )->count()
@@ -438,7 +438,7 @@ class SecurityControllerTest extends WebTestCase
             )->count()
         );
         $this->assertEquals(
-            2,
+            4,
             $crawler->filter(
                 'tbody tr'
             )->count()
@@ -458,13 +458,13 @@ class SecurityControllerTest extends WebTestCase
             )->count()
         );
         $this->assertEquals(
-            2,
+            4,
             $crawler->filter(
                 'td:contains("Macondo")'
             )->count()
         );
         $this->assertEquals(
-            2,
+            4,
             $crawler->filter(
                 'tbody tr'
             )->count()

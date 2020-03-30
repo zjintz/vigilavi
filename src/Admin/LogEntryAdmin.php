@@ -128,7 +128,10 @@ final class LogEntryAdmin extends AbstractAdmin
             ->add(
                 'outcomes',
                 null,
-                ['label' => 'logEntry.label.outcomes']
+                [
+                    'label' => 'logEntry.label.outcomes',
+                    'associated_property' => 'id'
+                ]
             )
             ->end();
     }
