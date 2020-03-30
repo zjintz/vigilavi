@@ -35,15 +35,8 @@ class ReportAnalizer
     {
         $entriesRepo = $this->entityManager->getRepository(LogEntry::class);
         $entries = $entriesRepo->findEntriesToReport($report);
-        echo "Numero Entradas : \n";
-        var_dump(count($entries));
-        echo " ojo a la fecha \n";
-        var_dump($report->getDate());
-        echo "  generando outcomes ..\n";
         $report  = $this->outcomeGenerator->genOutcomes($report, $entries);
-        echo "  haciendo vista ..\n";
         $viewByWord  = $this->viewMaker->makeView($report);
         $report->setViewByWord($viewByWord);
-        echo "  listo ..\n";
     }
 }
