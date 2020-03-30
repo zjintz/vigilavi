@@ -36,7 +36,7 @@ class LogEntryRepository extends ServiceEntityRepository
                  );
         $qBuilder->andWhere('l.origin = :val')
                  ->setParameter('val', $report->getOrigin());
-
+        
         return $qBuilder->getQuery()->getResult();
     }
 
