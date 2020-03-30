@@ -51,14 +51,11 @@ class ReportGenerator
                 $newReport->setWordSet($wordset);
                 $newReport->setOrigin($origin);
                 $counter += 1;
-                echo "prepersist ..\n";
                 $this->entityManager->persist($newReport);
-                echo "postpersist ..\n";
             }
         }
         $this->entityManager->flush();
         return ['total'=> $counter];
-
     }
     
 }

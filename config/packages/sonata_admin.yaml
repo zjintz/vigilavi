@@ -54,7 +54,46 @@ sonata_admin:
                 items:
                     - app.admin.log_entry
         blocks:
-#            - { type: sonata.admin.block.admin_list, position: left }
+            -
+                class:    col-lg-12 col-xs-12          # twitter bootstrap responsive code
+                position: top                        # zone in the dashboard
+                type:     sonata.block.service.empty  # block id # block i
+            -
+                class:    col-lg-2 col-xs-3          # twitter bootstrap responsive code
+                position: bottom                        # zone in the dashboard
+                type:     sonata.admin.block.stats   # block id # block id
+                roles: ['ROLE_ADMIN']
+                settings:
+                    code:  app.admin.user    # admin code - service id
+                    icon:  fa-user                  # font awesome icon
+                    text:  app.user.stats.inactive  
+                    color: bg-red
+                    filters:                         # filter values
+                        enabled: { value: 2 }
+            -
+                class:    col-lg-4 col-xs-6          # twitter bootstrap responsive code
+                position: top                        # zone in the dashboard
+                type:     sonata.admin.block.stats   # block id
+                roles: ['ROLE_ADMIN']
+                settings:
+                    code:  app.admin.user    # admin code - service id
+                    icon:  fa-user                  # font awesome icon
+                    text:  app.user.stats.total            # static text or translation message
+                    color: bg-blue                 # colors: bg-green, bg-red and bg-aqua
+
+            -
+                class:    col-lg-2 col-xs-3          # twitter bootstrap responsive code
+                position: bottom                        # zone in the dashboard
+                type:     sonata.admin.block.stats   # block id # block id
+                roles: ['ROLE_ADMIN']
+                settings:
+                    code:  app.admin.user    # admin code - service id
+                    icon:  fa-user                  # font awesome icon
+                    text:  app.user.stats.active  
+                    color: bg-green
+                    filters:                         # filter values
+                        enabled: { value: 1 }
+
     security:
         handler: sonata.admin.security.handler.role
         role_admin: ROLE_SONATA_ADMIN

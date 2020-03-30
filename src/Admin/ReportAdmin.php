@@ -101,6 +101,22 @@ final class ReportAdmin extends AbstractAdmin
             ]
         
         );
+        $listMapper->add(
+            'totalLogEntries',
+            null,
+            ['label' => 'label.totalLogEntries',
+
+            ]
+        
+        );
+
+        $listMapper->add(
+            'totalClassifiedLogEntries',
+            null,
+            ['label' => 'label.totalClassifiedLogEntries']
+        
+        );
+        
         $listMapper->add('_action', 'actions', array(
             'actions' => array(
                 'show' => array(),

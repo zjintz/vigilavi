@@ -18,6 +18,11 @@
           <source>stats_view_more</source>
           <target>lista</target>
         </trans-unit>
+        <trans-unit id="action_summary">
+          <source>action_summary</source>
+          <target>Informe</target>
+        </trans-unit>
+        
       </body>
     </file>
 </xliff>

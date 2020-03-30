@@ -2,6 +2,14 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
     <file source-language="en" datatype="plaintext" original="file.ext">
       <body>
+        <trans-unit id="Action">
+          <source>Action</source>
+          <target>Açao</target>
+        </trans-unit>
+        <trans-unit id="Description">
+          <source>Description</source>
+          <target>Descrição</target>
+        </trans-unit>
         <trans-unit id="app.user.stats.total">
           <source>app.user.stats.total</source>
           <target>Total de usuários registrados</target>
@@ -112,6 +120,14 @@
         <trans-unit id="label.time">
           <source>label.time</source>
           <target>Hora</target>
+        </trans-unit>
+        <trans-unit id="label.totalLogEntries">
+          <source>label.totalLogEntries</source>
+          <target>Registros</target>
+        </trans-unit>
+        <trans-unit id="label.totalClassifiedLogEntries">
+          <source>label.totalClassifiedLogEntries</source>
+          <target>Registros Classificados</target>
         </trans-unit>        
         <trans-unit id="link_return">
           <source>link.return</source>
@@ -125,6 +141,23 @@
           <source>LogEntry</source>
         <target>Registro</target>
         </trans-unit>
+        <trans-unit id="logEntry.label.domain">
+          <source>logEntry.label.domain</source>
+        <target>Dominio</target>
+        </trans-unit>
+        <trans-unit id="logEntry.label.url">
+          <source>logEntry.label.url</source>
+        <target>url</target>
+        </trans-unit>
+        <trans-unit id="logEntry.label.origin">
+          <source>logEntry.label.origin</source>
+        <target>Sede</target>
+        </trans-unit>
+        <trans-unit id="Log Entry List">
+          <source>Log Entry List</source>
+        <target>Lista de registros</target>
+        </trans-unit>
+        
         <trans-unit id="mails.logs.title">
           <source>mail.logs.title</source>
         <target>Mailer Logs</target>
@@ -132,6 +165,10 @@
         <trans-unit id="Origin">
           <source>Origin</source>
           <target>Sede</target>
+        </trans-unit>
+        <trans-unit id="Origin List">
+          <source>Origin List</source>
+          <target>Lista de sedes</target>
         </trans-unit>
         <trans-unit id="origin.label.name">
           <source>origin.label.name</source>
@@ -230,7 +267,10 @@
             * Lineas que empiezan por # se asumen comentadas por tanto son ignoradas.]]>
           </target>
         </trans-unit>
-         
+        <trans-unit id="Word Set">
+          <source>Word Set</source>
+          <target>Conjuntos de Palavra</target>
+        </trans-unit>
         <trans-unit id="wordSet.label.description">
           <source>wordSet.label.description</source>
           <target>Descrição</target>
