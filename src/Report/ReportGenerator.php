@@ -53,8 +53,9 @@ class ReportGenerator
                 $counter += 1;
                 $this->entityManager->persist($newReport);
             }
+            $this->entityManager->flush();
         }
-        $this->entityManager->flush();
+        $this->entityManager->clear();
         return ['total'=> $counter];
     }
     

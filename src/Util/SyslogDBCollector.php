@@ -43,12 +43,30 @@ class SyslogDBCollector
         return $this->doQuery($query);
     }
 
-    public function getRemoteLogs($dateLog, $subnet)
+    public function getRemoteLogs($dateLog, $origins)
     {
-        $subnet = $subnet.".";
-        $len = strlen($subnet);
-        $query = "select * from SophosEvents WHERE LEFT(src_ip,".$len.") = '".$subnet."' AND DATE(date) = '".$dateLog."';";
+        $query = $this->makeQuery($dateLog, $origins);
+
         return $this->doQuery($query);
+    }
+    
+    private function makeQuery($dateLog, $origins)
+    {
+        $query = "select * from SophosEvents WHERE DATE(date) = '".$dateLog."' AND (";
+        $firstOrigin = true;
+        foreach ($origins as $origin) {
+            $subnet = $origin->getSubnet().".";
+            $len = strlen($subnet);
+            if ($firstOrigin) {
+                $query = $query." LEFT(src_ip,".$len.") = '".$subnet."' ";
+                $firstOrigin = false;
+                continue;
+            }
+            $query = $query."OR LEFT(src_ip,".$len.") = '".$subnet."' ";
+
+        }
+        $query = $query . ") ;";
+        return $query;
     }
     
     protected function doQuery($query)

@@ -57,8 +57,14 @@ class LogRetriever
             $dateLog =  date_format($yesterday, 'yy-m-d');
         }
         $logsFound= 0;
+
+        $remoteLogs = $this->syslogDBCollector->getRemoteLogs(
+            $dateLog,
+            $origins
+        );
+        
         foreach ($origins as $origin) {
-            $logsFound += $this->fetchLogsByOrigin($dateLog, $origin->getId());
+            $logsFound += $this->fetchLogsByOrigin($dateLog, $origin->getId(), $remoteLogs);
         }
         return [
             'date' => $dateLog,
@@ -68,22 +74,18 @@ class LogRetriever
     }
 
 
-    protected function fetchLogsByOrigin($dateLog, $originId)
+    protected function fetchLogsByOrigin($dateLog, $originId, $remoteLogs)
     {
         $origin = $this->entityManager->getRepository(Origin::class)->findOneBy(
             ["id"=>$originId]
         );
-        $remoteLogs = $this->syslogDBCollector->getRemoteLogs(
-            $dateLog,
-            $origin->getSubnet()
-        );
+        
         $counter = 0 ;
-        echo "\nhaciendo ".$origin->getName(); 
         foreach ($remoteLogs as $log) {
             $this->entityManager->persist($this->createLogEntry($log, $origin));
             $counter+=1;
             //batching!!
-            if($counter == 4000) {
+            if($counter == 3000) {
                 $this->entityManager->flush();
                 $this->entityManager->clear();
                 $counter = 0;
