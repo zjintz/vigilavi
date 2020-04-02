@@ -52,12 +52,18 @@ class Origin
      */
     private $users;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\WordSet", inversedBy="origins")
+     */
+    private $wordSets;
+
     
     public function __construct()
     {
         $this->reports = new ArrayCollection();
         $this->logEntries = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->wordSets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -103,5 +109,31 @@ class Origin
     public function __toString()
     {
         return $this->name;
+    }
+
+    /**
+     * @return Collection|WordSet[]
+     */
+    public function getWordSets(): Collection
+    {
+        return $this->wordSets;
+    }
+
+    public function addWordSet(WordSet $wordSet): self
+    {
+        if (!$this->wordSets->contains($wordSet)) {
+            $this->wordSets[] = $wordSet;
+        }
+
+        return $this;
+    }
+
+    public function removeWordSet(WordSet $wordSet): self
+    {
+        if ($this->wordSets->contains($wordSet)) {
+            $this->wordSets->removeElement($wordSet);
+        }
+
+        return $this;
     }
 }

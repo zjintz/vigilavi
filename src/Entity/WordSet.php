@@ -38,11 +38,17 @@ class WordSet
      */
     private $words;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Origin", mappedBy="wordSets")
+     */
+    private $origins;
+
 
     public function __construct()
     {
         $this->words = new ArrayCollection();
         $this->reports = new ArrayCollection();
+        $this->origins = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -105,6 +111,34 @@ class WordSet
             if ($word->getWordSet() === $this) {
                 $word->setWordSet(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Origin[]
+     */
+    public function getOrigins(): Collection
+    {
+        return $this->origins;
+    }
+
+    public function addOrigin(Origin $origin): self
+    {
+        if (!$this->origins->contains($origin)) {
+            $this->origins[] = $origin;
+            $origin->addWordSet($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrigin(Origin $origin): self
+    {
+        if ($this->origins->contains($origin)) {
+            $this->origins->removeElement($origin);
+            $origin->removeWordSet($this);
         }
 
         return $this;
