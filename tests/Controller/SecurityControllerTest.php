@@ -87,8 +87,8 @@ class SecurityControllerTest extends WebTestCase
         $editorId = $fixtures->getReference('editor')->getId();
         $adminId = $fixtures->getReference('admin')->getId();
         $reportId = $fixtures->getReference('report-23-0')->getId();
+        $comalaOriginId = $fixtures->getReference('comala-origin')->getId();
         $this->checkUserRoutes($userId, $editorId, $adminId);
-        $this->checkUserOrigins();
         $logEntryId = $fixtures->getReference('comala_log_entry')->getId();
         $this->checkUserLogEntries($logEntryId);
         $this->checkUserReports($reportId);
@@ -123,10 +123,8 @@ class SecurityControllerTest extends WebTestCase
         $editorId = $fixtures->getReference('editor')->getId();
         $adminId = $fixtures->getReference('admin')->getId();
         $reportId = $fixtures->getReference('report-23-0')->getId();
-
         //check that the user with ROLE_EDITOR has no access to certain stuff.
         $this->checkEditorRoutes($userId, $editorId, $adminId);
-        $this->checkEditorOrigins();
         $logEntryId = $fixtures->getReference('comala_log_entry')->getId();
         $this->checkEditorLogEntries($logEntryId);
         $this->checkEditorReports($reportId);
@@ -161,9 +159,8 @@ class SecurityControllerTest extends WebTestCase
         $editorId = $fixtures->getReference('editor')->getId();
         $adminId = $fixtures->getReference('admin')->getId();
         $reportId = $fixtures->getReference('report-23-0')->getId();
-
+                
         $this->checkAdminRoutes($userId, $editorId, $adminId);
-        $this->checkAdminOrigins();
         $logEntryId = $fixtures->getReference('macondo_log_entry')->getId();
         $this->checkAdminLogEntries($logEntryId);
         $this->checkAdminReports($reportId);
@@ -247,78 +244,6 @@ class SecurityControllerTest extends WebTestCase
         $this->checkSuccess('/admin_sonata_user_user/'.$userId.'/edit');
     }
     
-    private function checkUserOrigins()
-    {
-        $this->checkSuccess('/app/origin/list');
-        $crawler = $this->client->request('GET', '/app/origin/list');
-        $this->assertEquals(
-            1,
-            $crawler->filter(
-                'td:contains("Comala")'
-            )->count()
-        );
-        $this->assertEquals(
-            1,
-            $crawler->filter(
-                'td:contains("Macondo")'
-            )->count()
-        );
-        $this->assertEquals(
-            2,
-            $crawler->filter(
-                'tbody tr'
-            )->count()
-        );
-    }
-
-    private function checkEditorOrigins()
-    {
-        $this->checkSuccess('/app/origin/list');
-        $crawler = $this->client->request('GET', '/app/origin/list');
-        $this->assertEquals(
-            1,
-            $crawler->filter(
-                'td:contains("Comala")'
-            )->count()
-        );
-        $this->assertEquals(
-            0,
-            $crawler->filter(
-                'td:contains("Macondo")'
-            )->count()
-        );
-        $this->assertEquals(
-            1,
-            $crawler->filter(
-                'tbody tr'
-            )->count()
-        );
-    }
-
-    private function checkAdminOrigins()
-    {
-        $this->checkSuccess('/app/origin/list');
-        $crawler = $this->client->request('GET', '/app/origin/list');
-        $this->assertEquals(
-            0,
-            $crawler->filter(
-                'td:contains("Comala")'
-            )->count()
-        );
-        $this->assertEquals(
-            1,
-            $crawler->filter(
-                'td:contains("Macondo")'
-            )->count()
-        );
-        $this->assertEquals(
-            1,
-            $crawler->filter(
-                'tbody tr'
-            )->count()
-        );
-    }
-
     private function checkUserLogEntries($logEntryId)
     {
         $this->checkSuccess('/app/logentry/list');

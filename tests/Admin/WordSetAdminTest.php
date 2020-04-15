@@ -16,83 +16,56 @@ class WordSetAdminTest extends WebTestCase
     use FixturesTrait;
     
     protected $client;
+    protected $wordsetId;
 
-    /**
-     * Tests the basic login and logout mechanics.
-     * This also tests the allowed routes of the basic User.
-     */
-    public function testLoginUser()
+    protected function setUp(): void
     {
         $fixtures = $this->loadFixtures(
             [AppExampleFixtures::class, UserTestFixtures::class]
         )->getReferenceRepository();
         $this->client = static::createClient();
         $this->client->setServerParameters([]);
-
-        //now login:
-        $crawler = $this->client->request('GET', '/');
-        $crawler=$this->client->followRedirect();
-        $form = $crawler->selectButton('Entrar')->form(array(
-            '_username'  => 'user@test.com',
-            '_password'  => 'testPass',
-        ));
-        $this->client->submit($form);
-        $this->assertRedirect('http://localhost/');
-        $crawler = $this->client->followRedirect();
-        //check that the user with ROLE_USER has no access to certain stuff.
-        $wordsetId = $fixtures->getReference('wordset')->getId();
-        $this->checkUserWordset($wordsetId);
+        $this->wordsetId = $fixtures->getReference('wordset')->getId();
     }
 
     /**
-     * Tests allowed routes of the ROLE_EDITOR.
+     * Tests the WordSetAdmin for the basic User.
      */
-    public function testLoginEditor()
+    public function testWordSetAdminUser()
     {
-        $fixtures = $this->loadFixtures(
-            [AppExampleFixtures::class, UserTestFixtures::class]
-        )->getReferenceRepository();
-                        
-        $this->client = static::createClient();
-        $this->client->setServerParameters([]);
-        //now login:
-        $crawler = $this->client->request('GET', '/');
-        $crawler=$this->client->followRedirect();
-        $form = $crawler->selectButton('Entrar')->form(array(
-            '_username'  => 'editor@test.com',
-            '_password'  => 'testPass',
-        ));
-        $this->client->submit($form);
-        $this->assertRedirect('http://localhost/');
-        $crawler = $this->client->followRedirect();
-        $wordsetId = $fixtures->getReference('wordset')->getId();
-        //check that the user with ROLE_EDITOR has no access to certain stuff.
-        $this->checkEditorWordset($wordsetId);
+        $this->login('user@test.com', 'testPass');
+        $this->checkUserWordset($this->wordsetId);
     }
 
     /**
-     * Tests allowed routes of the basic ROLE_ADMIN.
+     * Tests WordSetAdmin of the ROLE_EDITOR.
      */
-    public function testLoginAdmin()
+    public function testWordSetAdminEditor()
     {
-        $fixtures = $this->loadFixtures(
-            [AppExampleFixtures::class, UserTestFixtures::class]
-        )->getReferenceRepository();
-        $this->client = static::createClient();
-        $this->client->setServerParameters([]);
+        $this->login('editor@test.com', 'testPass');
+        $this->checkEditorWordset($this->wordsetId);
+    }
 
-        //now login:
-        $crawler = $this->client->request('GET', '/');
-        $crawler=$this->client->followRedirect();
+    /**
+     * Tests WordSetAdmin of the  ROLE_ADMIN.
+     */
+    public function testWordSetAdminAdmin()
+    {
+        $this->login('admin@test.com', 'testPass');
+        $this->checkAdminWordset($this->wordsetId);
+    }
+
+    private function login($username, $password)
+    {
+        $this->client->request('GET', '/');
+        $crawler = $this->client->followRedirect();
         $form = $crawler->selectButton('Entrar')->form(array(
-            '_username'  => 'admin@test.com',
-            '_password'  => 'testPass',
+            '_username'  => $username,
+            '_password'  => $password,
         ));
         $this->client->submit($form);
         $this->assertRedirect('http://localhost/');
-        $crawler = $this->client->followRedirect();
-        $wordsetId = $fixtures->getReference('wordset')->getId();
-        $this->checkAdminWordset($wordsetId);
+        $this->client->followRedirect();
     }
 
     private function assertRedirect($destiny)
@@ -143,9 +116,9 @@ class WordSetAdminTest extends WebTestCase
 
     private function checkCreateAndEdit()
     {
-        $crawler = $this->client->request('GET','/app/wordset/create');
+        $crawler = $this->client->request('GET', '/app/wordset/create');
         $values = $crawler->selectButton('btn_create_and_edit')->form()->getValues();
-        foreach ($values as $key=>$value) {
+        foreach ($values as $key => $value) {
             if ((substr($key, -6) === '[name]')) {
                 $values[$key] = "TestName";
             }
@@ -181,7 +154,7 @@ class WordSetAdminTest extends WebTestCase
 
         //check it can edit
         $values = $crawler->selectButton('btn_update_and_edit')->form()->getValues();
-        foreach ($values as $key=>$value) {
+        foreach ($values as $key => $value) {
             if ((substr($key, -6) === '[name]')) {
                 $values[$key] = "TestName2";
             }
@@ -210,7 +183,7 @@ class WordSetAdminTest extends WebTestCase
     }
     private function checkDelete($wordsetId)
     {
-        $crawler = $this->client->request('GET','/app/wordset/'.$wordsetId.'/delete');
+        $crawler = $this->client->request('GET', '/app/wordset/'.$wordsetId.'/delete');
         $this->assertResponseIsSuccessful($this->client->getResponse());
         $this->client->submitForm('Sim, eliminar');
         $crawler = $this->client->followRedirect();

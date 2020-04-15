@@ -75,7 +75,7 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
         $this->addReference("macondo_log_entry", $logEntry[5]);
         fclose($csv);
         $this->addTestUser($manager, $comalaOrigin);
-        $this->addWords($manager);
+        $this->addWords($manager, [$comalaOrigin, $macondoOrigin, $area51Origin]);
         $manager->flush();
         $this->addReports($manager);
     }
@@ -97,7 +97,7 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
         $manager->persist($testAdmin);
         $manager->flush();
     }
-    private function addWords(ObjectManager $manager)
+    private function addWords(ObjectManager $manager, $origins)
     {
         $words = ["bed", "shirt", "sheet", "skype"];
         $palabras = ["cama", "camisa", "lata", "machete"];
@@ -105,9 +105,13 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
         $englishWordSet = new WordSet();
         $englishWordSet->setName("English words");
         $englishWordSet->setDescription("just english.");
+        $englishWordSet->addOrigin($origins[2]);
         $latWordSet = new WordSet();
         $latWordSet->setName("Portunol");
         $latWordSet->setDescription("Solo esp y pr.");
+        $latWordSet->addOrigin($origins[0]);
+        $latWordSet->addOrigin($origins[1]);
+        $latWordSet->addOrigin($origins[2]);
         $manager->persist($englishWordSet);
         $manager->persist($latWordSet);
         foreach($words as $lastWord)

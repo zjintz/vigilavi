@@ -153,8 +153,6 @@ final class ReportAdmin extends AbstractAdmin
 
             ->end()
             ;
-
-
     }
 
     public function toString($object)
