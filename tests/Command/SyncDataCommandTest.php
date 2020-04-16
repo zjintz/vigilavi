@@ -163,16 +163,16 @@ class SyncDataCommandTest extends KernelTestCase
             // e.g: '--some-option' => 'option_value',
         ]);
         $this->assertStartDisplay($testDate);
-        $this->assertMakingReportsDisplay(6);
+        $this->assertMakingReportsDisplay(3);
         $this->assertSuccessDisplay();
         $newDate = \DateTime::createFromFormat("Y-m-d", "2019-08-22");
         $reports = $entityManager->getRepository(Report::class)->findByDate($newDate);
-        $this->assertEquals(6, count($reports));
+        $this->assertEquals(3, count($reports));
         //lets make sure it generates some reports and the views.
-        $report22 = $reports[2];
+        $report22 = $reports[1];
         $this->assertEquals("Macondo", $report22->getOrigin()->getName());
-        $this->assertEquals("English words", $report22->getWordSet()->getName());
-        $this->assertEquals(4, count($report22->getViewByWord()->getWordStats()));
+        $this->assertEquals("English words", $report22->getOrigin()->getWordSets()[0]->getName());
+        $this->assertEquals(12, count($report22->getViewByWord()->getWordStats()));
     }
 
     private function assertStartDisplay($dateGiven)
@@ -194,8 +194,6 @@ class SyncDataCommandTest extends KernelTestCase
             '----- Sync logs',
             $output
         );
-
-        
     }
 
     private function assertMakingReportsDisplay($newReports = 0)

@@ -324,19 +324,19 @@ class SecurityControllerTest extends WebTestCase
         $this->checkSuccess('/app/report/list');
         $crawler = $this->client->request('GET', '/app/report/list');
         $this->assertEquals(
-            4,
+            2,
             $crawler->filter(
                 'td:contains("Comala")'
             )->count()
         );
         $this->assertEquals(
-            4,
+            2,
             $crawler->filter(
                 'td:contains("Macondo")'
             )->count()
         );
         $this->assertEquals(
-            8,
+            4,
             $crawler->filter(
                 'tbody tr'
             )->count()
@@ -351,7 +351,7 @@ class SecurityControllerTest extends WebTestCase
         $this->checkSuccess('/app/report/list');
         $crawler = $this->client->request('GET', '/app/report/list');
         $this->assertEquals(
-            4,
+            2,
             $crawler->filter(
                 'td:contains("Comala")'
             )->count()
@@ -363,7 +363,7 @@ class SecurityControllerTest extends WebTestCase
             )->count()
         );
         $this->assertEquals(
-            4,
+            2,
             $crawler->filter(
                 'tbody tr'
             )->count()
@@ -383,13 +383,13 @@ class SecurityControllerTest extends WebTestCase
             )->count()
         );
         $this->assertEquals(
-            4,
+            2,
             $crawler->filter(
                 'td:contains("Macondo")'
             )->count()
         );
         $this->assertEquals(
-            4,
+            2,
             $crawler->filter(
                 'tbody tr'
             )->count()

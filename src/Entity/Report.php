@@ -24,11 +24,6 @@ class Report
     private $outcomes;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\WordSet", inversedBy="reports", cascade={"persist"})
-     */
-    private $wordSet;
-
-    /**
      * @ORM\Column(type="date")
      */
     private $date;
@@ -107,17 +102,6 @@ class Report
         return $this;
     }
 
-    public function getWordSet(): ?WordSet
-    {
-        return $this->wordSet;
-    }
-
-    public function setWordSet(?WordSet $wordSet): self
-    {
-        $this->wordSet = $wordSet;
-
-        return $this;
-    }
 
     public function getDate(): ?\DateTimeInterface
     {

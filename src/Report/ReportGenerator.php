@@ -41,18 +41,14 @@ class ReportGenerator
             $date = $today->sub(new \DateInterval('P1D'));
         }
         $origins = $this->entityManager->getRepository(Origin::class)->findAll();
-        $wordsets = $this->entityManager->getRepository(WordSet::class)->findAll();
         $counter = 0;
         foreach ($origins as $origin) {
-            foreach ($wordsets as $wordset) {
-                echo "\n haciendo ahora reporte para".$origin->getName(); 
-                $newReport = new Report();
-                $newReport->setDate($date);
-                $newReport->setWordSet($wordset);
-                $newReport->setOrigin($origin);
-                $counter += 1;
-                $this->entityManager->persist($newReport);
-            }
+            echo "\n haciendo ahora reporte para".$origin->getName(); 
+            $newReport = new Report();
+            $newReport->setDate($date);
+            $newReport->setOrigin($origin);
+            $counter += 1;
+            $this->entityManager->persist($newReport);
             $this->entityManager->flush();
         }
         $this->entityManager->clear();

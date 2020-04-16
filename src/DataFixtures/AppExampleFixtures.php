@@ -45,7 +45,6 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
         $manager->persist($area51Origin);
         while (!feof($csv)) {
             $dateTimeLog = \DateTime::createFromFormat($format,($line[1]." ".$line[2]));
-            var_dump($dateTimeLog);
             $logEntry[$num] = new LogEntry();
             $logEntry[$num]->setDate($dateTimeLog);
             $logEntry[$num]->setLogType($line[7]);
@@ -146,29 +145,26 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
         $format = "Y-m-d";
         $count = 0;
         foreach ($origins as $origin) {
-            foreach ($wordsets as $wordset) {
-                $newReport = new Report();
-                $newReport->setWordSet($wordset);
-                $newReport->setOrigin($origin);
-                $newDate = \DateTime::createFromFormat($format, "2019-08-23");
-                $newReport->setDate($newDate);
-                $this->addReference("report-23-".$count ,$newReport);
-                $manager->persist($newReport);
-                $count +=1;
-            }
+            $newReport = new Report();
+            $newReport->setOrigin($origin);
+            $newDate = \DateTime::createFromFormat($format, "2019-08-23");
+            $newReport->setDate($newDate);
+            $this->addReference("report-23-".$count ,$newReport);
+            $manager->persist($newReport);
+            $count +=1;
         }
         $count = 0;
         foreach ($origins as $origin) {
+            $newReport = new Report();
+            $newReport->setOrigin($origin);
             foreach ($wordsets as $wordset) {
-                $newReport = new Report();
-                $newReport->setWordSet($wordset);
-                $newReport->setOrigin($origin);
-                $newDate = \DateTime::createFromFormat($format, "2019-09-30");
-                $newReport->setDate($newDate);
-                $this->addReference("report-30-".$count ,$newReport);
-                $manager->persist($newReport);
-                $count +=1;
+                $origin->addWordSet($wordset);
             }
+            $newDate = \DateTime::createFromFormat($format, "2019-09-30");
+            $newReport->setDate($newDate);
+            $this->addReference("report-30-".$count ,$newReport);
+            $manager->persist($newReport);
+            $count +=1;
         }
         $manager->flush();
     }

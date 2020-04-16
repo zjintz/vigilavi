@@ -23,7 +23,7 @@ class OutcomeGenerator
      */
     public function genOutcomes(Report $report, array $entries) : Report
     {
-        $words = $report->getWordSet()->getWords();
+        $words = $this->getAllWords($report->getOrigin()->getWordSets());
         $report->setTotalWords(count($words));
         $report->setTotalLogEntries(count($entries));
         $totalAllowedEntries =0;
@@ -76,6 +76,16 @@ class OutcomeGenerator
         $report->setTotalDeniedClassifiedLogEntries($deniedClassifiedEntries);
 
         return $report;
+    }
+
+    protected function getAllWords($wordsets)
+    {
+        //$words = $report->getWordSet()->getWords();
+        $words = [];
+        foreach ($wordsets as $set) {
+            $words = array_merge($words, $set->getWords()->toArray());
+        }
+        return $words;
     }
     
     protected function makeOutcome($classes, $entry, $wordsFound)

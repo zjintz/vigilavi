@@ -3,6 +3,7 @@ namespace App\Tests\Report;
 
 use App\Entity\LogEntry;
 use App\Entity\Outcome;
+use App\Entity\Origin;
 use App\Entity\Report;
 use App\Entity\Word;
 use App\Entity\WordSet;
@@ -19,8 +20,9 @@ class OutcomeGeneratorTest extends TestCase
     public function testGenOutcomesNoEntries()
     {
         $report = new Report();
-        $wordset = new WordSet();
-        $report->setWordSet($wordset);
+        $origin = new Origin();
+        $origin->addWordSet(new WordSet());
+        $report->setOrigin($origin);
         $outcomeGenerator = new OutcomeGenerator();
         $newReport = $outcomeGenerator->genOutcomes($report, []);
         $this->assert0Stats($newReport);
@@ -37,8 +39,9 @@ class OutcomeGeneratorTest extends TestCase
     public function testGenOutcomesNoWords()
     {
         $report = new Report();
-        $wordset = new WordSet();
-        $report->setWordSet($wordset);
+        $origin = new Origin();
+        $origin->addWordSet(new WordSet());
+        $report->setOrigin($origin);
         $logEntry = new LogEntry();
         $outcomeGenerator = new OutcomeGenerator();
         $newReport = $outcomeGenerator->genOutcomes($report, [$logEntry]);
@@ -59,7 +62,9 @@ class OutcomeGeneratorTest extends TestCase
         $skypeWord = new Word();
         $skypeWord->setText("skype");
         $wordset->addWord($skypeWord);
-        $report->setWordSet($wordset);
+        $origin = new Origin();
+        $origin->addWordSet($wordset);
+        $report->setOrigin($origin);
         $logEntry = new LogEntry();
         $logEntry->setLogSubType("Allowed");
         $logEntry->setUrl("abc");
@@ -88,7 +93,9 @@ class OutcomeGeneratorTest extends TestCase
         $skypeWord = new Word();
         $skypeWord->setText("skype");
         $wordset->addWord($skypeWord);
-        $report->setWordSet($wordset);
+        $origin = new Origin();
+        $origin->addWordSet($wordset);
+        $report->setOrigin($origin);
         $urlsDomains = [["skype.com/23/fs/gxs", "msn.com", "Allowed"],
                         ["abc.net/431", "abc.net","Allowed"],
                         ["www.biz.to/844", "biz.to", "Allowed"]
@@ -120,7 +127,9 @@ class OutcomeGeneratorTest extends TestCase
         $keyWord = new Word();
         $keyWord->setText("key");
         $wordset->addWord($keyWord);
-        $report->setWordSet($wordset);
+        $origin = new Origin();
+        $origin->addWordSet($wordset);
+        $report->setOrigin($origin);
         $urlsDomains = [["skype.com/23/fs/gxs", "msn.com", "Allowed"],
                         ["abc.net/431", "key.net","Denied"],
                         ["www.biz.to/844", "biz.to", "Allowed"],
@@ -156,7 +165,9 @@ class OutcomeGeneratorTest extends TestCase
         $sinWord->setText("sin");
         $wordset->addWord($keyWord);
         $wordset->addWord($sinWord);
-        $report->setWordSet($wordset);
+        $origin = new Origin();
+        $origin->addWordSet($wordset);
+        $report->setOrigin($origin);
         $urlsDomains = [["skeype.com/23/fs/gxs", "msn.sin", "Allowed"],
                         ["abc.net/431", "key.net","Denied"],
                         ["www.biz.to/844", "biz.to", "Allowed"],

@@ -62,20 +62,19 @@ final class ReportAdmin extends AbstractAdmin
         $collection->remove('edit');
         $collection->remove('create');
         $collection->add('summary', $this->getRouterIdParameter().'/summary');
-        
+       
     }
     
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
-        $datagridMapper->add('wordSet', null, [
-            'operator_type' => EqualType::class,
-            'advanced_filter' => false
-        ]);
         $datagridMapper->add('date', null, [
             'operator_type' => EqualType::class,
             'advanced_filter' => false
         ]);
-
+        $datagridMapper->add('origin', null, [
+            'operator_type' => EqualType::class,
+            'advanced_filter' => false
+        ]);
     }
 
     protected function configureListFields(ListMapper $listMapper)
@@ -86,13 +85,7 @@ final class ReportAdmin extends AbstractAdmin
             ['label' => 'report.label.date']
         
         );
-        $listMapper->add(
-            'wordSet',
-            null,
-            ['label' => 'report.label.wordSet',
-             'class' => WordSet::class
-             ]
-        );
+
         $listMapper->add(
             'origin',
             null,
@@ -130,7 +123,6 @@ final class ReportAdmin extends AbstractAdmin
     {
         $showMapper
             ->with('General', ['class' => 'col-md-5'])
-            ->add('wordSet', null, ['label' => 'report.label.wordSet'])
             ->add('date', null, ['label' => 'report.label.date'])
             ->add(
                 'origin',

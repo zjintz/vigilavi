@@ -11,7 +11,7 @@ use App\Entity\Word;
 use App\Entity\WordStat;
 
 /**
- * \brief     A service that makes views of reports by words. 
+ * \brief     A service that makes views of reports by words.
  *
  *
  */
@@ -24,7 +24,7 @@ class ViewByWordMaker
      */
     public function makeView(Report $report): ViewByWord
     {
-        $words = $report->getWordSet()->getWords();
+        $words = $this->getAllWords($report->getOrigin()->getWordsets());
         $outcomes = $report->getOutcomes();
         $view = new ViewByWord();
         foreach ($words as $word) {
@@ -120,5 +120,14 @@ class ViewByWordMaker
             }
         }
         return false;
+    }
+
+    protected function getAllWords($wordsets)
+    {
+        $words = [];
+        foreach ($wordsets as $set) {
+            $words = array_merge($words, $set->getWords()->toArray());
+        }
+        return $words;
     }
 }

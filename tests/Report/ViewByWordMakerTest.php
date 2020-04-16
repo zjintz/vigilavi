@@ -2,6 +2,7 @@
 namespace App\Tests\Report;
 
 use App\Entity\LogEntry;
+use App\Entity\Origin;
 use App\Entity\Outcome;
 use App\Entity\Report;
 use App\Entity\Word;
@@ -19,10 +20,12 @@ class ViewByWordMakerTest extends TestCase
     public function testMakeViewNothing()
     {
         $report = new Report();
+        $origin = new Origin();
         $wordset = new WordSet();
-        $report->setWordSet($wordset);
-        $outcomeGenerator = new ViewByWordMaker();
-        $newView = $outcomeGenerator->makeView($report);
+        $origin->addWordset($wordset);
+        $report->setOrigin($origin);
+        $viewMaker = new ViewByWordMaker();
+        $newView = $viewMaker->makeView($report);
         $this->assertEquals(0, count($newView->getWordStats()));
     }
 
@@ -34,7 +37,10 @@ class ViewByWordMakerTest extends TestCase
     public function testMakeViewNoOutcomes()
     {
         $report = new Report();
-        $report->setWordSet($this->make2WordSet());
+        $origin = new Origin();
+        $wordset = $this->make2WordSet();
+        $origin->addWordset($wordset);
+        $report->setOrigin($origin);
         $outcomeGenerator = new ViewByWordMaker();
         $newView = $outcomeGenerator->makeView($report);
         $this->assertEquals(2, count($newView->getWordStats()));
@@ -75,7 +81,10 @@ class ViewByWordMakerTest extends TestCase
     public function testMakeViewOkOutcomes()
     {
         $report = new Report();
-        $report->setWordSet($this->make2WordSet());
+        $origin = new Origin();
+        $wordset = $this->make2WordSet();
+        $origin->addWordset($wordset);
+        $report->setOrigin($origin);
         $report= $this->addOkOutcomes($report);
         $outcomeGenerator = new ViewByWordMaker();
         $newView = $outcomeGenerator->makeView($report);
@@ -116,7 +125,10 @@ class ViewByWordMakerTest extends TestCase
     public function testMakeViewUrlOutcomes()
     {
         $report = new Report();
-        $report->setWordSet($this->make2WordSet());
+        $origin = new Origin();
+        $wordset = $this->make2WordSet();
+        $origin->addWordset($wordset);
+        $report->setOrigin($origin);
         $report= $this->addUrlOutcomes($report);
         $viewMaker = new ViewByWordMaker();
         $newView = $viewMaker->makeView($report);
@@ -180,7 +192,10 @@ class ViewByWordMakerTest extends TestCase
     public function testMakeView()
     {
         $report = new Report();
-        $report->setWordSet($this->make2WordSet());
+        $origin = new Origin();
+        $wordset = $this->make2WordSet();
+        $origin->addWordset($wordset);
+        $report->setOrigin($origin);
         $report= $this->addOutcomes($report);
         $viewMaker = new ViewByWordMaker();
         $newView = $viewMaker->makeView($report);

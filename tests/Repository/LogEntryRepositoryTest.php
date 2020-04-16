@@ -72,7 +72,7 @@ class LogEntryRepositoryTest extends WebTestCase
         $fixtures = $this->loadFixtures(
             [AppExampleFixtures::class, UserTestFixtures::class]
         )->getReferenceRepository();
-        $reportId = $fixtures->getReference('report-23-2')->getId();
+        $reportId = $fixtures->getReference('report-23-1')->getId();
         $report = $this->entityManager
                 ->getRepository(Report::class)
                 ->findOneBy(["id" => $reportId]);
@@ -83,5 +83,4 @@ class LogEntryRepositoryTest extends WebTestCase
         //this has 3 entries! Macondo for 2019-08-23
         $this->assertSame(3, count($entries));
     }
-
 }
