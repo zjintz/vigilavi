@@ -80,7 +80,6 @@ class OutcomeGenerator
 
     protected function getAllWords($wordsets)
     {
-        //$words = $report->getWordSet()->getWords();
         $words = [];
         foreach ($wordsets as $set) {
             $words = array_merge($words, $set->getWords()->toArray());

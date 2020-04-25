@@ -16,11 +16,13 @@ class SyslogDBCollector
     protected $sophosUser;
     protected $sophosPass;
     protected $options;
+    protected $queryMaker;
     
     public function __construct(
         string $sophosDNS,
         string $sophosUser,
-        string $sophosPass
+        string $sophosPass,
+        SyslogQueryMaker $queryMaker
     ) {
 
         $this->sophosDNS = $sophosDNS;
@@ -31,6 +33,7 @@ class SyslogDBCollector
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES   => false,
         ];
+        $this->queryMaker = $queryMaker;
     }
     
     /**
@@ -39,38 +42,19 @@ class SyslogDBCollector
      */
     public function getRemoteOrigins()
     {
-        $query = "select * from SophosIp";
-        return $this->doQuery($query);
+        return $this->doQuery($this->queryMaker->makeRemoteOriginsQuery());
     }
 
-    public function getRemoteLogs($dateLog, $origins)
+    public function getRemoteLogs($dateLog, $origins, $start, $end)
     {
-        $query = $this->makeQuery($dateLog, $origins);
-
-        return $this->doQuery($query);
+        return $this->doQuery(
+            $this->queryMaker->makeRemoteLogsQuery($dateLog, $origins, $start, $end)
+        );
     }
-    
-    private function makeQuery($dateLog, $origins)
-    {
-        $query = "select * from SophosEvents WHERE DATE(date) = '".$dateLog."' AND (";
-        $firstOrigin = true;
-        foreach ($origins as $origin) {
-            $subnet = $origin->getSubnet().".";
-            $len = strlen($subnet);
-            if ($firstOrigin) {
-                $query = $query." LEFT(src_ip,".$len.") = '".$subnet."' ";
-                $firstOrigin = false;
-                continue;
-            }
-            $query = $query."OR LEFT(src_ip,".$len.") = '".$subnet."' ";
 
-        }
-        $query = $query . ") ;";
-        return $query;
-    }
-    
     protected function doQuery($query)
     {
+        echo $query;
         try {
             $connection = new \PDO(
                 $this->sophosDNS, $this->sophosUser, $this->sophosPass,
@@ -87,7 +71,4 @@ class SyslogDBCollector
             throw new \PDOException($e->getMessage(), (int)$e->getCode());
         }
     }
-
-    
-
 }

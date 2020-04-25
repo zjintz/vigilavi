@@ -15,7 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class LogEntryRepositoryTest extends WebTestCase
 {
-
     use FixturesTrait;
     
     protected $client;
@@ -72,6 +71,19 @@ class LogEntryRepositoryTest extends WebTestCase
         $fixtures = $this->loadFixtures(
             [AppExampleFixtures::class, UserTestFixtures::class]
         )->getReferenceRepository();
+
+        //report-23-0 belongs to Comala should have 1 entry for this date
+        $reportId = $fixtures->getReference('report-23-0')->getId();
+        $report = $this->entityManager
+                ->getRepository(Report::class)
+                ->findOneBy(["id" => $reportId]);
+        $entries = $this->entityManager
+            ->getRepository(LogEntry::class)
+            ->findEntriesToReport($report)
+        ;
+        $this->assertSame(1, count($entries));
+        
+        //report-23-1 belongs to macondo should have 3 entries
         $reportId = $fixtures->getReference('report-23-1')->getId();
         $report = $this->entityManager
                 ->getRepository(Report::class)
@@ -80,7 +92,17 @@ class LogEntryRepositoryTest extends WebTestCase
             ->getRepository(LogEntry::class)
             ->findEntriesToReport($report)
         ;
-        //this has 3 entries! Macondo for 2019-08-23
         $this->assertSame(3, count($entries));
+        
+        //report-23-2 belongs to Area51 should have 992  entries for this date
+        $reportId = $fixtures->getReference('report-23-2')->getId();
+        $report = $this->entityManager
+                ->getRepository(Report::class)
+                ->findOneBy(["id" => $reportId]);
+        $entries = $this->entityManager
+            ->getRepository(LogEntry::class)
+            ->findEntriesToReport($report)
+        ;
+        $this->assertSame(992, count($entries));
     }
 }

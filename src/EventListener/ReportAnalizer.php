@@ -29,12 +29,12 @@ class ReportAnalizer
         $this->outcomeGenerator = $outcomeGenerator;
         $this->viewMaker = $viewMaker;
     }
-    // the entity listener methods receive two arguments:
-    // the entity instance and the lifecycle event
+
     public function addReportData(Report $report, LifecycleEventArgs $event)
     {
         $entriesRepo = $this->entityManager->getRepository(LogEntry::class);
         $entries = $entriesRepo->findEntriesToReport($report);
+        echo count($entries);
         $report  = $this->outcomeGenerator->genOutcomes($report, $entries);
         $viewByWord  = $this->viewMaker->makeView($report);
         $report->setViewByWord($viewByWord);

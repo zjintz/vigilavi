@@ -7,29 +7,50 @@ use App\Repository\OriginRepository;
 use App\Repository\LogRepository;
 use App\Util\SyslogDBCollector;
 use App\Util\LogRetriever;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Tests of the LogRetriever service.
+ *
+ *
+ */
 class LogRetrieverTest extends TestCase
 {
 
+    protected function mockBasicEntityManager()
+    {
+        $configMock = $this->createMock(Configuration::class);
+        $connectionMock = $this->createMock(Connection::class);
+        $connectionMock->expects($this->any())
+                       ->method('getConfiguration')
+                       ->willReturn($configMock);
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager->expects($this->any())
+                      ->method('getConnection')
+                      ->willReturn($connectionMock);
+        return $entityManager;
+    }
+    
     protected function mockEntityManager()
     {
+        $entityManager = $this->mockBasicEntityManager();
         $originA = $this->makeOrigin('192.168.21', 'Sede A', true); 
         $originRepository = $this->createMock(OriginRepository::class);
         $originRepository->expects($this->once())
             ->method('findBy')
             ->willReturn([$originA]);
-        $originRepository->expects($this->once())
+        $originRepository->expects($this->exactly(1))
             ->method('findOneBy')
             ->willReturn($originA);
-        $entityManager = $this->createMock(EntityManagerInterface::class);
-        $entityManager->expects($this->exactly(2))
+        $entityManager->expects($this->any())
             ->method('getRepository')
             ->willReturn($originRepository);
-        $entityManager->expects($this->once())
+        $entityManager->expects($this->any())
                       ->method('persist');
-        $entityManager->expects($this->once())
+        $entityManager->expects($this->any())
                       ->method('flush');
         return $entityManager;
     }
@@ -50,30 +71,32 @@ class LogRetrieverTest extends TestCase
     {
         $yesterdayStr = $this->getYesterdayStr();
         $syslogDBCollector = $this->createMock(SyslogDBCollector::class);
-        $syslogDBCollector->expects($this->once())
+        $syslogDBCollector->expects($this->exactly(2))
                           ->method('getRemoteLogs')
                           ->with(
                               $this->stringContains($yesterdayStr),
                               $this->anything()
                           )
                           ->willReturn(
-                              [[
-                                  'ID' => 6284459,
-                                  'date' =>$yesterdayStr." 00:00:00",
-                                  'log_type' => "Content Filtering",
-                                  'log_component' => "HTTP",
-                                  'log_subtype' => "Denied",
-                                  'fw_rule_id' => 26,
-                                  'user_name' => "No Auth",
-                                  'user_gp' => "",
-                                  'category' =>"IPAddress",
-                                  'category_type' => "Acceptable",
-                                  'url' => "https://17.167.138.17/",
-                                  'src_ip' => "192.168.21.64",
-                                  'dst_ip' => "17.167.138.17",
-                                  'domain' => "17.167.138.17",
-                                  'score_words' => ""
-                              ]]
+                              $this->onConsecutiveCalls(
+                                  [[
+                                      'ID' => 6284459,
+                                      'date' =>$yesterdayStr." 00:00:00",
+                                      'log_type' => "Content Filtering",
+                                      'log_component' => "HTTP",
+                                      'log_subtype' => "Denied",
+                                      'fw_rule_id' => 26,
+                                      'user_name' => "No Auth",
+                                      'user_gp' => "",
+                                      'category' =>"IPAddress",
+                                      'category_type' => "Acceptable",
+                                      'url' => "https://17.167.138.17/",
+                                      'src_ip' => "192.168.21.64",
+                                      'dst_ip' => "17.167.138.17",
+                                      'domain' => "17.167.138.17",
+                                      'score_words' => ""
+                                  ]] , []
+                              )
                           );
         return $syslogDBCollector;
     }
@@ -94,7 +117,7 @@ class LogRetrieverTest extends TestCase
         $originRepository->expects($this->once())
             ->method('findBy')
             ->willReturn([]);
-        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager = $this->mockBasicEntityManager();
         $entityManager->expects($this->exactly(1))
             ->method('getRepository')
             ->willReturn($originRepository);
@@ -127,11 +150,11 @@ class LogRetrieverTest extends TestCase
         $originRepository->expects($this->exactly(3))
                          ->method('findOneBy')
                          ->will($this->onConsecutiveCalls($originA, $originC, $originD));
-        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager = $this->mockBasicEntityManager();
         $entityManager->expects($this->exactly(4))
             ->method('getRepository')
             ->willReturn($originRepository);
-        $entityManager->expects($this->exactly(6))
+        $entityManager->expects($this->exactly(2))
                       ->method('persist');
         $entityManager->expects($this->exactly(3))
                       ->method('flush');
@@ -154,7 +177,7 @@ class LogRetrieverTest extends TestCase
             'score_words' => ""
         ];
         $syslogDBCollector = $this->createMock(SyslogDBCollector::class);
-        $syslogDBCollector->expects($this->exactly(1))
+        $syslogDBCollector->expects($this->exactly(2))
                           ->method('getRemoteLogs')
                           ->withConsecutive(
                               [
@@ -171,7 +194,10 @@ class LogRetrieverTest extends TestCase
                               ]
                           )
                           ->willReturn(
-                              [$logExample, $logExample]
+                              $this->onConsecutiveCalls(
+                                  [$logExample, $logExample],
+                                  []
+                              )
                           );
         
         $logRetriever = new LogRetriever(
@@ -188,7 +214,7 @@ class LogRetrieverTest extends TestCase
     public function testRetrieveDataWrongDate()
     {
         $logRetriever = new LogRetriever(
-            $this->createMock(EntityManagerInterface::class),
+            $this->mockBasicEntityManager(),
             $this->mockSyslogDBCollectorVoid(),
         );
         $response = $logRetriever->retrieveData("20201212");
@@ -274,7 +300,7 @@ class LogRetrieverTest extends TestCase
             [
                 'date' => "2020-01-01",
                 'active_origins' => 3,
-                'logs_found' => 6
+                'logs_found' => 2
             ],
             $response,
             "Erroneus output from the retrieveData function, from the LogRetriever.");

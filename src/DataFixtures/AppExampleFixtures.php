@@ -56,11 +56,9 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
             $logEntry[$num]->setDomain($line[29]);
             if ($num < 5) {
                 $logEntry[$num]->setOrigin($comalaOrigin);
-
             }
             if ($num >= 5 && $num <= 7) {
                 $logEntry[$num]->setOrigin($macondoOrigin);
-
             }
             if ($num > 7) {
                 $logEntry[$num]->setOrigin($area51Origin);
@@ -104,38 +102,34 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
         $englishWordSet = new WordSet();
         $englishWordSet->setName("English words");
         $englishWordSet->setDescription("just english.");
-        $englishWordSet->addOrigin($origins[2]);
+        $origins[2]->addWordSet($englishWordSet);
         $latWordSet = new WordSet();
         $latWordSet->setName("Portunol");
         $latWordSet->setDescription("Solo esp y pr.");
-        $latWordSet->addOrigin($origins[0]);
-        $latWordSet->addOrigin($origins[1]);
-        $latWordSet->addOrigin($origins[2]);
+        $origins[0]->addWordSet($latWordSet);
+        $origins[1]->addWordSet($latWordSet);
+        $origins[2]->addWordSet($latWordSet);
         $manager->persist($englishWordSet);
         $manager->persist($latWordSet);
-        foreach($words as $lastWord)
-        {
+        foreach ($words as $lastWord) {
             $newWord = $this->makeWord($lastWord);
             $newWord->setWordSet($englishWordSet);
-            $manager->persist($newWord);            
+            $manager->persist($newWord);          
         }
 
-        foreach($palabras as $lastWord)
-        {
+        foreach ($palabras as $lastWord) {
             $newWord = $this->makeWord($lastWord);
             $newWord->setWordSet($latWordSet);
             $manager->persist($newWord);
         }
 
-        foreach($palavras as $lastWord)
-        {
+        foreach ($palavras as $lastWord) {
             $newWord = $this->makeWord($lastWord);
             $newWord->setWordSet($latWordSet);
             $manager->persist($newWord);
         }
         $this->setReference('wordset', $englishWordSet);
         $manager->flush();
- 
     }
 
     private function addReports(ObjectManager $manager)
@@ -149,7 +143,7 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
             $newReport->setOrigin($origin);
             $newDate = \DateTime::createFromFormat($format, "2019-08-23");
             $newReport->setDate($newDate);
-            $this->addReference("report-23-".$count ,$newReport);
+            $this->addReference("report-23-".$count, $newReport);
             $manager->persist($newReport);
             $count +=1;
         }
@@ -162,7 +156,7 @@ class AppExampleFixtures extends Fixture implements FixtureGroupInterface
             }
             $newDate = \DateTime::createFromFormat($format, "2019-09-30");
             $newReport->setDate($newDate);
-            $this->addReference("report-30-".$count ,$newReport);
+            $this->addReference("report-30-".$count, $newReport);
             $manager->persist($newReport);
             $count +=1;
         }

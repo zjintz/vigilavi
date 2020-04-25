@@ -9,7 +9,7 @@ use App\Report\ReportGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 
-class LogRetrieverTest extends TestCase
+class ReportGeneratorTest extends TestCase
 {
     protected function mockEntityManagerVoid()
     {
@@ -17,15 +17,11 @@ class LogRetrieverTest extends TestCase
         $originRepository->expects($this->once())
             ->method('findAll')
             ->willReturn([]);
-        $wordsetRepository = $this->createMock(WordSetRepository::class);
-        $wordsetRepository->expects($this->once())
-            ->method('findAll')
-            ->willReturn([]);
         $entityManager = $this->createMock(EntityManagerInterface::class);
-        $entityManager->expects($this->exactly(2))
+        $entityManager->expects($this->exactly(1))
                       ->method('getRepository')
-                      ->withConsecutive([Origin::class], [WordSet::class])
-                      ->willReturnOnConsecutiveCalls($originRepository, $wordsetRepository);
+                      ->withConsecutive([Origin::class])
+                      ->willReturnOnConsecutiveCalls($originRepository);
 
         return $entityManager;
     }
@@ -38,19 +34,11 @@ class LogRetrieverTest extends TestCase
         $originRepository->expects($this->once())
             ->method('findAll')
             ->willReturn([$originA]);
-        //making the wordset repo
-        $wordsetA = new WordSet();
-        $wordsetA->setName("AA o");
-        $wordsetRepository = $this->createMock(WordSetRepository::class);
-
-        $wordsetRepository->expects($this->once())
-            ->method('findAll')
-            ->willReturn([$wordsetA]);
         $entityManager = $this->createMock(EntityManagerInterface::class);
-        $entityManager->expects($this->exactly(2))
+        $entityManager->expects($this->exactly(1))
                       ->method('getRepository')
-                      ->withConsecutive([Origin::class], [WordSet::class])
-                      ->willReturnOnConsecutiveCalls($originRepository, $wordsetRepository);
+                      ->withConsecutive([Origin::class])
+                      ->willReturnOnConsecutiveCalls($originRepository);
         $entityManager->expects($this->once())
                       ->method('persist');
         $entityManager->expects($this->once())

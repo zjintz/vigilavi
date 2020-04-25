@@ -124,24 +124,4 @@ class WordSet
         return $this->origins;
     }
 
-    public function addOrigin(Origin $origin): self
-    {
-        if (!$this->origins->contains($origin)) {
-            $this->origins[] = $origin;
-            $origin->addWordSet($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOrigin(Origin $origin): self
-    {
-        if ($this->origins->contains($origin)) {
-            $this->origins->removeElement($origin);
-            $origin->removeWordSet($this);
-        }
-
-        return $this;
-    }
-
 }

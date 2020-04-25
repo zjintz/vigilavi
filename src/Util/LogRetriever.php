@@ -33,6 +33,7 @@ class LogRetriever
      */
     public function retrieveData(string $dateLog = null)
     {
+        $this->entityManager->getConnection()->getConfiguration()->setSQLLogger(null);
         $date = \DateTime::createFromFormat('yy-m-d', $dateLog);
 
         if (!$date && !is_null($dateLog)) {
@@ -49,23 +50,14 @@ class LogRetriever
                 'logs_found' => 0
             ];
         }
-
         if (is_null($dateLog))
         {
             $today = new \DateTime();
             $yesterday = $today->sub(new \DateInterval('P1D'));
             $dateLog =  date_format($yesterday, 'yy-m-d');
         }
-        $logsFound= 0;
+        $logsFound = $this->fetchLogsByOrigin($dateLog, $origins);
 
-        $remoteLogs = $this->syslogDBCollector->getRemoteLogs(
-            $dateLog,
-            $origins
-        );
-        
-        foreach ($origins as $origin) {
-            $logsFound += $this->fetchLogsByOrigin($dateLog, $origin->getId(), $remoteLogs);
-        }
         return [
             'date' => $dateLog,
             'active_origins' => count($origins),
@@ -73,8 +65,35 @@ class LogRetriever
         ];
     }
 
+    protected function fetchLogsByOrigin($dateLog, $origins)
+    {
+        $logsFound = 0;
+        $cycle = 1;
+        $batchSize = 15000;
+        while (true) {
+            $end = $batchSize * $cycle;
+            $start =  $end - $batchSize;
+            $remoteLogs = $this->syslogDBCollector->getRemoteLogs(
+                $dateLog,
+                $origins,
+                $start,
+                $batchSize
+            );
+            $logsFound += count($remoteLogs);
+            if (empty($remoteLogs)) {
+                break;
+            }
+            $cycle += 1 ;
+            foreach ($origins as $origin) {
+                $this->persistLogsByOrigin($origin->getId(), $remoteLogs);
+            }
+            unset($remoteLogs);
+            gc_collect_cycles();
+        }
+        return $logsFound;
+    }
 
-    protected function fetchLogsByOrigin($dateLog, $originId, $remoteLogs)
+    protected function persistLogsByOrigin($originId, $remoteLogs)
     {
         $origin = $this->entityManager->getRepository(Origin::class)->findOneBy(
             ["id"=>$originId]
@@ -82,24 +101,30 @@ class LogRetriever
         
         $counter = 0 ;
         foreach ($remoteLogs as $log) {
+            if (!$this->logBelongsToOrigin($log, $origin)) {
+                continue;
+            }
             $this->entityManager->persist($this->createLogEntry($log, $origin));
             $counter+=1;
             //batching!!
-            if($counter == 3000) {
-                $this->entityManager->flush();
-                $this->entityManager->clear();
-                $counter = 0;
-            }                   
         }
         $this->entityManager->flush();
         $this->entityManager->clear();
-        $totalLogs= count($remoteLogs);
         $remoteLogs = null;
         $origin = null;
         unset($remoteLogs);
         unset($origin);
         gc_collect_cycles();
-        return $totalLogs;
+        return $counter;
+    }
+
+    protected function logBelongsToOrigin(array $log, Origin $origin)
+    {
+        $subnet = $origin->getSubnet();
+        if ($subnet === substr($log["src_ip"], 0, strlen($subnet))) {
+            return true;
+        }
+        return false;
     }
     
     protected function createLogEntry(array $log, Origin $origin): LogEntry
