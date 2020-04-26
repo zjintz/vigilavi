@@ -54,7 +54,6 @@ class SyslogDBCollector
 
     protected function doQuery($query)
     {
-        echo $query;
         try {
             $connection = new \PDO(
                 $this->sophosDNS, $this->sophosUser, $this->sophosPass,

@@ -129,16 +129,7 @@
         border-left: 2px solid #D0E4F5;
         }
       </style>
-      <script>
-        function showHideDetail(id) {
-        var x = document.getElementById(id);
-        if (x.style.display === "none") {
-        x.style.display = "block";
-        } else {
-        x.style.display = "none";
-        }
-        } 
-      </script>
+
       <title>Vigilavi - Sistema de Relatório de Acesso Web</title></head>
   <body link='#660000' vlink='#660000' alink='#660000'>
     <div class='title'> VIGILAVI </div>
@@ -166,13 +157,17 @@
                 <th>Acessos Liberados</th>
                 <th>Total</th>
                 <th>Detalhes por Usuário</th>
-                <th>Detalhes Log</th>
+                <th><div>Detalhes Log </div>
+                  <button onclick="showDetailAll()">Mostrar Todos</button>
+                  <button onclick="hideDetailAll()">Ocultar Todos</button>
+                </th>
               </tr>
               {% for wordStat in report.viewByWord.wordStats %}
                 {% if wordStat.outcomes|length > 0 %}
                   <tr>
                     <td>
                       <span class='palavra'>{{ wordStat.wordText }} </span>
+                      <div class='wordsets'>Conjuntos: {{ wordStat.wordSetsNames }} </div>
                     </td>
                     <td>
                       <span class=negnumber> {{ wordStat.deniedEntries }}</span>
@@ -264,4 +259,30 @@
           </table>
 </span>
 </body>
+<script>
+        function showHideDetail(id) {
+        var x = document.getElementById(id);
+        if (x.style.display === "none") {
+        x.style.display = "block";
+        } else {
+        x.style.display = "none";
+        }
+        }
+
+        function showDetailAll() {
+        var x = document.getElementsByClassName("details");
+        for (i =0; i<x.length; i++) {
+          element = x[i];
+          element.style.display = "block";
+         } 
+        }
+        function hideDetailAll() {
+        var x = document.getElementsByClassName("details");
+        for (i =0; i<x.length; i++) {
+          element = x[i];
+              element.style.display = "none";
+          }
+        }
+        
+                               </script>
 </html>
