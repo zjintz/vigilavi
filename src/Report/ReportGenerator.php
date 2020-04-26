@@ -41,7 +41,6 @@ class ReportGenerator
         $origins = $this->entityManager->getRepository(Origin::class)->findAll();
         $counter = 0;
         foreach ($origins as $origin) {
-            echo "\n haciendo ahora reporte para".$origin->getName();
             $newReport = new Report();
             $newReport->setDate($date);
             $newReport->setOrigin($origin);

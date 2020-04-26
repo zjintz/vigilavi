@@ -70,6 +70,7 @@ class ViewByWordMakerTest extends TestCase
             0,
             $newView->getWordStats()[1]->getAllowedEntries()
         );
+        $this->checkWordSetName($newView->getWordStats(), "key-sin-wordset");
         
     }
 
@@ -84,6 +85,66 @@ class ViewByWordMakerTest extends TestCase
         $origin = new Origin();
         $wordset = $this->make2WordSet();
         $origin->addWordset($wordset);
+        $report->setOrigin($origin);
+        $report= $this->addOkOutcomes($report);
+        $outcomeGenerator = new ViewByWordMaker();
+        $newView = $outcomeGenerator->makeView($report);
+        $this->checkWordSetName($newView->getWordStats(), "key-sin-wordset");
+        $this->assertEquals(2, count($newView->getWordStats()));
+        $this->assertEquals(0, count($newView->getWordStats()[0]->getOutcomes()));
+        $this->assertEquals(0, count($newView->getWordStats()[1]->getOutcomes()));
+        $this->assertEquals(
+            "key",
+            $newView->getWordStats()[0]->getWordText()
+        );
+        $this->assertEquals(
+            0,
+            $newView->getWordStats()[0]->getDeniedEntries()
+        );
+        $this->assertEquals(
+            0,
+            $newView->getWordStats()[0]->getAllowedEntries()
+        );
+        $this->assertEquals(
+            "sin",
+            $newView->getWordStats()[1]->getWordText()
+        );
+        $this->assertEquals(
+            0,
+            $newView->getWordStats()[1]->getDeniedEntries()
+        );
+        $this->assertEquals(
+            0,
+            $newView->getWordStats()[1]->getAllowedEntries()
+        );
+    }
+
+
+    /**
+     * Tests the makeView function from the ViewByWordMaker class, when
+     * there is more than one wordset.
+     *
+     * The words are the same as the testMakeViewOkOutcomes() but split in 2 
+     * wordsets. So the output should be the same.
+     * 
+     */
+    public function testMakeView2Wordsets()
+    {
+        $report = new Report();
+        $origin = new Origin();
+        //making wordsets
+        $wordset1 = new WordSet();
+        $keyWord = new Word();
+        $keyWord->setText("key");
+        $wordset1->addWord($keyWord);
+        $wordset2 = new WordSet();
+        $sinWord = new Word();
+        $sinWord->setText("sin");
+        $wordset2->addWord($sinWord);
+        // adding wordsets
+        $origin->addWordset($wordset1);
+        $origin->addWordset($wordset2);
+        //go on
         $report->setOrigin($origin);
         $report= $this->addOkOutcomes($report);
         $outcomeGenerator = new ViewByWordMaker();
@@ -119,6 +180,77 @@ class ViewByWordMakerTest extends TestCase
 
     /**
      * Tests the makeView function from the ViewByWordMaker class, when
+     * there is repeated words in different wordsets..
+     *
+     * The words are the same as the testMakeViewOkOutcomes() but split in 2 
+     * wordsets. So the output should be the same.
+     * 
+     */
+    public function testMakeViewRepetatedWords()
+    {
+        $report = new Report();
+        $origin = new Origin();
+        //making wordsets
+        $wordset1 = new WordSet();
+        $wordset1->setName("key-wordset");
+        $keyWord = new Word();
+        $keyWord->setText("key");
+        $wordset1->addWord($keyWord);
+        $wordset2 = new WordSet();
+        $sinWord = new Word();
+        $sinWord->setText("sin");
+        $wordset2->setName("sin-wordset");
+        $wordset2->addWord($sinWord);
+        $keyWord2 = new Word();
+        $keyWord2->setText("key");
+        $wordset2->addWord($keyWord2);
+        // adding wordsets
+        $origin->addWordset($wordset1);
+        $origin->addWordset($wordset2);
+        //go on
+        $report->setOrigin($origin);
+        $report= $this->addOkOutcomes($report);
+        $outcomeGenerator = new ViewByWordMaker();
+        $newView = $outcomeGenerator->makeView($report);
+        $this->assertEquals(2, count($newView->getWordStats()));
+        $this->assertEquals(0, count($newView->getWordStats()[0]->getOutcomes()));
+        $this->assertEquals(0, count($newView->getWordStats()[1]->getOutcomes()));
+        $this->assertEquals(
+            "key",
+            $newView->getWordStats()[0]->getWordText()
+        );
+        $this->assertEquals(
+            0,
+            $newView->getWordStats()[0]->getDeniedEntries()
+        );
+        $this->assertEquals(
+            0,
+            $newView->getWordStats()[0]->getAllowedEntries()
+        );
+        $this->assertEquals(
+            "sin",
+            $newView->getWordStats()[1]->getWordText()
+        );
+        $this->assertEquals(
+            0,
+            $newView->getWordStats()[1]->getDeniedEntries()
+        );
+        $this->assertEquals(
+            0,
+            $newView->getWordStats()[1]->getAllowedEntries()
+        );
+        $this->assertEquals(
+            "sin-wordset",
+            $newView->getWordStats()[1]->getWordSetsNames()
+        );
+        $this->assertEquals(
+            "key-wordset; sin-wordset",
+            $newView->getWordStats()[0]->getWordSetsNames()
+        );
+    }
+    
+    /**
+     * Tests the makeView function from the ViewByWordMaker class, when
      * in the outcome there is the word in the URL.
      *
      */
@@ -132,6 +264,7 @@ class ViewByWordMakerTest extends TestCase
         $report= $this->addUrlOutcomes($report);
         $viewMaker = new ViewByWordMaker();
         $newView = $viewMaker->makeView($report);
+        $this->checkWordSetName($newView->getWordStats(), "key-sin-wordset");
         $this->assertEquals(2, count($newView->getWordStats()));
         $this->assertEquals(1, count($newView->getWordStats()[0]->getOutcomes()));
         $this->assertEquals(3, count($newView->getWordStats()[1]->getOutcomes()));
@@ -199,6 +332,7 @@ class ViewByWordMakerTest extends TestCase
         $report= $this->addOutcomes($report);
         $viewMaker = new ViewByWordMaker();
         $newView = $viewMaker->makeView($report);
+        $this->checkWordSetName($newView->getWordStats(), "key-sin-wordset");
         $this->assertEquals(2, count($newView->getWordStats()));
         $this->assertEquals(4, count($newView->getWordStats()[0]->getOutcomes()));
         $this->assertEquals(2, count($newView->getWordStats()[1]->getOutcomes()));
@@ -339,6 +473,16 @@ class ViewByWordMakerTest extends TestCase
         return $report;
     }
 
+    protected function checkWordSetName($wordstats, $wordsetName)
+    {
+        foreach ($wordstats as $stat) {
+            $this->assertEquals(
+                $wordsetName,
+                $stat->getWordSetsNames()
+            );
+        }
+    }
+    
     protected function make2WordSet()
     {
         $wordset = new WordSet();
@@ -346,6 +490,7 @@ class ViewByWordMakerTest extends TestCase
         $keyWord->setText("key");
         $sinWord = new Word();
         $sinWord->setText("sin");
+        $wordset->setName("key-sin-wordset");
         $wordset->addWord($keyWord);
         $wordset->addWord($sinWord);
         return $wordset;

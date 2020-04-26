@@ -49,6 +49,11 @@ class WordStat
      */
     private $userStats;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $wordSetsNames;
+
     public function __construct()
     {
         $this->outcomes = new ArrayCollection();
@@ -136,6 +141,18 @@ class WordStat
             $this->userStats[] = $userStat;
             $userStat->setWordStat($this);
         }
+
+        return $this;
+    }
+
+    public function getWordSetsNames(): ?string
+    {
+        return $this->wordSetsNames;
+    }
+
+    public function setWordSetsNames(?string $wordSetsNames): self
+    {
+        $this->wordSetsNames = $wordSetsNames;
 
         return $this;
     }

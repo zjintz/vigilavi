@@ -28,8 +28,11 @@ class ViewByWordMaker
         $outcomes = $report->getOutcomes();
         $view = new ViewByWord();
         foreach ($words as $word) {
-            $wordStat = new WordStat();
-            $wordStat->setWordText($word->getText());
+            if ($this->isWordDone($word, $view->getWordStats())) {
+                
+                continue;
+            }
+            $wordStat = $this->initWordStat($word);
             $view->addWordStat($wordStat);
             $deniedCount = 0;
             $userStats = [];
@@ -130,4 +133,30 @@ class ViewByWordMaker
         }
         return $words;
     }
+
+    protected function initWordStat($word)
+    {
+        $wordStat = new WordStat();
+        $wordStat->setWordText($word->getText());
+        $wordStat->setWordSetsNames($word->getWordSet()->getName());
+        return $wordStat;
+    }
+
+    /** Checks if the word is already done in the wordstats of this view.
+     *
+     * If is already done it adds the name of the wordSet to the wordSetsNames
+     * of the stat.
+    */
+    protected function isWordDone($word , $wordStats)
+    {
+        foreach ($wordStats as $stat) {
+            if ($word->getText() === $stat->getWordText()) {
+                $stat->setWordSetsNames(
+                    $stat->getWordSetsNames()."; ".$word->getWordSet()->getName()
+                );
+                return true; 
+            }
+        }
+        return false;
+    }        
 }

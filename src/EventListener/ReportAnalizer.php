@@ -34,7 +34,6 @@ class ReportAnalizer
     {
         $entriesRepo = $this->entityManager->getRepository(LogEntry::class);
         $entries = $entriesRepo->findEntriesToReport($report);
-        echo count($entries);
         $report  = $this->outcomeGenerator->genOutcomes($report, $entries);
         $viewByWord  = $this->viewMaker->makeView($report);
         $report->setViewByWord($viewByWord);
