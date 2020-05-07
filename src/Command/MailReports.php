@@ -73,6 +73,7 @@ class MailReports extends Command
             $output
         );
         $output->writeln($result);
+        return 1;
     }
 
     protected function validateDate($dateString, $format = 'Y-m-d')

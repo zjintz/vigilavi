@@ -18,6 +18,13 @@ class SecurityControllerTest extends WebTestCase
     use FixturesTrait;
     
     protected $client;
+
+    protected function setUp(): void
+    {
+        self::ensureKernelShutdown();
+        $this->client = static::createClient();
+    }
+    
     /**
      * Anonymous (unauthenticated) users should be always redirected to the login page.
      *
@@ -25,7 +32,6 @@ class SecurityControllerTest extends WebTestCase
      */
     public function testAnonAccess()
     {
-        $this->client = static::createClient();
         $this->client->request('GET', '/dashboard');
         $this->assertRedirect('http://localhost/login');
         $crawler = $this->client->followRedirect();
@@ -48,7 +54,6 @@ class SecurityControllerTest extends WebTestCase
      */
     public function testFailedLogin()
     {
-        $this->client = static::createClient();
         $crawler = $this->client->request('GET', '/login');
         $this->assertLoginContent($crawler);
         $form = $crawler->selectButton('Entrar')->form();
@@ -69,7 +74,6 @@ class SecurityControllerTest extends WebTestCase
         $fixtures = $this->loadFixtures(
             [AppExampleFixtures::class, UserTestFixtures::class]
         )->getReferenceRepository();
-        $this->client = static::createClient();
         $this->client->setServerParameters([]);
 
         //now login:
@@ -106,7 +110,6 @@ class SecurityControllerTest extends WebTestCase
             [AppExampleFixtures::class, UserTestFixtures::class]
         )->getReferenceRepository();
                         
-        $this->client = static::createClient();
         $this->client->setServerParameters([]);
         //now login:
         $crawler = $this->client->request('GET', '/');
@@ -141,7 +144,6 @@ class SecurityControllerTest extends WebTestCase
         $fixtures = $this->loadFixtures(
             [AppExampleFixtures::class, UserTestFixtures::class]
         )->getReferenceRepository();
-        $this->client = static::createClient();
         $this->client->setServerParameters([]);
 
         //now login:
@@ -176,7 +178,6 @@ class SecurityControllerTest extends WebTestCase
     public function testNotEnabled()
     {
         $this->loadFixtures([UserNotEnabledTestFixtures::class]);
-        $this->client = static::createClient();
         $this->client->setServerParameters([]);
 
         //now login:

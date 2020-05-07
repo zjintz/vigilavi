@@ -93,18 +93,6 @@
     "doctrine/reflection": {
         "version": "v1.1.0"
     },
-    "easycorp/easy-log-handler": {
-        "version": "1.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "1.0",
-            "ref": "70062abc2cd58794d2a90274502f81b55cd9951b"
-        },
-        "files": [
-            "config/packages/dev/easy_log_handler.yaml"
-        ]
-    },
     "egulias/email-validator": {
         "version": "2.1.17"
     },
@@ -174,6 +162,9 @@
     "phpunit/php-file-iterator": {
         "version": "2.0.2"
     },
+    "phpunit/php-invoker": {
+        "version": "3.0.0"
+    },
     "phpunit/php-text-template": {
         "version": "1.2.1"
     },
@@ -209,6 +200,9 @@
     },
     "psr/log": {
         "version": "1.1.2"
+    },
+    "sebastian/code-unit": {
+        "version": "1.0.2"
     },
     "sebastian/code-unit-reverse-lookup": {
         "version": "1.0.1"
@@ -518,11 +512,17 @@
             "tests/bootstrap.php"
         ]
     },
+    "symfony/polyfill-intl-grapheme": {
+        "version": "v1.15.0"
+    },
     "symfony/polyfill-intl-icu": {
         "version": "v1.14.0"
     },
     "symfony/polyfill-intl-idn": {
         "version": "v1.14.0"
+    },
+    "symfony/polyfill-intl-normalizer": {
+        "version": "v1.15.0"
     },
     "symfony/polyfill-mbstring": {
         "version": "v1.14.0"
@@ -597,6 +597,9 @@
     },
     "symfony/stopwatch": {
         "version": "v4.4.4"
+    },
+    "symfony/string": {
+        "version": "v5.0.8"
     },
     "symfony/swiftmailer-bundle": {
         "version": "2.5",
@@ -704,6 +707,12 @@
         "files": [
             "config/packages/twig_extensions.yaml"
         ]
+    },
+    "twig/extra-bundle": {
+        "version": "v3.0.3"
+    },
+    "twig/string-extra": {
+        "version": "v3.0.3"
     },
     "twig/twig": {
         "version": "v2.12.5"

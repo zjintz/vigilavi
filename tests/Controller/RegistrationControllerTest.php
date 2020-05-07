@@ -25,7 +25,7 @@ class RegistrationControllerTest extends WebTestCase
     public function testRegister()
     {
         $this->client = static::createClient();
-        $this->loadFixtures([]);
+        $this->loadFixtures();
         $crawler =$this->client->request('GET', '/register/');
         $this->assertTrue($this->client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Registar')->form();

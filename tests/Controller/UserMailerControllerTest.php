@@ -1,6 +1,4 @@
 <?php
-
-
 namespace App\Tests\Controller;
 
 use App\DataFixtures\UserTestFixtures;
@@ -17,6 +15,7 @@ class UserMailerControllerTest extends WebTestCase
         $fixtures = $this->loadFixtures(
             [UserTestFixtures::class]
         )->getReferenceRepository();
+        self::ensureKernelShutdown();
         $client = static::createClient();
         $client->setServerParameters([]);
 
@@ -56,6 +55,7 @@ class UserMailerControllerTest extends WebTestCase
         $fixtures = $this->loadFixtures(
             [UserTestFixtures::class]
         )->getReferenceRepository();
+        self::ensureKernelShutdown();
         $client = static::createClient();
         $client->setServerParameters([]);
 

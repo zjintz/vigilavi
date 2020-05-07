@@ -23,6 +23,7 @@ class WordSetAdminTest extends WebTestCase
         $fixtures = $this->loadFixtures(
             [AppExampleFixtures::class, UserTestFixtures::class]
         )->getReferenceRepository();
+        self::ensureKernelShutdown();
         $this->client = static::createClient();
         $this->client->setServerParameters([]);
         $this->wordsetId = $fixtures->getReference('wordset')->getId();
