@@ -38,10 +38,14 @@ class RegistrationControllerTest extends WebTestCase
         $form['fos_user_registration_form[headquarter][name]'] = 'hqname';
         $form['fos_user_registration_form[headquarter][city]'] = 'hqcity';
         $form['fos_user_registration_form[headquarter][country]'] = 'CO';
+
         $crawler = $this->client->submit($form);
+        $this->client->enableProfiler();
         $this->assertRedirect('/login');
         $this->client->followRedirect();
+        $this->assertEmailSent();
         $this->assertTrue($this->client->getResponse()->isSuccessful());
+
         //check that it can't go to the dashboard.
         // submit the form
         $this->client->request('GET', '/dashboard');
@@ -81,5 +85,26 @@ class RegistrationControllerTest extends WebTestCase
         $this->assertEquals(false, $user->isEnabled());
         $this->assertEquals(true, $newSubs->getIsActive());
         $this->assertEquals(["ROLE_USER"], $user->getRoles());
+    }
+
+    private function assertEmailSent()
+    {
+         $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+
+        // checks that an email was sent
+        $this->assertSame(1, $mailCollector->getMessageCount());
+
+        $collectedMessages = $mailCollector->getMessages();
+        $message = $collectedMessages[0];
+
+        // Asserting email data
+        $this->assertInstanceOf('Swift_Message', $message);
+        $this->assertSame('no_reply@vigilavi.org', key($message->getFrom()));
+        $this->assertSame('test@no.com', key($message->getTo()));
+        $this->assertSame('Hello Email', $message->getSubject());
+        $this->assertSame(
+            'You should see me from the profiler!',
+            $message->getBody()
+        );
     }
 }
